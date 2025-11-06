@@ -1,0 +1,39 @@
+{
+  "actorSpecification": 1,
+  "name": "universal-web-scraper",
+  "title": "Universal Web Scraper",
+  "description": "AI-powered scraper that works on any website. Automatically detects JSON sources, generates extraction code, and delivers structured data. Cost-optimized with code caching.",
+  "version": "1.0.0",
+  "meta": {
+    "templateId": "python-empty"
+  },
+  "input": "./INPUT_SCHEMA.json",
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "categories": [
+    "SCRAPING",
+    "ECOMMERCE",
+    "TOOLS"
+  ],
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Scraped Data",
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "transformation": {
+            "fields": [
+              "__url",
+              "__extraction_source"
+            ]
+          },
+          "display": {
+            "component": "table"
+          }
+        }
+      }
+    }
+  }
+}
+

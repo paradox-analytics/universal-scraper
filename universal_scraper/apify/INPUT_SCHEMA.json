@@ -1,0 +1,87 @@
+{
+  "title": "Universal Web Scraper Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "urls": {
+      "title": "URLs to Scrape",
+      "type": "array",
+      "description": "List of URLs to scrape. Can be single URL or multiple URLs.",
+      "editor": "stringList",
+      "example": ["https://example.com/products", "https://example.com/page2"],
+      "prefill": ["https://books.toscrape.com/"]
+    },
+    "fields": {
+      "title": "Fields to Extract",
+      "type": "array",
+      "description": "List of field names to extract from each page (e.g., product_name, price, rating).",
+      "editor": "stringList",
+      "example": ["product_name", "price", "rating", "availability"],
+      "prefill": ["title", "price", "rating"]
+    },
+    "proxyType": {
+      "title": "Proxy Type",
+      "type": "string",
+      "description": "Type of proxy to use. Residential is recommended for production.",
+      "enum": ["none", "datacenter", "residential"],
+      "default": "residential",
+      "editor": "select"
+    },
+    "aiModel": {
+      "title": "AI Model",
+      "type": "string",
+      "description": "AI model to use for generating extraction code. Cheaper models work well for most sites.",
+      "enum": [
+        "gpt-4o-mini",
+        "gpt-4o",
+        "gpt-4-turbo",
+        "gemini-2.0-flash-exp",
+        "gemini-1.5-pro",
+        "claude-3-haiku-20240307",
+        "claude-3-sonnet-20240229",
+        "claude-3-opus-20240229"
+      ],
+      "default": "gpt-4o-mini",
+      "editor": "select"
+    },
+    "outputFormat": {
+      "title": "Output Format",
+      "type": "string",
+      "description": "Format for output data",
+      "enum": ["json", "csv", "both"],
+      "default": "json",
+      "editor": "select"
+    },
+    "apiKeys": {
+      "title": "API Keys",
+      "type": "object",
+      "description": "API keys for AI providers. Provide the key matching your selected model.",
+      "editor": "json",
+      "properties": {
+        "openai_api_key": {
+          "title": "OpenAI API Key",
+          "type": "string",
+          "description": "Required for GPT models (gpt-4o-mini, gpt-4o, etc.)",
+          "editor": "textfield",
+          "isSecret": true
+        },
+        "gemini_api_key": {
+          "title": "Google Gemini API Key",
+          "type": "string",
+          "description": "Required for Gemini models",
+          "editor": "textfield",
+          "isSecret": true
+        },
+        "anthropic_api_key": {
+          "title": "Anthropic API Key",
+          "type": "string",
+          "description": "Required for Claude models",
+          "editor": "textfield",
+          "isSecret": true
+        }
+      }
+    }
+  },
+  "required": ["urls", "fields"]
+}
+
