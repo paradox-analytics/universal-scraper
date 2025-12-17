@@ -38,7 +38,7 @@ class StructuralHashGenerator:
         hash_obj.update(structure_signature.encode('utf-8'))
         structure_hash = hash_obj.hexdigest()
         
-        logger.info(f"🔑 Generated hash: {structure_hash[:16]}...")
+        logger.info(f" Generated hash: {structure_hash[:16]}...")
         
         return {
             'hash': structure_hash,

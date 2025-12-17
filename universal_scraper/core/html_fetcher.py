@@ -30,6 +30,7 @@ class HTMLFetcher:
     def __init__(
         self,
         proxy_config: Optional[Dict[str, str]] = None,
+        proxy_manager: Optional[Any] = None,  # NEW: ProxyManager for rotation
         enable_warming: bool = True,
         timeout: int = 30,
         max_retries: int = 3
@@ -38,12 +39,14 @@ class HTMLFetcher:
         Initialize HTML Fetcher
         
         Args:
-            proxy_config: Dict with 'server', 'username', 'password' keys
+            proxy_config: Static proxy dict with 'server', 'username', 'password' keys (deprecated)
+            proxy_manager: ProxyManager instance for per-request rotation (recommended)
             enable_warming: Enable session warming for better success rates
             timeout: Request timeout in seconds
             max_retries: Maximum retry attempts
         """
         self.proxy_config = proxy_config
+        self.proxy_manager = proxy_manager  # NEW: Store ProxyManager
         self.enable_warming = enable_warming
         self.timeout = timeout
         self.max_retries = max_retries
@@ -88,7 +91,7 @@ class HTMLFetcher:
             'Sec-Fetch-User': '?1',
         })
         
-        logger.info(f"🎭 Using user agent: {selected_ua[:60]}...")
+        logger.info(f" Using user agent: {selected_ua[:60]}...")
         
         # Enhanced retry strategy
         retry_strategy = Retry(
@@ -101,14 +104,24 @@ class HTMLFetcher:
         self.session.mount("http://", adapter)
         self.session.mount("https://", adapter)
         
-        # Configure proxies if provided
-        if self.proxy_config:
-            proxy_url = f"http://{self.proxy_config['username']}:{self.proxy_config['password']}@{self.proxy_config['server'].replace('http://', '')}"
+        # Configure proxies if provided (static format only)
+        # Note: Apify proxy format is handled by ProxyManager, not here
+        if self.proxy_config and 'server' in self.proxy_config:
+            # Static proxy format: {'server': '...', 'username': '...', 'password': '...'}
+            username = self.proxy_config.get('username', '')
+            password = self.proxy_config.get('password', '')
+            server = self.proxy_config['server'].replace('http://', '').replace('https://', '')
+            
+            if username and password:
+                proxy_url = f"http://{username}:{password}@{server}"
+            else:
+                proxy_url = f"http://{server}"
+            
             self.session.proxies.update({
                 'http': proxy_url,
                 'https': proxy_url
             })
-            logger.info(f"🔗 Using proxy: {self.proxy_config['server']}")
+            logger.info(f" Using static proxy: {self.proxy_config['server']}")
     
     def fetch(self, url: str, warm_session: bool = None) -> Dict[str, Any]:
         """
@@ -137,7 +150,7 @@ class HTMLFetcher:
                 self.request_count += 1
                 self.last_request_time = time.time()
                 
-                logger.info(f"🌐 Fetching: {url[:80]}..." if len(url) > 80 else f"🌐 Fetching: {url}")
+                logger.info(f" Fetching: {url[:80]}..." if len(url) > 80 else f" Fetching: {url}")
                 
                 response = self.session.get(url, timeout=self.timeout)
                 
@@ -151,9 +164,9 @@ class HTMLFetcher:
                 
                 # Log result
                 if response.status_code == 200:
-                    logger.info(f"✅ Success: {response.status_code} ({len(response.text)} bytes)")
+                    logger.info(f" Success: {response.status_code} ({len(response.text)} bytes)")
                 else:
-                    logger.warning(f"⚠️ Response: {response.status_code}")
+                    logger.warning(f" Response: {response.status_code}")
                 
                 return {
                     'html': response.text,
@@ -164,7 +177,7 @@ class HTMLFetcher:
                 }
                 
             except Exception as e:
-                logger.error(f"❌ Fetch failed (attempt {attempt + 1}/{self.max_retries}): {str(e)[:100]}")
+                logger.error(f" Fetch failed (attempt {attempt + 1}/{self.max_retries}): {str(e)[:100]}")
                 if attempt < self.max_retries - 1:
                     backoff_delay = 2 ** attempt * 5
                     logger.info(f"⏳ Retrying in {backoff_delay}s...")
@@ -182,7 +195,7 @@ class HTMLFetcher:
         if domain in self.warmed_domains:
             return True
         
-        logger.info(f"🔥 Warming session for: {domain}")
+        logger.info(f" Warming session for: {domain}")
         
         # Generic warm-up URL (homepage)
         warm_url = f"{parsed.scheme}://{parsed.netloc}"
@@ -192,13 +205,13 @@ class HTMLFetcher:
             response = self.session.get(warm_url, timeout=self.timeout)
             
             if response.status_code == 200:
-                logger.info(f"✅ Session warmed: {response.status_code}")
+                logger.info(f" Session warmed: {response.status_code}")
                 self.warmed_domains.add(domain)
                 return True
             else:
-                logger.warning(f"⚠️ Warm-up returned: {response.status_code}")
+                logger.warning(f" Warm-up returned: {response.status_code}")
         except Exception as e:
-            logger.warning(f"⚠️ Warm-up failed: {str(e)[:50]}")
+            logger.warning(f" Warm-up failed: {str(e)[:50]}")
         
         # Mark as warmed even if failed to avoid repeated attempts
         self.warmed_domains.add(domain)

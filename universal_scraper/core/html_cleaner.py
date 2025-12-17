@@ -1,59 +1,98 @@
 """
-Smart HTML Cleaner - Reduces HTML size by ~98% while preserving structure
-Removes unnecessary elements and detects repeating patterns
+Smart HTML Cleaner - Aggressively removes noise while preserving data content
+Phase 1 Enhancements: Remove UI elements, widgets, social, forms
+Based on ScrapeGraphAI principles + optimization for complex dynamic sites
 """
 
 import re
 import logging
 from typing import Dict, Any
 from bs4 import BeautifulSoup, Comment
-from collections import defaultdict
-import hashlib
 
 logger = logging.getLogger(__name__)
 
 
 class SmartHTMLCleaner:
-    """Intelligently cleans HTML while preserving structure"""
+    """
+    Intelligently cleans HTML - aggressive noise removal for better LLM extraction
     
-    # Tags to remove completely
+    Philosophy (inspired by ScrapeGraphAI + optimized for quality):
+    - Remove true noise: scripts, styles, comments
+    - Remove UI elements: forms, buttons, SVGs (Phase 1 NEW)
+    - Remove widgets: social, newsletters, CTAs (Phase 1 NEW)
+    - Remove structural noise: nav, header, footer, aside
+    - Minify whitespace without losing content boundaries
+    - Result: Fewer chunks, better LLM context, higher quality extraction
+    """
+    
+    # Tags to remove completely (true noise + navigation + UI)
     REMOVE_TAGS = [
-        'script', 'style', 'noscript', 'iframe', 'embed', 'object',
-        'link', 'meta'  # Keep meta for now, might contain useful data
-    ]
-    
-    # Tags that are typically navigation/non-content
-    NAVIGATION_TAGS = [
-        'nav', 'header', 'footer', 'aside', 'menu'
-    ]
-    
-    # Attributes to keep (minimal set for structure)
-    KEEP_ATTRIBUTES = [
-        'id', 'class', 'href', 'src', 'alt', 'title',
-        'data-*'  # Keep data attributes, might be useful
-    ]
-    
-    # Classes/IDs that indicate ads/tracking
-    AD_PATTERNS = [
-        'ad', 'ads', 'advertisement', 'banner', 'sponsor',
-        'tracking', 'analytics', 'cookie', 'gdpr', 'consent',
-        'popup', 'modal', 'overlay'
-    ]
-    
-    def __init__(self, keep_samples: int = 2):
-        """
-        Initialize HTML Cleaner
+        # Core noise
+        'script',    # JavaScript code
+        'style',     # CSS styles
+        'noscript',  # Noscript fallbacks
+        'iframe',    # Embedded frames
+        'embed',     # Embedded objects
+        'object',    # Object embeds
         
-        Args:
-            keep_samples: Number of repeating elements to keep for pattern detection
-        """
-        self.keep_samples = keep_samples
+        # Structural noise
+        'nav',       # Navigation menus
+        'header',    # Page headers
+        'footer',    # Page footers
+        'aside',     # Sidebar content
+        
+        # UI elements (Phase 1 additions)
+        'svg',       # Icons and graphics (not data-bearing)
+        'form',      # Forms (search, login) - rarely contain list data
+        'button',    # Buttons - pure UI elements
+        'select',    # Dropdown menus - UI controls
+        'input',     # Input fields - UI controls
+        'textarea',  # Text inputs - UI controls
+        'label',     # Form labels - UI text
+    ]
+    
+    # Classes/IDs that indicate noise (Phase 1 expansion)
+    NOISE_PATTERNS = [
+        # Ads & tracking
+        'advertisement', 'ad-container', 'ad-banner', 'google-ad',
+        'sponsored-content', 'sponsored', 'promoted',
+        'cookie-consent', 'gdpr-notice', 'privacy-notice',
+        
+        # Social & sharing
+        'social-share', 'share-button', 'social-links', 'social-media',
+        'share-tools', 'sharing', 'social-icons',
+        
+        # Newsletter & CTA
+        'newsletter', 'email-signup', 'subscribe', 'subscription',
+        'call-to-action', 'cta', 'signup', 'sign-up',
+        
+        # Related content & widgets
+        'related-posts', 'related-content', 'related-articles',
+        'you-may-like', 'recommended', 'suggestions',
+        'sidebar-widget', 'widget-area', 'widget',
+        'trending', 'popular-posts',
+        
+        # Navigation & breadcrumbs
+        'breadcrumb', 'breadcrumbs', 'pagination',
+        'mobile-menu', 'mobile-nav', 'menu-toggle',
+        
+        # Author & meta
+        'author-bio', 'author-info', 'author-box', 'byline',
+        'meta-info', 'post-meta', 'entry-meta',
+        
+        # Comments & interaction
+        'comment-form', 'comments-section', 'comments',
+        'discussion', 'replies',
+    ]
+    
+    def __init__(self):
+        """Initialize HTML Cleaner"""
         self.original_size = 0
         self.cleaned_size = 0
     
     def clean(self, html: str) -> Dict[str, Any]:
         """
-        Clean HTML and return cleaned version with metadata
+        Clean HTML - Remove noise, keep content (ScrapeGraphAI approach)
         
         Args:
             html: Raw HTML content
@@ -63,45 +102,28 @@ class SmartHTMLCleaner:
         """
         self.original_size = len(html)
         
-        logger.info(f"🧹 Cleaning HTML ({self.original_size:,} bytes)")
+        logger.info(f" Cleaning HTML ({self.original_size:,} bytes)")
         
         # Parse HTML
         soup = BeautifulSoup(html, 'html.parser')
         
-        # Step 1: Remove scripts, styles, etc.
-        self._remove_unwanted_tags(soup)
+        # Step 1: Remove noise tags (scripts, styles, nav, forms, buttons, SVGs)
+        self._remove_noise_tags(soup)
         
-        # Step 2: Remove ads and analytics
-        self._remove_ads_and_tracking(soup)
-        
-        # Step 3: Remove inline SVGs (can be huge)
-        self._remove_inline_svgs(soup)
-        
-        # Step 4: Replace URLs with placeholders
-        self._replace_urls_with_placeholders(soup)
-        
-        # Step 5: Remove non-essential attributes
-        self._remove_non_essential_attributes(soup)
-        
-        # Step 6: Remove navigation elements
-        self._remove_navigation(soup)
-        
-        # Step 7: Detect and sample repeating structures
-        self._sample_repeating_structures(soup)
-        
-        # Step 8: Remove empty elements
-        self._remove_empty_elements(soup)
-        
-        # Step 9: Remove comments
+        # Step 2: Remove HTML comments
         self._remove_comments(soup)
         
-        # Get cleaned HTML
-        cleaned_html = str(soup)
+        # Step 3: Remove noise by class/ID (ads, widgets, social, CTAs)
+        self._remove_obvious_ads(soup)
+        
+        # Step 4: Minify whitespace
+        cleaned_html = self._minify_html(str(soup))
+        
         self.cleaned_size = len(cleaned_html)
         
         reduction_percent = ((self.original_size - self.cleaned_size) / self.original_size * 100) if self.original_size > 0 else 0
         
-        logger.info(f"✅ Cleaned: {self.cleaned_size:,} bytes ({reduction_percent:.1f}% reduction)")
+        logger.info(f" Cleaned: {self.cleaned_size:,} bytes ({reduction_percent:.1f}% reduction)")
         
         return {
             'html': cleaned_html,
@@ -110,166 +132,42 @@ class SmartHTMLCleaner:
             'reduction_percent': reduction_percent
         }
     
-    def _remove_unwanted_tags(self, soup: BeautifulSoup) -> None:
-        """Remove script, style, and other unwanted tags"""
+    def _remove_noise_tags(self, soup: BeautifulSoup) -> None:
+        """Remove ONLY noise tags (scripts, styles, etc.)"""
+        removed_count = 0
         for tag_name in self.REMOVE_TAGS:
             for tag in soup.find_all(tag_name):
                 tag.decompose()
-        
-        logger.debug(f"   Removed {len(self.REMOVE_TAGS)} tag types")
-    
-    def _remove_ads_and_tracking(self, soup: BeautifulSoup) -> None:
-        """Remove elements that look like ads or tracking"""
-        removed_count = 0
-        
-        for tag in soup.find_all(True):  # Find all tags
-            # Check class and id for ad patterns
-            classes = tag.get('class', [])
-            id_attr = tag.get('id', '')
-            
-            # Convert to strings for checking
-            class_str = ' '.join(classes) if isinstance(classes, list) else str(classes)
-            combined = (class_str + ' ' + id_attr).lower()
-            
-            # Check if matches ad patterns
-            if any(pattern in combined for pattern in self.AD_PATTERNS):
-                tag.decompose()
                 removed_count += 1
         
         if removed_count > 0:
-            logger.debug(f"   Removed {removed_count} ad/tracking elements")
+            logger.debug(f"   Removed {removed_count} noise tags")
     
-    def _remove_inline_svgs(self, soup: BeautifulSoup) -> None:
-        """Remove inline SVG images (can be very large)"""
-        svg_count = 0
-        for svg in soup.find_all('svg'):
-            svg.decompose()
-            svg_count += 1
+    def _remove_obvious_ads(self, soup: BeautifulSoup) -> None:
+        """
+        Remove noise elements (ads, widgets, UI, social, etc.)
+        Conservative approach: only remove when class/ID matches known patterns
+        """
+        removed_count = 0
         
-        if svg_count > 0:
-            logger.debug(f"   Removed {svg_count} inline SVGs")
-    
-    def _replace_urls_with_placeholders(self, soup: BeautifulSoup) -> None:
-        """Replace long URLs with placeholders to reduce size"""
-        url_pattern = re.compile(r'https?://[^\s<>"\']+')
-        
-        # Replace in text content
-        for tag in soup.find_all(text=True):
-            if url_pattern.search(str(tag)):
-                new_text = url_pattern.sub('[URL]', str(tag))
-                tag.replace_with(new_text)
-        
-        # Shorten src/href attributes
-        for tag in soup.find_all(['img', 'a', 'link']):
-            if tag.get('src'):
-                # Keep filename but remove long paths
-                src = tag['src']
-                if len(src) > 50:
-                    tag['src'] = '[SRC]'
-            if tag.get('href'):
-                href = tag['href']
-                if len(href) > 50 and not href.startswith('#'):
-                    tag['href'] = '[HREF]'
-        
-        logger.debug("   Replaced URLs with placeholders")
-    
-    def _remove_non_essential_attributes(self, soup: BeautifulSoup) -> None:
-        """Remove non-essential HTML attributes"""
         for tag in soup.find_all(True):
-            # Get all attributes
-            attrs = dict(tag.attrs)
-            
-            # Keep only essential attributes
-            for attr in list(attrs.keys()):
-                should_keep = False
+            try:
+                # Check class and id for noise pattern matches
+                classes = tag.get('class', [])
+                id_attr = tag.get('id', '')
                 
-                # Check if in keep list
-                if attr in self.KEEP_ATTRIBUTES:
-                    should_keep = True
+                class_str = ' '.join(classes) if isinstance(classes, list) else str(classes)
+                combined = (class_str + ' ' + id_attr).lower()
                 
-                # Keep data-* attributes
-                if attr.startswith('data-'):
-                    should_keep = True
-                
-                # Remove if not needed
-                if not should_keep:
-                    del tag.attrs[attr]
-        
-        logger.debug("   Removed non-essential attributes")
-    
-    def _remove_navigation(self, soup: BeautifulSoup) -> None:
-        """Remove navigation elements"""
-        removed_count = 0
-        for tag_name in self.NAVIGATION_TAGS:
-            for tag in soup.find_all(tag_name):
-                tag.decompose()
-                removed_count += 1
-        
-        if removed_count > 0:
-            logger.debug(f"   Removed {removed_count} navigation elements")
-    
-    def _sample_repeating_structures(self, soup: BeautifulSoup) -> None:
-        """Detect repeating structures and keep only samples"""
-        # Find potential list containers
-        list_containers = soup.find_all(['ul', 'ol', 'div', 'section', 'article'])
-        
-        removed_count = 0
-        for container in list_containers:
-            # Get direct children with same tag name
-            children = list(container.find_all(recursive=False))
-            
-            if len(children) <= self.keep_samples:
-                continue
-            
-            # Group by tag name and structure
-            structure_groups = defaultdict(list)
-            for child in children:
-                # Create structure signature
-                signature = self._get_structure_signature(child)
-                structure_groups[signature].append(child)
-            
-            # For each group, keep only samples
-            for signature, group in structure_groups.items():
-                if len(group) > self.keep_samples:
-                    # Keep first N samples, remove rest
-                    for item in group[self.keep_samples:]:
-                        item.decompose()
-                        removed_count += 1
-        
-        if removed_count > 0:
-            logger.debug(f"   Sampled repeating structures (removed {removed_count} duplicates)")
-    
-    def _get_structure_signature(self, tag) -> str:
-        """Get structural signature of a tag for comparison"""
-        if not tag.name:
-            return ''
-        
-        # Create signature from tag name and immediate children
-        children_tags = [child.name for child in tag.find_all(recursive=False) if child.name]
-        
-        signature = f"{tag.name}:{','.join(sorted(children_tags))}"
-        
-        # Add class signature if present
-        classes = tag.get('class', [])
-        if classes:
-            signature += f":{','.join(sorted(classes))}"
-        
-        return signature
-    
-    def _remove_empty_elements(self, soup: BeautifulSoup) -> None:
-        """Remove empty divs and containers"""
-        removed_count = 0
-        
-        # Multiple passes to handle nested empty elements
-        for _ in range(3):
-            for tag in soup.find_all(['div', 'span', 'p', 'section', 'article']):
-                # Check if empty (no text, no children with content)
-                if not tag.get_text(strip=True) and not tag.find_all(['img', 'video', 'audio']):
+                # Check if class/ID contains any noise patterns
+                if any(pattern in combined for pattern in self.NOISE_PATTERNS):
                     tag.decompose()
                     removed_count += 1
+            except (AttributeError, TypeError):
+                continue
         
         if removed_count > 0:
-            logger.debug(f"   Removed {removed_count} empty elements")
+            logger.debug(f"   Removed {removed_count} noise elements")
     
     def _remove_comments(self, soup: BeautifulSoup) -> None:
         """Remove HTML comments"""
@@ -280,6 +178,26 @@ class SmartHTMLCleaner:
         if len(comments) > 0:
             logger.debug(f"   Removed {len(comments)} comments")
     
+    def _minify_html(self, html: str) -> str:
+        """
+        Minify HTML by removing excessive whitespace
+        Based on ScrapeGraphAI's approach
+        """
+        # Remove HTML comments (<!-- ... -->)
+        html = re.sub(r'<!--.*?-->', '', html, flags=re.DOTALL)
+        
+        # Remove whitespace between tags
+        html = re.sub(r'>\s+<', '><', html)
+        
+        # Remove leading/trailing whitespace from lines
+        html = re.sub(r'^\s+', '', html, flags=re.MULTILINE)
+        html = re.sub(r'\s+$', '', html, flags=re.MULTILINE)
+        
+        # Collapse multiple spaces to single space
+        html = re.sub(r'\s+', ' ', html)
+        
+        return html.strip()
+    
     def get_reduction_stats(self) -> Dict[str, Any]:
         """Get cleaning statistics"""
         return {
@@ -288,4 +206,3 @@ class SmartHTMLCleaner:
             'reduction_percent': ((self.original_size - self.cleaned_size) / self.original_size * 100) if self.original_size > 0 else 0,
             'reduction_ratio': f"{self.original_size / self.cleaned_size:.1f}x" if self.cleaned_size > 0 else "N/A"
         }
-

@@ -7,11 +7,37 @@ import os
 import json
 import logging
 import time
-from typing import Optional, Dict, Any
+import hashlib
+from typing import Optional, Dict, Any, List
 from pathlib import Path
 import diskcache
 
 logger = logging.getLogger(__name__)
+
+
+def generate_cache_key(structure_hash: str, fields: List[str]) -> str:
+    """
+    Generate a cache key that includes both structure hash and field names.
+    
+    This ensures that different field sets get their own cached code,
+    preventing field mismatch issues (e.g., 'title' vs 'question_title').
+    
+    Args:
+        structure_hash: HTML structure hash
+        fields: List of field names to extract
+        
+    Returns:
+        Combined cache key string
+    """
+    # Sort fields for consistency (order shouldn't matter)
+    sorted_fields = sorted(fields)
+    fields_str = ','.join(sorted_fields)
+    
+    # Create a hash of the field names
+    fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
+    
+    # Combine: structure_hash + fields_hash
+    return f"{structure_hash}:{fields_hash}"
 
 
 class CodeCache:
@@ -39,10 +65,10 @@ class CodeCache:
         if self.enable_cache:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
             self.cache = diskcache.Cache(str(self.cache_dir))
-            logger.info(f"💾 Cache initialized: {self.cache_dir}")
+            logger.info(f" Cache initialized: {self.cache_dir}")
         else:
             self.cache = None
-            logger.info("💾 Cache disabled")
+            logger.info(" Cache disabled")
     
     def get(self, structure_hash: str) -> Optional[Dict[str, Any]]:
         """
@@ -64,18 +90,18 @@ class CodeCache:
             if cached_data:
                 # Check if expired
                 if self._is_expired(cached_data):
-                    logger.info(f"♻️ Cache entry expired: {structure_hash[:16]}...")
+                    logger.info(f" Cache entry expired: {structure_hash[:16]}...")
                     self.delete(structure_hash)
                     return None
                 
-                logger.info(f"✅ Cache hit: {structure_hash[:16]}...")
+                logger.info(f" Cache hit: {structure_hash[:16]}...")
                 return cached_data
             else:
-                logger.info(f"❌ Cache miss: {structure_hash[:16]}...")
+                logger.info(f" Cache miss: {structure_hash[:16]}...")
                 return None
                 
         except Exception as e:
-            logger.error(f"❌ Cache get error: {str(e)}")
+            logger.error(f" Cache get error: {str(e)}")
             return None
     
     def set(
@@ -111,11 +137,11 @@ class CodeCache:
             
             self.cache.set(cache_key, cached_data, expire=self.ttl)
             
-            logger.info(f"💾 Cached code: {structure_hash[:16]}... (TTL: {self.ttl}s)")
+            logger.info(f" Cached code: {structure_hash[:16]}... (TTL: {self.ttl}s)")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Cache set error: {str(e)}")
+            logger.error(f" Cache set error: {str(e)}")
             return False
     
     def delete(self, structure_hash: str) -> bool:
@@ -136,12 +162,12 @@ class CodeCache:
             deleted = self.cache.delete(cache_key)
             
             if deleted:
-                logger.info(f"🗑️ Deleted cache: {structure_hash[:16]}...")
+                logger.info(f" Deleted cache: {structure_hash[:16]}...")
             
             return deleted
             
         except Exception as e:
-            logger.error(f"❌ Cache delete error: {str(e)}")
+            logger.error(f" Cache delete error: {str(e)}")
             return False
     
     def clear(self) -> bool:
@@ -156,11 +182,11 @@ class CodeCache:
         
         try:
             self.cache.clear()
-            logger.info("🗑️ Cache cleared")
+            logger.info(" Cache cleared")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Cache clear error: {str(e)}")
+            logger.error(f" Cache clear error: {str(e)}")
             return False
     
     def get_stats(self) -> Dict[str, Any]:
@@ -185,7 +211,7 @@ class CodeCache:
             return stats
             
         except Exception as e:
-            logger.error(f"❌ Cache stats error: {str(e)}")
+            logger.error(f" Cache stats error: {str(e)}")
             return {'enabled': True, 'error': str(e)}
     
     def _is_expired(self, cached_data: Dict[str, Any]) -> bool:
@@ -225,7 +251,7 @@ class CodeCache:
             }
         
         # Generate new
-        logger.info("🤖 Cache miss, generating new code...")
+        logger.info(" Cache miss, generating new code...")
         result = generator_func(*args, **kwargs)
         
         # Store in cache
@@ -264,7 +290,7 @@ class CodeCache:
             hashes = [key.replace('code:', '') for key in keys if key.startswith('code:')]
             return hashes
         except Exception as e:
-            logger.error(f"❌ Error listing cache: {str(e)}")
+            logger.error(f" Error listing cache: {str(e)}")
             return []
     
     def export_cache(self, export_path: str) -> bool:
@@ -293,11 +319,11 @@ class CodeCache:
             with open(export_path, 'w') as f:
                 json.dump(export_data, f, indent=2)
             
-            logger.info(f"📤 Exported {len(export_data)} cache entries to {export_path}")
+            logger.info(f" Exported {len(export_data)} cache entries to {export_path}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Export error: {str(e)}")
+            logger.error(f" Export error: {str(e)}")
             return False
     
     def import_cache(self, import_path: str) -> bool:
@@ -326,11 +352,11 @@ class CodeCache:
                 )
                 count += 1
             
-            logger.info(f"📥 Imported {count} cache entries from {import_path}")
+            logger.info(f" Imported {count} cache entries from {import_path}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Import error: {str(e)}")
+            logger.error(f" Import error: {str(e)}")
             return False
     
     def __enter__(self):
