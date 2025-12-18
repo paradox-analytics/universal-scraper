@@ -2,7 +2,7 @@
 
 A powerful, AI-driven universal web scraper that can extract structured data from any website. Built for cost efficiency and speed by prioritizing JSON detection, using intelligent HTML cleaning, and leveraging code caching.
 
-## 🎯 Key Features
+## Key Features
 
 - **JSON-First Architecture**: Automatically detects and extracts JSON data before resorting to HTML parsing
 - **Smart HTML Cleaning**: Reduces HTML size by ~98% while preserving structure
@@ -12,7 +12,7 @@ A powerful, AI-driven universal web scraper that can extract structured data fro
 - **Apify Ready**: Deployable to Apify platform with one command
 - **Cost Optimized**: Uses LLMs only for understanding structure, not extraction
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 URL → HTML Fetcher → Smart Cleaner → JSON Detector → Structural Hash → Code Cache
@@ -32,7 +32,7 @@ URL → HTML Fetcher → Smart Cleaner → JSON Detector → Structural Hash →
 6. **AI Code Generator**: Creates BeautifulSoup extraction code using LLMs
 7. **Data Extractor**: Executes generated code and returns structured data
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -120,7 +120,7 @@ scraper = UniversalScraper(
 )
 ```
 
-## 🎯 Use Cases
+## Use Cases
 
 ### E-commerce Product Scraping
 
@@ -171,7 +171,7 @@ result = scraper.scrape(
 )
 ```
 
-## 🏢 Apify Deployment
+## Apify Deployment
 
 ### Deploy to Apify
 
@@ -192,7 +192,7 @@ cd universal-scraper
 }
 ```
 
-## 🔧 Advanced Features
+## Advanced Features
 
 ### JSON Detection Priority
 
@@ -225,7 +225,7 @@ hash1 = scraper.get_structural_hash(url1)  # First time: generates code
 hash2 = scraper.get_structural_hash(url2)  # Same structure: reuses code
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 universal-scraper/
@@ -263,7 +263,7 @@ universal-scraper/
     └── test_html_cleaner.py
 ```
 
-## 🎓 Examples
+## Examples
 
 See the `examples/` directory for comprehensive examples:
 
@@ -273,22 +273,11 @@ See the `examples/` directory for comprehensive examples:
 - `with_proxies.py`: Using residential proxies
 - `cache_management.py`: Managing the code cache
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
-## 🙏 Credits
-
-Inspired by:
-- [WitesoAI/universal-scraper](https://github.com/WitesoAI/universal-scraper)
-- Parsera Project architecture
-- LiteLLM for multi-provider AI support
-
-## 📞 Support
-
-For issues, questions, or feature requests, please open an issue on GitHub.
 
