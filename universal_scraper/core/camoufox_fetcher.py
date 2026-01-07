@@ -706,10 +706,32 @@ class CamoufoxFetcher:
         # Add Web Unblocker if provided and no proxy yet
         if not proxy_config_for_request and self.web_unblocker_api_key:
             # Detect if it's proxy credentials format or API key
+            # Split only on first colon to handle passwords with colons
             if ':' in self.web_unblocker_api_key:
-                parts = self.web_unblocker_api_key.split(':')
+                parts = self.web_unblocker_api_key.split(':', 1)  # Split only on FIRST colon
+                if len(parts) == 2:
+                    # user:pass format
+                    username = parts[0].strip()
+                    password = parts[1].strip()
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': username,
+                        'password': password
+                    }
+                    logger.info(f"🔐 Using Web Unblocker proxy (user: {username[:50]}...)")
+                else:
+                    # Shouldn't happen with split(':', 1), but fallback just in case
+                    customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
+                        'password': self.web_unblocker_api_key
+                    }
+                    logger.info(f"🔐 Using Web Unblocker proxy (fallback, customer: {customer_id})")
+            elif ',' in self.web_unblocker_api_key:
+                # Comma-separated format (legacy)
+                parts = self.web_unblocker_api_key.split(',')
                 if len(parts) >= 4:
-                    # host:port:user:pass
                     host = parts[0].strip()
                     port = parts[1].strip()
                     username = parts[2].strip()
@@ -719,17 +741,7 @@ class CamoufoxFetcher:
                         'username': username,
                         'password': password
                     }
-                    logger.info(f" Using Web Unblocker as proxy for Camoufox (host:port:user:pass)")
-                elif len(parts) == 2:
-                    # user:pass
-                    username = parts[0].strip()
-                    password = parts[1].strip()
-                    proxy_config_for_request = {
-                        'server': 'brd.superproxy.io:33335',
-                        'username': username,
-                        'password': password
-                    }
-                    logger.info(f" Using Web Unblocker as proxy for Camoufox (user:pass)")
+                    logger.info(f"🔐 Using Web Unblocker proxy (comma-separated)")
                 else:
                     # Fallback for other colon counts
                     customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
