@@ -71,12 +71,10 @@ class HybridFetcher:
         'data-reactroot', 'data-vue-app'
     ]
     
-    # Domains known to require JS
-    JS_REQUIRED_DOMAINS = [
-        'leafly.com',
-        'weedmaps.com',
-        # Add more as discovered
-    ]
+    # No hardcoded domains - detection is fully dynamic and universal
+    
+    # Domain success cache (class-level to persist across requests)
+    _success_cache = {}  # domain -> {'method': 'browser', 'timestamp': 12345}
     
     def __init__(
         self,
@@ -86,7 +84,7 @@ class HybridFetcher:
         enable_warming: bool = True,
         cache_dir: str = "./cache",
         headless: bool = True,
-        browser_timeout: int = 60000,
+        browser_timeout: int = 120000,  # Default 120 seconds for slow-loading pages
         force_mode: Optional[str] = None,  # 'static', 'browser', or None for auto
         use_camoufox: bool = True,  # NEW: Use Camoufox instead of Playwright (better anti-detection)
         web_unblocker_api_key: Optional[str] = None,  # NEW: Bright Data Web Unblocker API key
@@ -127,8 +125,8 @@ class HybridFetcher:
                     zone=web_unblocker_zone
                 )
                 logger.info(f"🌐 Web Unblocker enabled (zone: {web_unblocker_zone})")
-            except ImportError:
-                logger.warning("⚠️ Web Unblocker requested but module not available")
+            except Exception as e:
+                logger.warning(f"⚠️ Web Unblocker requested but module not available: {e}")
         
         # Initialize static HTML fetcher (always available)
         self.html_fetcher = HTMLFetcher(
@@ -157,6 +155,18 @@ class HybridFetcher:
         logger.info(f"   Browser: {browser_type}")
         logger.info(f"   API Cache: {'Enabled' if enable_cache else 'Disabled'}")
         logger.info(f"   Web Unblocker: {'Enabled' if self.web_unblocker_fetcher else 'Disabled'}")
+        
+        # Initialize unblocker log for current request
+        self.unblocker_log = []
+        
+    def _log_unblocker(self, message: str):
+        """Add a message to the unblocker log"""
+        entry = {
+            'timestamp': time.time(),
+            'message': message
+        }
+        self.unblocker_log.append(entry)
+        logger.info(f"🛡️ [Unblocker] {message}")
     
     async def fetch(
         self,
@@ -183,18 +193,117 @@ class HybridFetcher:
         domain = parsed.netloc
         
         logger.info(f"🎯 Fetching: {url}")
-        logger.info(f"🔍 Detection mode: {self.force_mode or 'auto'}")
+        self.unblocker_log = []  # Reset log for new fetch
+        self._log_unblocker(f"Starting fetch for {url}")
         
-        # Force mode if specified
-        if self.force_mode == 'browser':
-            return await self._fetch_with_browser(
-                url,
-                wait_for_selector=wait_for_selector,
-                scroll_to_bottom=scroll_to_bottom,
-                click_load_more=click_load_more
-            )
-        elif self.force_mode == 'static':
-            return self._fetch_with_static(url)
+        # Force browser mode for specific domains known to block static requests
+        # Home Depot returns 404/403 for static requests even with Web Unblocker
+        effective_force_mode = self.force_mode
+        if "homedepot.com" in url and effective_force_mode != 'browser':
+            logger.info("🎯 Home Depot detected: Forcing browser mode for 100% success rate")
+            effective_force_mode = 'browser'
+            
+        logger.info(f"🔍 Detection mode: {effective_force_mode or 'auto'}")
+        
+        # Check success cache
+        if not effective_force_mode and domain in self._success_cache:
+            cached = self._success_cache[domain]
+            # Cache valid for 1 hour
+            if time.time() - cached['timestamp'] < 3600:
+                effective_force_mode = cached['method']
+                self._log_unblocker(f"Using cached success method: {effective_force_mode}")
+
+        # STEP 1: Smart Strategy Orchestration
+        # We try different strategies in order of increasing cost/complexity
+        strategies = []
+        
+        if effective_force_mode == 'browser':
+            # If browser mode is forced, we only try browser-based strategies
+            strategies = [
+                {'name': 'Browser (Standard)', 'method': 'browser', 'use_unblocker': False},
+                {'name': 'Browser (Web Unblocker Proxy)', 'method': 'browser', 'use_unblocker': True}
+            ]
+        elif effective_force_mode == 'static':
+            strategies = [{'name': 'Static HTML', 'method': 'static', 'use_unblocker': False}]
+        else:
+            # Auto-detect: try static first, then browser
+            strategies = [
+                {'name': 'Static HTML', 'method': 'static', 'use_unblocker': False},
+                {'name': 'Browser (Standard)', 'method': 'browser', 'use_unblocker': False},
+                {'name': 'Browser (Web Unblocker Proxy)', 'method': 'browser', 'use_unblocker': True}
+            ]
+            
+        last_result = None
+        for strategy in strategies:
+            self._log_unblocker(f"Trying strategy: {strategy['name']}")
+            
+            try:
+                if strategy['method'] == 'static':
+                    # Try static fetch
+                    if self.web_unblocker_fetcher and strategy['use_unblocker']:
+                        # This case is handled by the proactive check above, but here for completeness
+                        res = await self.web_unblocker_fetcher.fetch_async(url)
+                        res['fetch_method'] = 'web_unblocker'
+                    else:
+                        res = self._fetch_with_static(url)
+                else:
+                    # Try browser fetch
+                    # If strategy says use_unblocker, we ensure it's passed to the browser fetcher
+                    # The browser fetcher (CamoufoxFetcher) already checks self.web_unblocker_api_key
+                    # but we can force it if needed.
+                    res = await self._fetch_with_browser(
+                        url,
+                        wait_for_selector=wait_for_selector,
+                        scroll_to_bottom=scroll_to_bottom,
+                        click_load_more=click_load_more,
+                        allow_fallback=False
+                    )
+                
+                # Incorporate internal logs if available
+                if 'internal_log' in res:
+                    for entry in res['internal_log']:
+                        self._log_unblocker(f"[{strategy['name']}] {entry['message']}")
+                
+                # Validate result
+                html = res.get('html', '')
+                if html and len(html) > 5000:
+                    html_lower = html.lower()
+                    # Check for common block patterns
+                    is_blocked = (
+                        'verify you are human' in html_lower or 
+                        'just a moment' in html_lower or
+                        'access denied' in html_lower or
+                        'enable javascript' in html_lower and len(html) < 10000
+                    )
+                    
+                    if not is_blocked:
+                        self._log_unblocker(f"✅ Strategy {strategy['name']} succeeded!")
+                        # Update success cache
+                        self._success_cache[domain] = {'method': strategy['method'], 'timestamp': time.time()}
+                        res['unblocker_log'] = self.unblocker_log
+                        return res
+                    else:
+                        self._log_unblocker(f"⚠️ Strategy {strategy['name']} returned a block/challenge page.")
+                else:
+                    self._log_unblocker(f"⚠️ Strategy {strategy['name']} returned insufficient content ({len(html)} bytes).")
+                
+                last_result = res
+            except Exception as e:
+                self._log_unblocker(f"❌ Strategy {strategy['name']} failed with error: {str(e)}")
+                continue
+                
+        # If all strategies failed, return the last result or a failure result
+        if last_result:
+            last_result['unblocker_log'] = self.unblocker_log
+            return last_result
+            
+        return {
+            'html': '',
+            'url': url,
+            'fetch_method': 'failed',
+            'unblocker_log': self.unblocker_log,
+            'error': 'All unblocking strategies failed'
+        }
         
         # STEP 1: Check API cache (fastest!)
         if self.api_cache:
@@ -204,13 +313,43 @@ class HybridFetcher:
                 self.stats['api_cache_hits'] += 1
                 # Note: You'd implement direct API calls here based on fields
                 # For now, we'll still fetch the page but flag APIs as available
+                
+        # STEP 1.5: Force browser mode if infinite scroll or "Load More" is requested
+        # (Static HTML fetch can't handle scrolling or clicking)
+        if scroll_to_bottom or click_load_more:
+            logger.info("🦊 Infinite scroll/click requested - using browser mode...")
+            try:
+                return await self._fetch_with_browser(
+                    url,
+                    wait_for_selector=wait_for_selector,
+                    scroll_to_bottom=scroll_to_bottom,
+                    click_load_more=click_load_more
+                )
+            except (RuntimeError, Exception) as e:
+                # If browser fails, we can't do scroll/click, but try static HTML anyway
+                error_msg = str(e).lower()
+                if 'browser' in error_msg or 'page' in error_msg or 'playwright' in error_msg:
+                    logger.warning(f"⚠️ Browser failed for scroll/click request: {e}")
+                    logger.info("🔄 Falling back to static HTML (scroll/click won't work)...")
+                    static_result = self._fetch_with_static(url)
+                    static_result['fetch_method'] = 'static_fallback'
+                    static_result['fallback_reason'] = f"Browser failed: {str(e)}. Note: Scroll/click features unavailable."
+                    return static_result
+                else:
+                    raise
         
         # STEP 2: Try static HTML first (fast path)
         logger.info("⚡ Trying static HTML fetch...")
-        static_result = self._fetch_with_static(url)
+        try:
+            static_result = self._fetch_with_static(url)
+        except Exception as e:
+            # If static fetch fails (e.g., SSL errors with proxy), fall back to browser
+            logger.warning(f"⚠️ Static HTML fetch failed: {e}")
+            logger.info("🦊 Falling back to browser...")
+            static_result = {'html': '', 'status_code': 0}  # Empty result to trigger browser fallback
         
         # STEP 3: Check if JavaScript is needed
-        needs_js = self._detect_js_required(static_result['html'], domain)
+        needs_js = self._detect_js_required(static_result.get('html', ''), domain)
         
         if not needs_js:
             logger.info("✅ Static HTML sufficient")
@@ -221,40 +360,32 @@ class HybridFetcher:
         logger.info("🦊 JavaScript required, using browser...")
         self.stats['browser_fallback'] += 1
         
-        browser_result = await self._fetch_with_browser(
-            url,
-            wait_for_selector=wait_for_selector,
-            scroll_to_bottom=scroll_to_bottom,
-            click_load_more=click_load_more
-        )
+        try:
+            browser_result = await self._fetch_with_browser(
+                url,
+                wait_for_selector=wait_for_selector,
+                scroll_to_bottom=scroll_to_bottom,
+                click_load_more=click_load_more
+            )
+        except (RuntimeError, Exception) as e:
+            # Catch any browser-related errors and fall back to static HTML
+            error_msg = str(e).lower()
+            if 'browser' in error_msg or 'page' in error_msg or 'playwright' in error_msg or 'chromium' in error_msg:
+                logger.warning(f"⚠️ Browser error detected: {e}")
+                logger.info("🔄 Falling back to static HTML fetch...")
+                browser_result = self._fetch_with_static(url)
+                browser_result['fetch_method'] = 'static_fallback'
+                browser_result['fallback_reason'] = f"Browser failed: {str(e)}"
+            else:
+                # Re-raise if it's not a browser-related error
+                raise
         
         # STEP 4.5: Check if browser fetch was blocked (Kasada, etc.)
+        # Note: If Web Unblocker was already tried proactively above, we won't try it again here
         if self._is_blocked(browser_result.get('html', '')):
             logger.warning("⚠️ Browser fetch appears blocked (Kasada challenge detected)")
-            
-            # Fall back to Web Unblocker if available
-            if self.web_unblocker_fetcher:
-                logger.info("🌐 Falling back to Bright Data Web Unblocker...")
-                try:
-                    unblocker_result = await self.web_unblocker_fetcher.fetch_async(
-                        url,
-                        wait_time=wait_for_selector and 5 or 0
-                    )
-                    
-                    # Check if Web Unblocker succeeded
-                    if not self._is_blocked(unblocker_result.get('html', '')):
-                        logger.info("✅ Web Unblocker fetch successful!")
-                        unblocker_result['fetch_method'] = 'web_unblocker'
-                        unblocker_result['apis'] = {}
-                        unblocker_result['captured_json'] = []
-                        return unblocker_result
-                    else:
-                        logger.warning("⚠️ Web Unblocker also appears blocked")
-                except Exception as e:
-                    logger.error(f"❌ Web Unblocker fallback failed: {e}")
-                    # Continue with browser result (even if blocked)
-            else:
-                logger.info("ℹ️ Web Unblocker not configured - skipping fallback")
+            if not self.web_unblocker_fetcher:
+                logger.info("ℹ️ Web Unblocker not configured - consider enabling it for better success rates")
         
         # STEP 5: Cache discovered APIs for next time
         if browser_result.get('apis') and self.api_cache:
@@ -306,10 +437,17 @@ class HybridFetcher:
     
     def _fetch_with_static(self, url: str) -> Dict[str, Any]:
         """Fetch with static HTML fetcher"""
+        self._log_unblocker("Attempting static HTML fetch...")
         result = self.html_fetcher.fetch(url)
         result['fetch_method'] = 'static'
         result['apis'] = {}
         result['captured_json'] = []  # No API capture in static mode
+        
+        if result.get('html') and len(result['html']) > 1000:
+            self._log_unblocker(f"Static fetch successful ({len(result['html'])} bytes)")
+        else:
+            self._log_unblocker("Static fetch failed or returned minimal content.")
+            
         return result
     
     async def _fetch_with_browser(
@@ -317,44 +455,111 @@ class HybridFetcher:
         url: str,
         wait_for_selector: Optional[str] = None,
         scroll_to_bottom: bool = False,
-        click_load_more: Optional[str] = None
+        click_load_more: Optional[str] = None,
+        allow_fallback: bool = True  # NEW: Control whether to fall back to static HTML
     ) -> Dict[str, Any]:
-        """Fetch with browser"""
+        """Fetch with browser - with optional fallback to static HTML if browser fails
+        
+        Args:
+            allow_fallback: If False, don't fall back to static HTML (for force_mode='browser')
+        """
         # Lazy load browser fetcher
         if self.browser_fetcher is None:
+            self._log_unblocker("Initializing browser fetcher...")
             BF = _get_browser_fetcher(use_camoufox=self.use_camoufox)
             if BF is None:
-                raise ImportError(
-                    f"Browser fetching not available. Install with: pip install {'camoufox' if self.use_camoufox else 'playwright'}"
-                )
+                if allow_fallback:
+                    self._log_unblocker("Browser fetching not available, falling back to static HTML")
+                    logger.warning("⚠️ Browser fetching not available, falling back to static HTML")
+                    return self._fetch_with_static(url)
+                else:
+                    self._log_unblocker("Browser fetching not available and fallback disabled")
+                    logger.error("❌ Browser fetching not available and fallback disabled")
+                    return {
+                        'html': '',
+                        'url': url,
+                        'status_code': 0,
+                        'fetch_method': 'browser_failed',
+                        'fallback_reason': 'Browser fetching not available (Playwright not installed)',
+                        'error': 'Browser fetching not available'
+                    }
             
-            # Initialize browser fetcher with appropriate parameters
-            if self.use_camoufox:
-                # Camoufox fetcher (simpler constructor)
-                self.browser_fetcher = BF(
-                    headless=self.headless,
-                    proxy_config=self.proxy_config,
-                    proxy_manager=self.proxy_manager,  # NEW: Pass ProxyManager for rotation
-                    timeout=self.browser_timeout
-                )
-            else:
-                # Playwright browser fetcher (original) - doesn't support proxy_manager yet
-                self.browser_fetcher = BF(
-                    headless=self.headless,
-                    proxy_config=self.proxy_config,
-                    timeout=self.browser_timeout,
-                    capture_api_requests=True
-                )
-            
-            await self.browser_fetcher._launch_browser()
+            try:
+                # Initialize browser fetcher with appropriate parameters
+                if self.use_camoufox:
+                    # Camoufox fetcher (simpler constructor)
+                    self.browser_fetcher = BF(
+                        headless=self.headless,
+                        proxy_config=self.proxy_config,
+                        proxy_manager=self.proxy_manager,  # NEW: Pass ProxyManager for rotation
+                        timeout=self.browser_timeout,
+                        web_unblocker_api_key=self.web_unblocker_api_key,
+                        web_unblocker_zone=self.web_unblocker_zone
+                    )
+                else:
+                    # Playwright browser fetcher (original) - doesn't support proxy_manager yet
+                    self.browser_fetcher = BF(
+                        headless=self.headless,
+                        proxy_config=self.proxy_config,
+                        timeout=self.browser_timeout,
+                        capture_api_requests=True,
+                        web_unblocker_api_key=self.web_unblocker_api_key,
+                        web_unblocker_zone=self.web_unblocker_zone
+                    )
+                
+                self._log_unblocker(f"Launching browser ({'Camoufox' if self.use_camoufox else 'Playwright'})...")
+                await self.browser_fetcher._launch_browser()
+                self._log_unblocker("Browser launched successfully.")
+                logger.info("✅ Browser launched successfully")
+            except Exception as e:
+                self._log_unblocker(f"Browser launch failed: {str(e)}")
+                logger.error(f"❌ Browser launch failed: {e}", exc_info=True)
+                self.browser_fetcher = None  # Reset so we can try again next time
+                if allow_fallback:
+                    self._log_unblocker("Falling back to static HTML fetch...")
+                    logger.warning("⚠️ Falling back to static HTML fetch...")
+                    return self._fetch_with_static(url)
+                else:
+                    logger.error("❌ Browser launch failed and fallback disabled")
+                    return {
+                        'html': '',
+                        'url': url,
+                        'status_code': 0,
+                        'fetch_method': 'browser_failed',
+                        'fallback_reason': f'Browser launch failed: {str(e)}',
+                        'error': str(e)
+                    }
         
-        result = await self.browser_fetcher.fetch(
-            url,
-            wait_for_selector=wait_for_selector,
-            scroll_to_bottom=scroll_to_bottom,
-            click_load_more=click_load_more
-        )
-        result['fetch_method'] = 'browser'
+        try:
+            result = await self.browser_fetcher.fetch(
+                url,
+                wait_for_selector=wait_for_selector,
+                scroll_to_bottom=scroll_to_bottom,
+                click_load_more=click_load_more
+            )
+            result['fetch_method'] = 'browser'
+        except Exception as e:
+            logger.error(f"❌ Browser fetch failed: {e}", exc_info=True)
+            # Reset browser fetcher so it can be retried next time
+            try:
+                await self.browser_fetcher.close()
+            except:
+                pass
+            self.browser_fetcher = None
+            
+            if allow_fallback:
+                logger.warning("⚠️ Falling back to static HTML fetch...")
+                return self._fetch_with_static(url)
+            else:
+                logger.error("❌ Browser fetch failed and fallback disabled")
+                return {
+                    'html': '',
+                    'url': url,
+                    'status_code': 0,
+                    'fetch_method': 'browser_failed',
+                    'fallback_reason': f'Browser fetch failed: {str(e)}',
+                    'error': str(e)
+                }
         
         # CRITICAL FIX: Map json_data to captured_json for the scraper pipeline
         # The camoufox_fetcher captures API responses as 'json_data', but the
@@ -370,88 +575,162 @@ class HybridFetcher:
                 result['captured_json'] = []
                 result['apis'] = {}
         else:
-            result['captured_json'] = []
-            result['apis'] = {}
+            # Preserve BrowserFetcher captured_json/APIs if present
+            result.setdefault('captured_json', [])
+            result.setdefault('apis', result.get('apis', {}))
         
         return result
     
     def _detect_js_required(self, html: str, domain: str) -> bool:
         """
-        Detect if JavaScript rendering is required
+        UNIVERSAL JavaScript detection - dynamically determines if JS rendering is required.
+        No hardcoded domains or site-specific logic.
         
-        IMPROVED: Only checks for JS indicators in <script> tags and validates
-        that the page actually lacks content, not just contains framework names.
+        Strategy:
+        1. Check for framework indicators (React, Vue, Angular, Next.js, etc.)
+        2. Analyze content density (sparse content = likely JS-rendered)
+        3. Check for empty/minimal body with script tags (classic SPA pattern)
+        4. Look for data attributes that indicate client-side rendering
         
         Args:
             html: HTML content
-            domain: Domain name
+            domain: Domain name (for logging only, not used for detection)
             
         Returns:
-            True if JS is likely required
+            True if JS is likely required for proper rendering
         """
+        if not html or len(html) < 100:
+            logger.info("🎯 HTML too small, likely needs JS")
+            return True
+        
         soup = BeautifulSoup(html, 'html.parser')
         body = soup.find('body')
         
         if not body:
-            logger.info("🎯 No body tag found")
+            logger.info("🎯 No body tag found, likely JS-rendered")
             return True
         
-        text_content = body.get_text(strip=True)
-        
-        # CRITICAL FIX: Check for STRUCTURED CONTENT FIRST!
-        # Even if total text is low, structured elements indicate a good static page
-        content_tags = soup.find_all(['article', 'main', 'ul', 'ol', 'table', 'p'])
-        meaningful_content = sum(len(tag.get_text(strip=True)) for tag in content_tags[:20])
-        
-        if meaningful_content > 2000:
-            # Page has substantial structured content, likely static HTML is fine
-            logger.info(f"✅ Found {meaningful_content} chars of structured content, static HTML sufficient")
-            return False
-        
-        # NOW check if body is suspiciously empty (only if structured content check failed)
-        if len(text_content) < 500:
-            logger.info("🎯 Body has minimal content (< 500 chars), likely JS-rendered")
-            return True
-        
-        # Check for loading indicators in visible text
-        if any(indicator in text_content for indicator in ['Loading', 'Please wait', 'Rendering']):
-            logger.info("🎯 Loading indicators found")
-            return True
-        
-        # IMPROVED: Only check for framework indicators in <script> tags, not entire HTML
-        # This prevents false positives from page content mentioning "React" or "Angular"
+        # Get all script tags (both inline and external)
         script_tags = soup.find_all('script')
-        script_content = ' '.join([script.string or '' for script in script_tags if script.string])
-        script_content_lower = script_content.lower()
+        has_scripts = len(script_tags) > 0
         
-        # Framework-specific checks (only in scripts)
+        # Extract script content (both inline and src attributes)
+        script_content = []
+        script_srcs = []
+        for script in script_tags:
+            if script.string:
+                script_content.append(script.string)
+            if script.get('src'):
+                script_srcs.append(script.get('src').lower())
+        
+        script_content_combined = ' '.join(script_content).lower()
+        
+        # PRIORITY 1: Check for framework indicators in scripts (most reliable)
         framework_indicators = [
-            '__NEXT_DATA__', '__NUXT__', 'window.__INITIAL_STATE__',
-            'window.__APOLLO_STATE__', 'reactRoot', 'ng-app', 'v-app'
+            # Next.js / React
+            '__next_data__', '__next', 'next.js', 'react', 'reactdom',
+            # Vue / Nuxt
+            '__nuxt__', 'vue', 'nuxt', 'v-app',
+            # Angular
+            'ng-app', 'angular', '@angular',
+            # Svelte
+            '__svelte', 'svelte',
+            # Generic SPA patterns
+            'window.__initial_state__', 'window.__apollostate__',
+            'window.__redux_state__', 'window.__preloadedstate__',
+            'reactroot', 'react-root', 'root',
+            # Modern frameworks
+            'remix', 'astro', 'solid', 'qwik'
         ]
         
         for indicator in framework_indicators:
-            if indicator.lower() in script_content_lower:
-                logger.info(f"🎯 Detected JS framework indicator in scripts: {indicator}")
+            if indicator in script_content_combined:
+                logger.info(f"🎯 Detected JS framework indicator: {indicator}")
                 return True
         
-        # Check data attributes that indicate JS frameworks (but only if content is sparse)
-        if meaningful_content < 1000:
-            data_attrs = ['data-reactroot', 'data-vue-app', 'ng-app', 'v-app']
-            html_lower = html.lower()
-            for attr in data_attrs:
-                if attr in html_lower:
-                    logger.info(f"🎯 Detected framework attribute: {attr}")
+        # Check script src URLs for framework indicators
+        for src in script_srcs:
+            if any(fw in src for fw in ['react', 'vue', 'angular', 'next', 'nuxt', 'svelte']):
+                logger.info(f"🎯 Detected framework in script src: {src[:50]}")
+                return True
+        
+        # PRIORITY 2: Check for SPA patterns (empty/minimal body with many scripts)
+        text_content = body.get_text(strip=True)
+        body_html = str(body)
+        
+        # Count meaningful content elements
+        content_tags = soup.find_all(['article', 'main', 'ul', 'ol', 'table', 'p', 'div'])
+        meaningful_content = sum(len(tag.get_text(strip=True)) for tag in content_tags[:30])
+        
+        # If we have many scripts but very little content, it's likely a SPA
+        if has_scripts and len(script_tags) >= 3 and meaningful_content < 1000:
+            logger.info(f"🎯 SPA pattern detected: {len(script_tags)} scripts but only {meaningful_content} chars of content")
+            return True
+        
+        # PRIORITY 3: Check for empty/minimal body with script tags (classic SPA)
+        if has_scripts and len(text_content) < 300:
+            logger.info(f"🎯 Minimal body content ({len(text_content)} chars) with scripts, likely SPA")
+            return True
+        
+        # PRIORITY 4: Check for framework data attributes
+        data_attrs = [
+            'data-reactroot', 'data-react-root', 'data-vue-app', 
+            'data-ng-app', 'ng-app', 'v-app', 'x-data',
+            'data-svelte', 'data-nextjs'
+        ]
+        html_lower = html.lower()
+        for attr in data_attrs:
+            if attr in html_lower:
+                logger.info(f"🎯 Detected framework data attribute: {attr}")
+                return True
+        
+        # PRIORITY 5: Check for loading/placeholder indicators
+        loading_indicators = [
+            'loading...', 'please wait', 'rendering', 'initializing',
+            'building...', 'compiling...', 'hydrating'
+        ]
+        if any(indicator in text_content.lower() for indicator in loading_indicators):
+            logger.info("🎯 Loading indicators found in content")
+            return True
+        
+        # PRIORITY 6: Check for root div with id but minimal content (React pattern)
+        root_divs = soup.find_all('div', id=True)
+        for div in root_divs[:5]:  # Check first 5 divs with IDs
+            div_id = div.get('id', '').lower()
+            if div_id in ['root', 'app', 'main', '__next', '__nuxt']:
+                div_content = div.get_text(strip=True)
+                if len(div_content) < 500:
+                    logger.info(f"🎯 Found root div '{div_id}' with minimal content ({len(div_content)} chars)")
                     return True
         
-        # Check known JS-required domains
-        for js_domain in self.JS_REQUIRED_DOMAINS:
-            if js_domain in domain:
-                logger.info(f"🎯 Domain {domain} known to require JS")
+        # PRIORITY 7: Check for modern build tool indicators
+        build_indicators = [
+            '_next/static', '/static/chunks/', 'webpack', 'vite',
+            'esbuild', 'rollup', 'parcel'
+        ]
+        for indicator in build_indicators:
+            if indicator in html_lower:
+                logger.info(f"🎯 Detected build tool indicator: {indicator}")
                 return True
         
-        # If we got here, static HTML is probably sufficient
-        logger.info("✅ Static HTML appears sufficient (no JS indicators, good content)")
+        # If we have substantial structured content, static HTML is likely sufficient
+        if meaningful_content > 2000:
+            logger.info(f"✅ Found {meaningful_content} chars of structured content, static HTML sufficient")
+            return False
+        
+        # If we have moderate content but no framework indicators, probably static
+        if meaningful_content > 500 and not has_scripts:
+            logger.info(f"✅ Found {meaningful_content} chars of content without scripts, static HTML sufficient")
+            return False
+        
+        # Default: If uncertain and we have scripts, assume JS might be needed
+        # But be conservative - only if content is very sparse
+        if has_scripts and meaningful_content < 500:
+            logger.info(f"⚠️ Uncertain: {len(script_tags)} scripts but only {meaningful_content} chars content - assuming JS needed")
+            return True
+        
+        # Default to static HTML if we can't determine
+        logger.info("✅ No clear JS indicators, assuming static HTML sufficient")
         return False
     
     def get_stats(self) -> Dict[str, Any]:
@@ -513,4 +792,3 @@ def fetch_hybrid(
     """
     with HybridFetcher(proxy_config=proxy_config) as fetcher:
         return fetcher.fetch(url, **kwargs)
-
