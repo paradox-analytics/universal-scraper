@@ -1,9 +1,6 @@
 """
-Camoufox Browser Fetcher - Advanced anti-detection browser automation
-Inspired by the Parsera project's successful Camoufox implementation
-
-Note: Camoufox uses Playwright's sync API, so we run it in a separate thread
-to avoid conflicts with asyncio.
+Note: Camoufox uses Playwright's async API, which is now fully integrated
+with our asyncio loop.
 """
 
 import asyncio
@@ -26,7 +23,7 @@ except ImportError:
     PROXY_MANAGER_AVAILABLE = False
     logger.warning(" ProxyManager not available")
 
-# Camoufox will be imported inside the sync function to avoid asyncio conflicts
+# Camoufox will be imported inside the async function to avoid issues
 CAMOUFOX_AVAILABLE = True
 try:
     import camoufox
@@ -43,7 +40,7 @@ except ImportError:
     logger.warning(" Anti-detection manager not available")
 
 
-def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
+async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     """
     UNIVERSAL SOLUTION 3: Smart Wait Strategy for JS-heavy sites
     
@@ -66,7 +63,7 @@ def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     try:
         # Strategy 1: Wait for network idle (most reliable for JS-heavy sites)
         logger.debug("   Waiting for network idle...")
-        page.wait_for_load_state('networkidle', timeout=5000)
+        await page.wait_for_load_state('networkidle', timeout=5000)
     except:
         # Timeout is OK, try other strategies
         pass
@@ -75,7 +72,7 @@ def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     if wait_for_selector:
         try:
             logger.debug(f"   Waiting for selector: {wait_for_selector}")
-            page.wait_for_selector(wait_for_selector, timeout=5000)
+            await page.wait_for_selector(wait_for_selector, timeout=5000)
         except:
             # Selector not found, continue anyway
             pass
@@ -95,7 +92,7 @@ def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     
     for selector in content_selectors:
         try:
-            page.wait_for_selector(selector, timeout=2000)
+            await page.wait_for_selector(selector, timeout=2000)
             logger.debug(f"   Content detected: {selector}")
             break
         except:
@@ -106,7 +103,7 @@ def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     if elapsed < 2:
         remaining = 2 - elapsed
         logger.debug(f"   Minimum wait: {remaining:.1f}s")
-        time.sleep(remaining)
+        await asyncio.sleep(remaining)
 
 
 def _camoufox_fetch_sync(
@@ -650,45 +647,28 @@ class CamoufoxFetcher:
         wait_for_selector: Optional[str] = None,
         wait_time: int = 2000,
         scroll_to_bottom: bool = False,
-        click_load_more: Optional[str] = None  # For compatibility with HybridFetcher
+        click_load_more: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Fetch page content with Camoufox
-        
-        Runs Camoufox in a separate thread to avoid asyncio conflicts
-        
-        Args:
-            url: URL to fetch
-            wait_for_selector: CSS selector to wait for before considering page loaded
-            wait_time: Additional wait time in milliseconds after page load
-            scroll_to_bottom: Whether to scroll to bottom for lazy-loaded content
-            click_load_more: Not implemented for Camoufox (compatibility parameter)
-            
-        Returns:
-            Dict with 'html', 'status', 'api_calls', 'json_data'
+        Fetch page content with Async Camoufox
         """
-        logger.info(f" Fetching with Camoufox: {url}")
+        logger.info(f" Fetching with Async Camoufox: {url}")
         
-        # NEW: Get fresh proxy for THIS request (Oxylabs approach)
-        proxy_config_for_request = self.proxy_config  # Default: use static config
+        # 1. Determine proxy configuration for this request
+        proxy_config_for_request = self.proxy_config
         
         if self.proxy_manager:
-            # Try to get fresh proxy from manager (per-request rotation)
             try:
-                # Check if we're in Apify context
+                # Try Apify proxy first
                 try:
                     from apify import Actor
-                    # Get new proxy URL for THIS request
                     proxy_url = await self.proxy_manager.get_apify_proxy_url(Actor)
                     if proxy_url:
-                        # Parse Apify proxy URL: http://username:password@host:port
-                        # Convert to proxy_config format
                         proxy_config_for_request = self._parse_proxy_url(proxy_url)
-                        logger.info(f" Using rotated Apify proxy for this request")
+                        logger.info(f" Using rotated Apify proxy")
                 except ImportError:
-                    # Not in Apify context, use ProxyManager's pool
-                    from urllib.parse import urlparse as parse_url
-                    domain = parse_url(url).netloc
+                    # Use ProxyManager pool
+                    domain = urlparse(url).netloc
                     proxy_dict = self.proxy_manager.get_proxy(domain=domain)
                     if proxy_dict:
                         proxy_config_for_request = {
@@ -697,111 +677,150 @@ class CamoufoxFetcher:
                             'password': proxy_dict.get('password', '')
                         }
                         logger.info(f" Using proxy from pool: {proxy_dict['server']}")
-                    else:
-                        # ProxyManager pool is empty, fall back to static config
-                        logger.info(f" ProxyManager pool empty, using static proxy_config")
             except Exception as e:
-                logger.warning(f" Proxy rotation failed, using fallback: {e}")
+                logger.warning(f" Proxy rotation failed: {e}")
         
-        # Add Web Unblocker if provided and no proxy yet
+        # 2. Handle Web Unblocker credentials
         if not proxy_config_for_request and self.web_unblocker_api_key:
-            # Detect if it's proxy credentials format or API key
-            # Split only on first colon to handle passwords with colons
-            if ':' in self.web_unblocker_api_key:
-                parts = self.web_unblocker_api_key.split(':', 1)  # Split only on FIRST colon
+            api_key = self.web_unblocker_api_key.strip()
+            
+            # Normalize comma-separated credentials
+            if ',' in api_key:
+                parts = [p.strip() for p in api_key.split(',')]
+                if len(parts) >= 4:
+                    # host,port,user,pass
+                    proxy_config_for_request = {
+                        'server': f"{parts[0]}:{parts[1]}",
+                        'username': parts[2],
+                        'password': parts[3]
+                    }
+                    logger.info(f"🔐 Using Web Unblocker (comma-separated)")
+                elif len(parts) == 2:
+                    # user,pass
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': parts[0],
+                        'password': parts[1]
+                    }
+                    logger.info(f"🔐 Using Web Unblocker (user,pass)")
+            
+            # Handle colon-separated credentials
+            elif ':' in api_key:
+                parts = [p.strip() for p in api_key.split(':', 1)]
                 if len(parts) == 2:
-                    # user:pass format
-                    username = parts[0].strip()
-                    password = parts[1].strip()
-                    proxy_config_for_request = {
-                        'server': 'brd.superproxy.io:33335',
-                        'username': username,
-                        'password': password
-                    }
-                    logger.info(f"🔐 Using Web Unblocker proxy (user: {username[:50]}...)")
-                else:
-                    # Shouldn't happen with split(':', 1), but fallback just in case
-                    customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
-                    proxy_config_for_request = {
-                        'server': 'brd.superproxy.io:33335',
-                        'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
-                        'password': self.web_unblocker_api_key
-                    }
-                    logger.info(f"🔐 Using Web Unblocker proxy (fallback, customer: {customer_id})")
-            elif ',' in self.web_unblocker_api_key:
-                # Comma-separated format (legacy)
-                parts = self.web_unblocker_api_key.split(',')
-                if len(parts) >= 4:
-                    host = parts[0].strip()
-                    port = parts[1].strip()
-                    username = parts[2].strip()
-                    password = parts[3].strip()
-                    proxy_config_for_request = {
-                        'server': f"{host}:{port}",
-                        'username': username,
-                        'password': password
-                    }
-                    logger.info(f"🔐 Using Web Unblocker proxy (comma-separated)")
-                else:
-                    # Fallback for other colon counts
-                    customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
-                    proxy_config_for_request = {
-                        'server': 'brd.superproxy.io:33335',
-                        'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
-                        'password': self.web_unblocker_api_key
-                    }
-                    logger.info(f" Using Web Unblocker API key as proxy for Camoufox (fallback, customer: {customer_id})")
-            elif ',' in self.web_unblocker_api_key and self.web_unblocker_api_key.count(',') >= 3:
-                parts = self.web_unblocker_api_key.split(',')
-                if len(parts) >= 4:
-                    host = parts[0].strip()
-                    port = parts[1].strip()
-                    username = parts[2].strip()
-                    password = parts[3].strip()
-                    proxy_config_for_request = {
-                        'server': f"{host}:{port}",
-                        'username': username,
-                        'password': password
-                    }
-                    logger.info(f" Using Web Unblocker as proxy for Camoufox (csv)")
+                    username, password = parts
+                    # Check if username is already a full Bright Data username
+                    if username.startswith('brd-customer-') or username.startswith('hl_'):
+                        if username.startswith('hl_'):
+                            username = f"brd-customer-{username}-zone-{self.web_unblocker_zone}"
+                        
+                        proxy_config_for_request = {
+                            'server': 'brd.superproxy.io:33335',
+                            'username': username,
+                            'password': password
+                        }
+                        logger.info(f"🔐 Using Web Unblocker (user:pass)")
+                    else:
+                        # Generic user:pass
+                        proxy_config_for_request = {
+                            'server': 'brd.superproxy.io:33335',
+                            'username': username,
+                            'password': password
+                        }
+                        logger.info(f"🔐 Using Web Unblocker (generic user:pass)")
+            
+            # Handle plain API key
             else:
-                # Use as API key (Bearer token)
                 customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
                 proxy_config_for_request = {
                     'server': 'brd.superproxy.io:33335',
                     'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
-                    'password': self.web_unblocker_api_key
+                    'password': api_key
                 }
-                logger.info(f" Using Web Unblocker API key as proxy for Camoufox (Bearer, customer: {customer_id})")
+                logger.info(f"🔐 Using Web Unblocker (plain API key)")
+
+        # 3. Normalize proxy server string
+        if proxy_config_for_request and 'server' in proxy_config_for_request:
+            server = proxy_config_for_request['server'].replace(',', ':')
+            if not server.startswith('http'):
+                # Bright Data Web Unblocker (33335) usually works with http too
+                # and sometimes https causes issues with the proxy connection itself
+                server = f"http://{server}"
+            proxy_config_for_request['server'] = server
+            
+
+        # 4. Prepare Camoufox configuration
+        from camoufox.async_api import AsyncCamoufox
         
-        # Log proxy being used
-        if proxy_config_for_request:
-            server = proxy_config_for_request.get('server', 'none')
-            username = proxy_config_for_request.get('username', '')
-            logger.info(f" Using proxy: {server} (user: {username[:30]}...)")
+        if ANTI_DETECTION_AVAILABLE and self.anti_detection_config:
+            anti_detect = AntiDetectionManager(**self.anti_detection_config)
+            camoufox_config = anti_detect.get_camoufox_config()
         else:
-            logger.warning(f" No proxy configured for this request!")
+            camoufox_config = {'humanize': True}
+            
+        # Disable geoip check as it often fails with Web Unblockers
+        camoufox_config['geoip'] = False
+            
+        if proxy_config_for_request:
+            camoufox_config['proxy'] = proxy_config_for_request
+            
+        # 5. Execute fetch
+        captured_requests = []
+        captured_json = []
         
-        # Run the entire Camoufox session in a separate thread
-        loop = asyncio.get_event_loop()
-        result = await loop.run_in_executor(
-            None,
-            _camoufox_fetch_sync,
-            url,
-            self.headless,
-            proxy_config_for_request,  # Use per-request proxy!
-            self.timeout,
-            wait_for_selector,
-            wait_time,
-            scroll_to_bottom,
-            self.anti_detection_config  # NEW: Pass anti-detection config
-        )
-        
-        logger.info(f" Camoufox fetch complete: {len(result['html'])} bytes")
-        logger.info(f" Captured {len(result['api_calls'])} API requests")
-        logger.info(f" Extracted {len(result['json_data'])} JSON blobs")
-        
-        return result
+        try:
+            async with AsyncCamoufox(headless=self.headless, **camoufox_config) as browser:
+                page = await browser.new_page(ignore_https_errors=True)
+                
+                # Capture API responses
+                async def handle_response(response):
+                    try:
+                        url = response.url
+                        captured_requests.append(url)
+                        
+                        content_type = response.headers.get('content-type', '').lower()
+                        if 'application/json' in content_type:
+                            try:
+                                data = await response.json()
+                                if data:
+                                    captured_json.append({
+                                        'url': url,
+                                        'data': data
+                                    })
+                            except:
+                                pass
+                    except:
+                        pass
+                
+                page.on('response', handle_response)
+                
+                # Navigate
+                logger.info(f"   Navigating to: {url}")
+                response = await page.goto(url, wait_until='domcontentloaded', timeout=self.timeout)
+                status = response.status if response else 0
+                
+                # Smart wait
+                await _smart_wait_for_content(page, wait_for_selector)
+                
+                # Scroll if requested
+                if scroll_to_bottom:
+                    await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    await asyncio.sleep(2)
+                
+                # Get content
+                html = await page.content()
+                
+                return {
+                    'html': html,
+                    'status': status,
+                    'url': page.url,
+                    'api_calls': captured_requests,
+                    'json_data': captured_json,
+                    'internal_log': [] # Placeholder for now
+                }
+        except Exception as e:
+            logger.error(f"❌ Async Camoufox fetch failed: {e}")
+            raise
     
     def _parse_proxy_url(self, proxy_url: str) -> Dict[str, str]:
         """
