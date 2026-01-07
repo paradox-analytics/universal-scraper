@@ -166,6 +166,20 @@ def convert_proxy_config(frontend_config: Optional[Dict[str, Any]]) -> Optional[
         username = external_proxy.get('username')
         password = external_proxy.get('password')
         server = external_proxy.get('server')
+        
+        # Robust parsing for comma-separated credentials in the server field
+        # Format: host,port,user,pass
+        if server and ',' in server:
+            parts = [p.strip() for p in server.split(',')]
+            if len(parts) >= 4:
+                server = f"{parts[0]}:{parts[1]}"
+                username = parts[2]
+                password = parts[3]
+                logger.info(f"✅ Parsed comma-separated proxy: {server} (user: {username})")
+            elif len(parts) == 2:
+                # host,port
+                server = f"{parts[0]}:{parts[1]}"
+        
         if server:
             server = server.replace(',', ':')
         
