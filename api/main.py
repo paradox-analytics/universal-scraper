@@ -520,6 +520,7 @@ async def suggest_fields_endpoint(
                 logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
         
         # HybridFetcher now handles domain-specific forcing (e.g., Home Depot)
+        from universal_scraper.core.hybrid_fetcher import HybridFetcher
         force_mode = None
 
         hybrid_fetcher = HybridFetcher(
@@ -643,6 +644,11 @@ async def preview_endpoint(
         # This ensures users see the actual rendered page, not just static HTML shell
         # CRITICAL: Pass Web Unblocker config to bypass Cloudflare/anti-bot protection
         # IMPORTANT: Use longer timeout and wait for JavaScript to fully render
+        from universal_scraper.core.hybrid_fetcher import HybridFetcher
+        from universal_scraper.core.json_detector import JSONDetector
+        from bs4 import BeautifulSoup
+        import json as json_module
+        
         fetcher = HybridFetcher(
             proxy_config=proxy_config,
             headless=True,
