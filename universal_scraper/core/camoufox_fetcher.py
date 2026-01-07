@@ -668,6 +668,7 @@ class CamoufoxFetcher:
                         logger.info(f" Using rotated Apify proxy")
                 except ImportError:
                     # Use ProxyManager pool
+                    from urllib.parse import urlparse
                     domain = urlparse(url).netloc
                     proxy_dict = self.proxy_manager.get_proxy(domain=domain)
                     if proxy_dict:
@@ -680,15 +681,14 @@ class CamoufoxFetcher:
             except Exception as e:
                 logger.warning(f" Proxy rotation failed: {e}")
         
-        # 2. Handle Web Unblocker credentials
+        # 2. Handle Web Unblocker fallback if proxy_config is missing
         if not proxy_config_for_request and self.web_unblocker_api_key:
             api_key = self.web_unblocker_api_key.strip()
             
-            # Normalize comma-separated credentials
+            # Robust parsing for comma-separated credentials (host,port,user,pass)
             if ',' in api_key:
                 parts = [p.strip() for p in api_key.split(',')]
                 if len(parts) >= 4:
-                    # host,port,user,pass
                     proxy_config_for_request = {
                         'server': f"{parts[0]}:{parts[1]}",
                         'username': parts[2],
@@ -696,7 +696,6 @@ class CamoufoxFetcher:
                     }
                     logger.info(f"🔐 Using Web Unblocker (comma-separated)")
                 elif len(parts) == 2:
-                    # user,pass
                     proxy_config_for_request = {
                         'server': 'brd.superproxy.io:33335',
                         'username': parts[0],
@@ -704,30 +703,22 @@ class CamoufoxFetcher:
                     }
                     logger.info(f"🔐 Using Web Unblocker (user,pass)")
             
-            # Handle colon-separated credentials
+            # Handle colon-separated credentials (user:pass)
             elif ':' in api_key:
+                # Split only on the first colon to handle passwords with colons
                 parts = [p.strip() for p in api_key.split(':', 1)]
                 if len(parts) == 2:
                     username, password = parts
-                    # Check if username is already a full Bright Data username
-                    if username.startswith('brd-customer-') or username.startswith('hl_'):
-                        if username.startswith('hl_'):
-                            username = f"brd-customer-{username}-zone-{self.web_unblocker_zone}"
-                        
-                        proxy_config_for_request = {
-                            'server': 'brd.superproxy.io:33335',
-                            'username': username,
-                            'password': password
-                        }
-                        logger.info(f"🔐 Using Web Unblocker (user:pass)")
-                    else:
-                        # Generic user:pass
-                        proxy_config_for_request = {
-                            'server': 'brd.superproxy.io:33335',
-                            'username': username,
-                            'password': password
-                        }
-                        logger.info(f"🔐 Using Web Unblocker (generic user:pass)")
+                    # Normalize username for Bright Data
+                    if username.startswith('hl_'):
+                        username = f"brd-customer-{username}-zone-{self.web_unblocker_zone}"
+                    
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': username,
+                        'password': password
+                    }
+                    logger.info(f"🔐 Using Web Unblocker (user:pass)")
             
             # Handle plain API key
             else:

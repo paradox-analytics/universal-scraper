@@ -139,103 +139,89 @@ extractor_pool: Dict[str, DirectLLMExtractor] = {}
 def convert_proxy_config(frontend_config: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     """
     Convert frontend proxy configuration format to backend format.
-    
-    Frontend format (nested):
-    {
-        "provider": "brightdata",
-        "externalProxy": {"server": "...", "username": "...", "password": "..."}
-    }
-    
-    Backend format (flat):
-    {
-        "server": "...",
-        "username": "...",
-        "password": "..."
-    }
+    Handles nested frontend format, comma-separated strings, and Web Unblocker specific logic.
     """
     if not frontend_config:
         return None
         
     provider = frontend_config.get('provider', 'none')
-    
     if provider == 'none':
         return None
         
-    if provider in ['brightdata', 'bright_data', 'custom', 'oxylabs', 'scraperapi', 'web_unlocker', 'web_unblocker']:
-        external_proxy = frontend_config.get('externalProxy', {})
-        username = external_proxy.get('username')
-        password = external_proxy.get('password')
-        server = external_proxy.get('server')
-        
-        # Robust parsing for comma-separated credentials in the server field
-        # Format: host,port,user,pass
-        if server and ',' in server:
-            parts = [p.strip() for p in server.split(',')]
-            if len(parts) >= 4:
-                server = f"{parts[0]}:{parts[1]}"
-                username = parts[2]
-                password = parts[3]
-                logger.info(f"✅ Parsed comma-separated proxy: {server} (user: {username})")
-            elif len(parts) == 2:
-                # host,port
-                server = f"{parts[0]}:{parts[1]}"
-        
-        if server:
-            server = server.replace(',', ':')
-        
-        # Default server for Bright Data if missing
-        if not server and username and 'brd-customer' in username:
-            server = 'brd.superproxy.io:33335'
-            logger.info(f"✅ Defaulting to Bright Data server: {server}")
-        elif not server and not username and provider in ['web_unlocker', 'web_unblocker']:
-            # Fallback for Web Unblocker if only API key provided
-            customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
-            zone = os.getenv('WEB_UNBLOCKER_ZONE', 'web_unlocker1')
-            server = 'brd.superproxy.io:33335'
-            username = f'brd-customer-{customer_id}-zone-{zone}'
-            password = os.getenv('WEB_UNBLOCKER_API_KEY')
-            logger.info(f"✅ Constructing Web Unblocker proxy from environment: {server}")
-            
-        if server and username and password:
-            return {
-                'server': server,
-                'username': username,
-                'password': password
-            }
-            
-    if provider == 'web_unlocker':
-        # Web unlocker uses a different format
-        web_unblocker = frontend_config.get('webUnblocker', {})
-        external_proxy = frontend_config.get('externalProxy', {})
-        
-        # Check for comma-separated format in externalProxy.server
-        ext_server = external_proxy.get('server', '')
-        if ',' in ext_server and ext_server.count(',') >= 3:
-            return {
-                'web_unlocker_api_key': ext_server,
-                'web_unlocker_zone': web_unblocker.get('zone', 'web_unlocker1'),
-                'web_unlocker': True
-            }
+    # Initialize result with defaults
+    result = {
+        'server': None,
+        'username': None,
+        'password': None,
+        'web_unlocker_api_key': None,
+        'web_unlocker_zone': 'web_unlocker1',
+        'web_unlocker': False
+    }
 
-        if web_unblocker.get('useProxyMethod') and external_proxy.get('server'):
-            return {
-                'server': external_proxy['server'],
-                'username': external_proxy.get('username', ''),
-                'password': external_proxy.get('password', ''),
-                'web_unlocker': True
-            }
-        elif web_unblocker.get('apiKey'):
-            return {
-                'web_unlocker_api_key': web_unblocker['apiKey'],
-                'web_unlocker_zone': web_unblocker.get('zone', 'web_unlocker1'),
-                'web_unlocker': True
-            }
+    # 1. Extract raw values from frontend config
+    external_proxy = frontend_config.get('externalProxy', {})
+    server = external_proxy.get('server')
+    username = external_proxy.get('username')
+    password = external_proxy.get('password')
+    
+    # 2. Robust parsing for comma-separated credentials (host,port,user,pass)
+    # This handles the case where the user pastes the entire string into the 'server' field
+    if server and ',' in server:
+        parts = [p.strip() for p in server.split(',')]
+        if len(parts) >= 4:
+            server = f"{parts[0]}:{parts[1]}"
+            username = parts[2]
+            password = parts[3]
+            logger.info(f"✅ Parsed comma-separated proxy: {server} (user: {username})")
+        elif len(parts) == 2:
+            server = f"{parts[0]}:{parts[1]}"
+    
+    # 3. Normalize server string
+    if server:
+        server = server.replace(',', ':')
+        if not server.startswith('http'):
+            server = f"http://{server}"
             
-    # Already in backend format
-    if frontend_config.get('server'):
-        return frontend_config
+    # 4. Handle Web Unblocker specific logic
+    if provider in ['web_unlocker', 'web_unblocker']:
+        result['web_unlocker'] = True
+        web_unblocker_config = frontend_config.get('webUnblocker', {})
+        result['web_unlocker_zone'] = web_unblocker_config.get('zone', 'web_unlocker1')
         
-    return None
+        if web_unblocker_config.get('enabled'):
+            if web_unblocker_config.get('useProxyMethod'):
+                # Use the parsed credentials
+                if server and username and password:
+                    # Construct internal API key format: host:port:user:pass
+                    host_port = server.replace('http://', '').replace('https://', '')
+                    result['web_unlocker_api_key'] = f"{host_port}:{username}:{password}"
+            else:
+                # Use explicit API key
+                result['web_unlocker_api_key'] = web_unblocker_config.get('apiKey')
+                
+    # 5. Default server for Bright Data if missing
+    if not server and username and 'brd-customer' in username:
+        server = 'http://brd.superproxy.io:33335'
+        logger.info(f"✅ Defaulting to Bright Data server: {server}")
+        
+    # 6. Fallback for Web Unblocker if only API key provided via environment
+    if result['web_unlocker'] and not server and not username:
+        customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'hl_803e8195')
+        server = 'http://brd.superproxy.io:33335'
+        username = f'brd-customer-{customer_id}-zone-{result["web_unlocker_zone"]}'
+        password = os.getenv('WEB_UNBLOCKER_API_KEY')
+        logger.info(f"✅ Constructing Web Unblocker proxy from environment: {server}")
+
+    # Set final values
+    result['server'] = server
+    result['username'] = username
+    result['password'] = password
+    
+    # Return None if no server was found
+    if not result['server']:
+        return None
+        
+    return result
 
 def get_extractor(api_key: str, redis_cache: Optional[RedisCache] = None) -> DirectLLMExtractor:
     """Get or create extractor instance with Redis cache support"""
@@ -319,34 +305,17 @@ def get_scraper(
 ) -> UniversalScraper:
     """
     Get or create scraper instance
-    
-    Args:
-        api_key: LLM API key
-        mode: Fetch mode (hybrid, static, browser)
-        proxy_config: Proxy configuration (provided by user via frontend)
-        redis_cache: Optional Redis cache (for multi-tenant SaaS)
-        browser_timeout: Browser navigation timeout in milliseconds
     """
-    # Extract web unlocker config from proxy_config if present
+    # 1. Convert proxy config to backend format (Robust parsing)
+    backend_proxy_config = convert_proxy_config(proxy_config)
+    
+    # 2. Extract web unlocker details from the converted config
     web_unblocker_api_key = None
     web_unblocker_zone = "web_unlocker1"
     
-    if proxy_config and proxy_config.get("provider") == "web_unlocker":
-        web_unblocker_config = proxy_config.get("webUnblocker", {})
-        if web_unblocker_config.get("enabled"):
-            if web_unblocker_config.get("useProxyMethod"):
-                # Use proxy credentials format: host:port:username:password
-                external_proxy = proxy_config.get("externalProxy", {})
-                server = external_proxy.get("server", "")
-                username = external_proxy.get("username", "")
-                password = external_proxy.get("password", "")
-                if server and username and password:
-                    # Format: host:port:username:password
-                    web_unblocker_api_key = f"{server.split(':')[0]}:{server.split(':')[1] if ':' in server else '22225'}:{username}:{password}"
-            else:
-                # Use API key (Bearer token)
-                web_unblocker_api_key = web_unblocker_config.get("apiKey")
-            web_unblocker_zone = web_unblocker_config.get("zone", "web_unlocker1")
+    if backend_proxy_config:
+        web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
+        web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
     
     # Fallback to environment variables if not provided in request
     if not web_unblocker_api_key:
@@ -355,18 +324,15 @@ def get_scraper(
         if web_unblocker_api_key:
             logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
     
-    # Include proxy config and timeout in key for proper pooling
+    # 3. Include proxy config and timeout in key for proper pooling
     proxy_key = ""
-    if proxy_config:
-        proxy_key = f":{proxy_config.get('server', '')[:20]}"
+    if backend_proxy_config:
+        proxy_key = f":{backend_proxy_config.get('server', '')[:20]}"
     web_unlocker_key = f":web_unlocker{web_unblocker_api_key[:10] if web_unblocker_api_key else 'none'}"
     timeout_key = f":timeout{browser_timeout}"
     key = f"{api_key[:10]}:{mode}{proxy_key}{web_unlocker_key}{timeout_key}"
     
     if key not in scraper_pool:
-        # Convert proxy config to backend format before passing to UniversalScraper
-        backend_proxy_config = convert_proxy_config(proxy_config)
-        
         scraper_pool[key] = UniversalScraper(
             api_key=api_key,
             fetch_mode=mode,
@@ -535,64 +501,16 @@ async def suggest_fields_endpoint(
     try:
         logger.info(f"[{tenant_id}] Field discovery for URL: {request.url}")
         
-        # Convert frontend proxy config format to backend format
-        backend_proxy_config = None
-        if request.proxy_config:
-            if request.proxy_config.get('provider') == 'bright_data':
-                # Extract Bright Data proxy from externalProxy
-                external_proxy = request.proxy_config.get('externalProxy', {})
-                if external_proxy.get('server') and external_proxy.get('username') and external_proxy.get('password'):
-                    backend_proxy_config = {
-                        'server': external_proxy['server'],
-                        'username': external_proxy['username'],
-                        'password': external_proxy['password']
-                    }
-                    logger.info(f"✅ Using Bright Data proxy: {external_proxy['server']}")
-            elif request.proxy_config.get('provider') == 'externalProxy':
-                # Direct external proxy format
-                external_proxy = request.proxy_config.get('externalProxy', {})
-                if external_proxy.get('server') and external_proxy.get('username') and external_proxy.get('password'):
-                    backend_proxy_config = {
-                        'server': external_proxy['server'],
-                        'username': external_proxy['username'],
-                        'password': external_proxy['password']
-                    }
-            elif request.proxy_config.get('server'):
-                # Already in backend format
-                backend_proxy_config = request.proxy_config
-        
-        # Fetch HTML (use browser mode for better results, especially for dynamic sites)
-        from universal_scraper.core.hybrid_fetcher import HybridFetcher
-        
-        # Convert proxy config from nested frontend format to flat backend format
+        # 1. Convert frontend proxy config format to backend format (Robust parsing)
         backend_proxy_config = convert_proxy_config(request.proxy_config) if request.proxy_config else None
         
-        # Extract Web Unblocker config from request
+        # 2. Extract Web Unblocker details from the converted config
         web_unblocker_api_key = None
         web_unblocker_zone = "web_unlocker1"
         
-        if request.proxy_config and request.proxy_config.get('provider') == 'web_unlocker':
-            # Web Unblocker configuration
-            web_unblocker_config = request.proxy_config.get('webUnblocker', {})
-            if web_unblocker_config:
-                # Check if using external proxy format (host:port:username:password)
-                external_proxy = request.proxy_config.get('externalProxy')
-                if external_proxy and external_proxy.get('server'):
-                    # Legacy format: convert to Web Unblocker credentials
-                    server = external_proxy.get('server', '')
-                    # Remove protocol if present for splitting
-                    server_clean = server.replace('http://', '').replace('https://', '')
-                    host = server_clean.split(':')[0]
-                    port = server_clean.split(':')[1] if ':' in server_clean else '22225'
-                    username = external_proxy.get('username', '')
-                    password = external_proxy.get('password', '')
-                    # Format: host:port:username:password
-                    web_unblocker_api_key = f"{host}:{port}:{username}:{password}"
-                elif web_unblocker_config.get("apiKey"):
-                    # Use API key (Bearer token)
-                    web_unblocker_api_key = web_unblocker_config.get("apiKey")
-                
-                web_unblocker_zone = web_unblocker_config.get("zone", "web_unlocker1")
+        if backend_proxy_config:
+            web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
+            web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
         
         # Fallback to environment variables if not provided in request
         if not web_unblocker_api_key:
@@ -701,48 +619,16 @@ async def preview_endpoint(
     try:
         logger.info(f"[{tenant_id}] Preview request for: {request.url}")
         
-        # Convert proxy config - validate it's not empty/invalid
-        proxy_config = None
-        if request.proxy_config:
-            try:
-                converted = convert_proxy_config(request.proxy_config)
-                # Validate proxy config has required fields
-                if converted and converted.get('server'):
-                    proxy_config = converted
-                    logger.info(f"[{tenant_id}] Using proxy: {converted.get('server', 'unknown')}")
-                else:
-                    logger.warning(f"[{tenant_id}] Proxy config provided but invalid or missing 'server' field. Continuing without proxy...")
-            except Exception as e:
-                logger.warning(f"[{tenant_id}] Error converting proxy config: {e}. Continuing without proxy...")
-                proxy_config = None
+        # 1. Convert frontend proxy config format to backend format (Robust parsing)
+        backend_proxy_config = convert_proxy_config(request.proxy_config) if request.proxy_config else None
         
-        # Fetch the page
-        from universal_scraper.core.hybrid_fetcher import HybridFetcher
-        from universal_scraper.core.json_detector import JSONDetector
-        from bs4 import BeautifulSoup
-        import json as json_module
-        
-        # Extract Web Unblocker config from request
+        # 2. Extract Web Unblocker details from the converted config
         web_unblocker_api_key = None
         web_unblocker_zone = "web_unlocker1"
         
-        if request.proxy_config and request.proxy_config.get('provider') == 'web_unlocker':
-            # Web Unblocker configuration
-            web_unblocker_config = request.proxy_config.get('webUnblocker', {})
-            if web_unblocker_config:
-                # Check if using external proxy format (host:port:username:password)
-                external_proxy = request.proxy_config.get('externalProxy')
-                if external_proxy and external_proxy.get('server'):
-                    # Legacy format: convert to Web Unblocker credentials
-                    server = external_proxy.get('server', '')
-                    username = external_proxy.get('username', '')
-                    password = external_proxy.get('password', '')
-                    # Format: host:port:username:password
-                    web_unblocker_api_key = f"{server.split(':')[0]}:{server.split(':')[1] if ':' in server else '22225'}:{username}:{password}"
-                else:
-                    # Use API key (Bearer token)
-                    web_unblocker_api_key = web_unblocker_config.get("apiKey")
-                web_unblocker_zone = web_unblocker_config.get("zone", "web_unlocker1")
+        if backend_proxy_config:
+            web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
+            web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
         
         # Fallback to environment variables if not provided in request
         if not web_unblocker_api_key:
@@ -750,6 +636,8 @@ async def preview_endpoint(
             web_unblocker_zone = os.getenv("WEB_UNBLOCKER_ZONE", "web_unlocker1")
             if web_unblocker_api_key:
                 logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
+        
+        proxy_config = backend_proxy_config
         
         # For preview, force browser mode to ensure full JS rendering
         # This ensures users see the actual rendered page, not just static HTML shell
