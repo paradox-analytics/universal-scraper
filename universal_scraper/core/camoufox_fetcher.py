@@ -9,6 +9,7 @@ to avoid conflicts with asyncio.
 import asyncio
 import logging
 import random
+import re
 from typing import Dict, Any, Optional, List
 from urllib.parse import urlparse
 import json
@@ -24,12 +25,13 @@ except ImportError:
     PROXY_MANAGER_AVAILABLE = False
     logger.warning(" ProxyManager not available")
 
+# Camoufox will be imported inside the sync function to avoid asyncio conflicts
+CAMOUFOX_AVAILABLE = True
 try:
-    from camoufox.sync_api import Camoufox
-    CAMOUFOX_AVAILABLE = True
+    import camoufox
 except ImportError:
-    logger.warning(" Camoufox not installed. Install with: pip install camoufox")
     CAMOUFOX_AVAILABLE = False
+    logger.warning(" Camoufox not installed. Install with: pip install camoufox")
 
 # Import the universal anti-detection manager
 try:
@@ -122,6 +124,17 @@ def _camoufox_fetch_sync(
     """
     captured_requests = []
     captured_json = []
+    internal_log = []
+    
+    def log_internal(message: str):
+        internal_log.append({
+            'timestamp': time.time(),
+            'message': message
+        })
+        logger.info(f"    [Camoufox] {message}")
+    
+    # CRITICAL: Import Camoufox inside the thread to avoid asyncio loop detection
+    from camoufox.sync_api import Camoufox
     
     # Initialize anti-detection manager if available
     if ANTI_DETECTION_AVAILABLE and anti_detection_config:
@@ -134,24 +147,38 @@ def _camoufox_fetch_sync(
             # NOTE: 'screen' removed - Camoufox generates this internally to avoid browserforge version conflicts
         }
     
-    # Enable geoip matching if using proxy (matches browser fingerprint to proxy IP location)
+    # Add proxy to Camoufox constructor if configured
     if proxy_config and proxy_config.get('server'):
-        camoufox_config['geoip'] = True  # Match timezone/locale to proxy IP location
-        logger.debug("    GeoIP matching enabled for proxy")
+        server = proxy_config['server']
+        # Bright Data Web Unblocker (33335) often works better with https for the proxy connection itself
+        if '33335' in server and not server.startswith('http'):
+            server = f"https://{server}"
+        elif not server.startswith('http'):
+            server = f"http://{server}"
+            
+        camoufox_config['proxy'] = {
+            'server': server,
+            'username': proxy_config.get('username', ''),
+            'password': proxy_config.get('password', '')
+        }
+        log_internal(f"Proxy configured: {server}")
     
-    # CRITICAL: Need to create a new event loop in this thread to avoid conflict with parent async loop
+    # CRITICAL: Explicitly set the event loop to None in this thread.
+    # Playwright Sync API checks `asyncio.get_event_loop()` and errors if it returns a running loop.
+    # Even in a thread executor, some environments might leak a loop or have a default one.
+    # Setting it to None ensures Playwright sees a clean state.
     import asyncio
     try:
-        # Try to get existing loop in this thread
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            # If there's a running loop (shouldn't happen in executor thread), create new one
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-    except RuntimeError:
-        # No loop in this thread (expected in executor), create one
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        asyncio.set_event_loop(None)
+    except Exception:
+        pass  # Ignore errors if we can't set it (unlikely)
+    
+    # Log config (masking password)
+    safe_config = camoufox_config.copy()
+    if 'proxy' in safe_config:
+        safe_config['proxy'] = safe_config['proxy'].copy()
+        safe_config['proxy']['password'] = '********'
+    log_internal(f"Launching Camoufox with config: {safe_config}")
     
     browser = Camoufox(headless=headless, **camoufox_config)
     
@@ -183,25 +210,20 @@ def _camoufox_fetch_sync(
             'user_agent': selected_ua
         }
         
-        # Add proxy if configured
-        if proxy_config and proxy_config.get('server'):
-            # Ensure server format is correct (Camoufox expects http://host:port)
-            server = proxy_config['server']
-            if not server.startswith('http'):
-                server = f"http://{server}"
-            
-            context_options['proxy'] = {
-                'server': server,
-                'username': proxy_config.get('username', ''),
-                'password': proxy_config.get('password', '')
-            }
-            logger.debug(f"    Proxy configured: {server} (user: {proxy_config.get('username', '')[:20]}...)")
-        else:
-            logger.debug(f"    No proxy configured in context_options")
+        # Proxy is now handled at the browser level in Camoufox constructor
+        pass
         
         # Create context and page
         context = b.new_context(**context_options)
         page = context.new_page()
+        
+        # IP Verification (Debug)
+        try:
+            page.goto("https://api.ipify.org?format=json", timeout=10000)
+            ip_data = page.content()
+            log_internal(f"Proxy IP check result: {ip_data[:200]}")
+        except Exception as e:
+            logger.warning(f"    Proxy IP check failed: {e}")
         
         # Inject advanced anti-detection scripts (from Parsera project)
         page.add_init_script("""
@@ -349,37 +371,56 @@ def _camoufox_fetch_sync(
         
         # Navigate to URL
         start_time = time.time()
-        page.goto(url, wait_until='domcontentloaded', timeout=timeout)
+        try:
+            page.goto(url, wait_until='domcontentloaded', timeout=timeout)
+        except Exception as e:
+            logger.warning(f"    Navigation error: {e}")
+            # If we have some content, continue. If not, return error.
+            if len(page.content()) < 100:
+                return {
+                    'html': page.content(),
+                    'status_code': 500,
+                    'status': 500,
+                    'url': url,
+                    'error': str(e),
+                    'api_calls': captured_requests,
+                    'json_data': captured_json,
+                    'internal_log': internal_log,
+                    'elapsed_time': time.time() - start_time
+                }
         
-        # Check if we got a Kasada challenge page (common on e-commerce sites)
-        html_preview = page.content()[:500].lower()
+        # Check if we got a Kasada or Cloudflare challenge page
+        html_preview = page.content()[:2000].lower()
         is_kasada_challenge = 'kasada' in html_preview or 'kpsdk' in html_preview or 'ips.js' in html_preview
+        is_cloudflare_challenge = 'verify you are human' in html_preview or 'just a moment' in html_preview or 'cloudflare-static' in html_preview
         
-        if is_kasada_challenge:
-            logger.info("    Detected Kasada anti-bot challenge - waiting for challenge to complete...")
-            # Wait longer for Kasada challenge to complete (can take 5-15 seconds)
+        if is_kasada_challenge or is_cloudflare_challenge:
+            challenge_type = "Kasada" if is_kasada_challenge else "Cloudflare"
+            log_internal(f"Detected {challenge_type} challenge - waiting...")
+            # Wait longer for challenge to complete (can take 5-15 seconds)
             try:
                 page.wait_for_load_state('networkidle', timeout=30000)  # Wait up to 30s for network idle
-                # Additional wait for JavaScript execution
-                time.sleep(5)  # Give Kasada time to solve
-                logger.info("    Waited for Kasada challenge")
+                # Additional wait for JavaScript execution/challenge solving
+                time.sleep(8)  # Give it time to solve
+                log_internal(f"Waited for {challenge_type} challenge")
             except:
-                logger.warning("    Kasada challenge timeout - continuing anyway")
+                logger.warning(f"    {challenge_type} challenge timeout - continuing anyway")
         
         # UNIVERSAL SOLUTION 3: Smart Wait Strategy for JS-heavy sites
         # Adaptively waits for content to load without hardcoded delays
         _smart_wait_for_content(page, wait_for_selector)
         
-        # Check if page content looks like a challenge/block page
+        # Check if page content still looks like a challenge/block page
         current_html = page.content()
-        if len(current_html) < 2000 and ('kasada' in current_html.lower() or 'kpsdk' in current_html.lower() or 'ips.js' in current_html.lower()):
-            logger.warning("    Page still appears to be Kasada challenge - waiting longer...")
+        html_lower = current_html.lower()
+        if len(current_html) < 5000 and ('kasada' in html_lower or 'kpsdk' in html_lower or 'verify you are human' in html_lower or 'just a moment' in html_lower):
+            logger.warning("    Page still appears to be a challenge - waiting longer...")
             # Wait even longer and check again
             try:
                 page.wait_for_load_state('networkidle', timeout=20000)
-                time.sleep(10)  # Extra wait for challenge completion
+                time.sleep(12)  # Extra wait for challenge completion
                 current_html = page.content()  # Refresh HTML
-                logger.info(f"    After wait: {len(current_html):,} bytes")
+                log_internal(f"After extended wait: {len(current_html):,} bytes")
             except:
                 pass
         
@@ -391,45 +432,124 @@ def _camoufox_fetch_sync(
         if wait_time > 0:
             time.sleep(wait_time / 1000)
         
-        # UNIVERSAL ENHANCEMENT: Auto-scroll for SPAs to trigger lazy-loaded API calls
-        # Many modern sites (Leafly, etc.) only load data when you scroll
-        # We'll ALWAYS try scrolling on JS-heavy sites to capture more APIs
-        should_scroll = scroll_to_bottom or True  # Always scroll to discover APIs
-        
-        if should_scroll:
-            logger.debug("    Scrolling to trigger lazy-loaded content...")
+        # Universal infinite scroll detection and scrolling
+        if scroll_to_bottom:
+            logger.info("    Scrolling to trigger lazy-loaded content (infinite scroll)...")
             
-            # Smooth scroll to trigger lazy loading
-            page.evaluate("""
+            # Universal item detection - find repeating patterns dynamically
+            # This works for any website by detecting common repeating structures
+            scroll_result = page.evaluate("""
                 (async () => {
-                    const distance = 200;
-                    const delay = 300;
-                    const maxScrolls = 10;
+                    // Universal item detection - find repeating containers
+                    function detectRepeatingItems() {
+                        // Common patterns for repeating items
+                        const selectors = [
+                            'article',
+                            '[role="article"]',
+                            '[data-testid*="item"]',
+                            '[data-testid*="post"]',
+                            '[data-testid*="card"]',
+                            '[data-testid*="product"]',
+                            '[class*="item"]',
+                            '[class*="card"]',
+                            '[class*="product"]',
+                            '[class*="post"]',
+                            '[id*="item"]',
+                            '[id*="product"]',
+                            'li[class*="item"]',
+                            'div[class*="item"]',
+                            'div[class*="card"]',
+                            'div[class*="product"]',
+                            'section > div',
+                            'main > div > div',
+                            '[data-component*="item"]',
+                            '[data-component*="card"]'
+                        ];
+                        
+                        for (const selector of selectors) {
+                            try {
+                                const items = document.querySelectorAll(selector);
+                                // If we find 3+ items with the same selector, likely a repeating pattern
+                                if (items.length >= 3) {
+                                    // Check if items are actually repeating (similar structure)
+                                    const firstItem = items[0];
+                                    const secondItem = items[1];
+                                    if (firstItem && secondItem) {
+                                        const firstClasses = Array.from(firstItem.classList || []).join(' ');
+                                        const secondClasses = Array.from(secondItem.classList || []).join(' ');
+                                        // If items share classes/structure, it's a repeating pattern
+                                        if (firstClasses && firstClasses === secondClasses) {
+                                            return selector;
+                                        }
+                                    }
+                                }
+                            } catch (e) {
+                                continue;
+                            }
+                        }
+                        
+                        // Fallback: return a generic selector that should work
+                        return 'article, [role="article"], div[class*="item"], div[class*="card"]';
+                    }
+                    
+                    const itemSelector = detectRepeatingItems();
+                    const distance = 500;
+                    const delay = 500;
+                    const maxScrolls = 30;  // Increased for better coverage
+                    const maxNoChange = 5;  // Increased tolerance for slow-loading sites
                     
                     let scrollCount = 0;
-                    while (scrollCount < maxScrolls && 
-                           document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight) {
+                    let noChangeCount = 0;
+                    let prevHeight = document.scrollingElement.scrollHeight;
+                    let prevItemCount = document.querySelectorAll(itemSelector).length;
+                    
+                    while (scrollCount < maxScrolls) {
+                        // Scroll down
                         document.scrollingElement.scrollBy(0, distance);
                         await new Promise(resolve => setTimeout(resolve, delay));
-                        scrollCount++;
+                        
+                        // Check if new content loaded
+                        const newHeight = document.scrollingElement.scrollHeight;
+                        const newItemCount = document.querySelectorAll(itemSelector).length;
+                        
+                        if (newHeight > prevHeight || newItemCount > prevItemCount) {
+                            scrollCount++;
+                            noChangeCount = 0;
+                            prevHeight = newHeight;
+                            prevItemCount = newItemCount;
+                        } else {
+                            noChangeCount++;
+                            if (noChangeCount >= maxNoChange) {
+                                break;  // No new content after maxNoChange tries
+                            }
+                        }
                     }
+                    
+                    return {
+                        scrollCount: scrollCount,
+                        finalItemCount: prevItemCount,
+                        finalHeight: prevHeight,
+                        itemSelector: itemSelector
+                    };
                 })();
             """)
             
+            if scroll_result:
+                log_internal(f"Scrolled {scroll_result.get('scrollCount', 0)} times, found {scroll_result.get('finalItemCount', 0)} items")
+            
             # Wait for new API calls to complete after scrolling
-            # This is critical for capturing product/content APIs
             logger.debug("   ⏳ Waiting for API calls after scroll...")
-            time.sleep(2)  # Give APIs time to fire
+            time.sleep(3)  # Give APIs more time to fire for Reddit
             
             try:
                 # Wait for network idle again (new APIs might be loading)
-                page.wait_for_load_state('networkidle', timeout=3000)
+                page.wait_for_load_state('networkidle', timeout=5000)
             except:
                 pass  # Timeout is OK
             
             new_api_count = len(captured_json)
             if new_api_count > initial_api_count:
-                logger.debug(f"    Captured {new_api_count - initial_api_count} additional APIs after scroll")
+                logger.info(f"    Captured {new_api_count - initial_api_count} additional APIs after scroll")
             else:
                 logger.debug(f"   ℹ  No additional APIs captured")
         
@@ -443,10 +563,12 @@ def _camoufox_fetch_sync(
         
         return {
             'html': html,
-            'status': 200,
+            'status_code': 200,  # Playwright/Camoufox usually only returns if successful or handles errors
+            'status': 200,       # Keep for compatibility
             'url': url,
             'api_calls': captured_requests,
             'json_data': captured_json,
+            'internal_log': internal_log,
             'elapsed_time': elapsed_time
         }
 
@@ -473,7 +595,9 @@ class CamoufoxFetcher:
         enable_js: bool = True,
         anti_detection_profile: str = 'random',  # NEW: Anti-detection profile
         humanize: bool = True,  # NEW: Enable human-like behavior
-        stealth_mode: bool = True  # NEW: Maximum stealth (slower but harder to detect)
+        stealth_mode: bool = True,  # NEW: Maximum stealth (slower but harder to detect)
+        web_unblocker_api_key: Optional[str] = None,
+        web_unblocker_zone: str = "web_unlocker1"
     ):
         """
         Initialize Camoufox fetcher
@@ -504,6 +628,8 @@ class CamoufoxFetcher:
             'humanize': humanize,
             'stealth_mode': stealth_mode
         }
+        self.web_unblocker_api_key = web_unblocker_api_key
+        self.web_unblocker_zone = web_unblocker_zone
         
         logger.info(f" Camoufox Fetcher initialized")
         logger.info(f"   Headless: {headless}, Timeout: {timeout}ms")
@@ -575,6 +701,65 @@ class CamoufoxFetcher:
                         logger.info(f" ProxyManager pool empty, using static proxy_config")
             except Exception as e:
                 logger.warning(f" Proxy rotation failed, using fallback: {e}")
+        
+        # Add Web Unblocker if provided and no proxy yet
+        if not proxy_config_for_request and self.web_unblocker_api_key:
+            # Detect if it's proxy credentials format or API key
+            if ':' in self.web_unblocker_api_key:
+                parts = self.web_unblocker_api_key.split(':')
+                if len(parts) >= 4:
+                    # host:port:user:pass
+                    host = parts[0].strip()
+                    port = parts[1].strip()
+                    username = parts[2].strip()
+                    password = parts[3].strip()
+                    proxy_config_for_request = {
+                        'server': f"{host}:{port}",
+                        'username': username,
+                        'password': password
+                    }
+                    logger.info(f" Using Web Unblocker as proxy for Camoufox (host:port:user:pass)")
+                elif len(parts) == 2:
+                    # user:pass
+                    username = parts[0].strip()
+                    password = parts[1].strip()
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': username,
+                        'password': password
+                    }
+                    logger.info(f" Using Web Unblocker as proxy for Camoufox (user:pass)")
+                else:
+                    # Fallback for other colon counts
+                    customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
+                    proxy_config_for_request = {
+                        'server': 'brd.superproxy.io:33335',
+                        'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
+                        'password': self.web_unblocker_api_key
+                    }
+                    logger.info(f" Using Web Unblocker API key as proxy for Camoufox (fallback, customer: {customer_id})")
+            elif ',' in self.web_unblocker_api_key and self.web_unblocker_api_key.count(',') >= 3:
+                parts = self.web_unblocker_api_key.split(',')
+                if len(parts) >= 4:
+                    host = parts[0].strip()
+                    port = parts[1].strip()
+                    username = parts[2].strip()
+                    password = parts[3].strip()
+                    proxy_config_for_request = {
+                        'server': f"{host}:{port}",
+                        'username': username,
+                        'password': password
+                    }
+                    logger.info(f" Using Web Unblocker as proxy for Camoufox (csv)")
+            else:
+                # Use as API key (Bearer token)
+                customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
+                proxy_config_for_request = {
+                    'server': 'brd.superproxy.io:33335',
+                    'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
+                    'password': self.web_unblocker_api_key
+                }
+                logger.info(f" Using Web Unblocker API key as proxy for Camoufox (Bearer, customer: {customer_id})")
         
         # Log proxy being used
         if proxy_config_for_request:
