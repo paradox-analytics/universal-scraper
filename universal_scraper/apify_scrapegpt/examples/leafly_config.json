@@ -1,0 +1,53 @@
+{
+  "mode": "full_pipeline",
+  "startUrls": [
+    {"url": "https://www.leafly.com/dispensaries/nevada"}
+  ],
+  "crawlConfig": {
+    "maxDepth": 2,
+    "maxPages": 100,
+    "followPatterns": ["/dispensaries/", "/dispensary-info/"],
+    "ignorePatterns": [
+      "/products",
+      "/strains",
+      "/news",
+      "/brands",
+      "/doctors",
+      "/learn",
+      "/cannabis-101"
+    ],
+    "handlePagination": true,
+    "discoverApis": true,
+    "respectRobotsTxt": false
+  },
+  "scrapeConfig": {
+    "fields": [
+      "name",
+      "address",
+      "city",
+      "state",
+      "zip",
+      "phone",
+      "website",
+      "hours",
+      "rating",
+      "reviewCount",
+      "description",
+      "amenities"
+    ],
+    "fetchMode": "browser"
+  },
+  "proxyConfiguration": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"],
+    "apifyProxyCountry": "US"
+  }
+}
+
+
+
+
+
+
+
+

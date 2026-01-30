@@ -1,371 +1,61 @@
-# Byte-compiled / optimized / DLL files
+# ==============================================================================
+# STRICT WHITELIST APPROACH
+# ==============================================================================
+
+# 1. Ignore EVERYTHING by default
+/*
+!/
+
+# 2. Whitelist Core Directories (Everything inside these is tracked unless ignored below)
+!/api/
+!/frontend/
+!/universal_scraper/
+
+# 3. Whitelist Essential Documentation & Config
+!/.gitignore
+!/README.md
+!/LICENSE
+!/CONTRIBUTING.md
+!/CHANGELOG.md
+!/requirements.txt
+!/setup.py
+!/deploy_to_apify.sh
+
+# ==============================================================================
+# STANDARD IGNORES (Apply to content within whitelisted directories)
+# ==============================================================================
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff
-instance/
-.webassets-cache
-
-# Scrapy stuff
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-Pipfile.lock
-
-# PEP 582
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
 .env
 .venv
 env/
 venv/
-ENV/
-env.bak/
-venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
 
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+.DS_Store
 
 # IDEs
 .vscode/
 .idea/
 *.swp
-*.swo
-*~
-.DS_Store
 
-# ===== NODE MODULES (CRITICAL - should never be tracked) =====
-node_modules/
-frontend/node_modules/
-
-# ===== TEMPORARY AND DEBUG FILES =====
-*.log
+# Temporary / Debug Files
 *.tmp
 *.bak
-*.swp
-cache/
-*.cache
-logs/
-tmp/
-temp/
-
-# ===== TEST SCRIPTS AND EXPLORATION FILES =====
-test_*.py
 test_*.json
-test_*.sh
-test_*.html
-test_*.txt
-test_*.csv
-quick_*.py
-verify_*.py
-update_*.py
-update_*.sh
-reproduce_*.py
-extract_*.py
-debug_*.py
-debug_*.html
+test_output_*.txt
 debug_*.json
-analyze_*.py
-check_*.py
-tests/
-test_cache/
-
-# ===== DEBUG OUTPUT DIRECTORIES =====
-debug_output/
-apify_storage_local/
-
-# ===== RESULT AND DATA FILES (not needed in repo) =====
-*_results.json
-*_results.csv
-*.html
-!frontend/**/*.html
-!universal_scraper/**/*.html
-
-# ===== DOCUMENTATION (internal notes, not needed for core engine) =====
-# Keep only README.md, CONTRIBUTING.md, LICENSE, CHANGELOG.md
-ACTUAL_QA_RESULTS.md
-AGENT_TYPE_SPLIT*.md
-AMAZON_*.md
-APIFY_*.md
-API_TESTING*.md
-ARCHITECTURE_*.md
-AUTH_DETECTION.md
-AUTO_PAGINATION*.md
-BROWSER_*.md
-BUG*.md
-CACHE_*.md
-CAMOUFOX_*.md
-CATALANT_*.md
-CHEWY_*.md
-CLEANING_*.md
-CLOUDFLARE_*.md
-CODEBASE_*.md
-CODE_EXAMPLES.md
-COMPETITIVE_*.md
-COMPETITOR_*.md
-COMPREHENSIVE_*.md
-CONTENT_*.md
-CONTEXT_*.md
-COST_*.md
-CRAWLER_*.md
-CRAWL_*.md
-CRITICAL_*.md
-CSS_*.md
-CSV_*.md
-CURRENT_*.md
-DATA_*.md
-DEEP_*.md
-DEPLOYMENT_*.md
-DEPLOY_*.md
-DIRECT_LLM_*.md
-DOCUMENTATION_*.md
-DOCUMENT_*.md
-DOM_*.md
-EBAY_*.md
-EMBEDDING_*.md
-ENHANCED_*.md
-EXTRACTED_*.md
-EXTRACTION_*.md
-FETCHER_*.md
-FIELD_*.md
-FINAL_*.md
-FIREBASE_*.md
-FIXES_*.md
-FREQUENCY_*.md
-FUNDAMENTAL_*.md
-GAP_*.md
-GCP_*.md
-GET_*.md
-GLOBAL_*.md
-GPT4O_*.md
-HOW_*.md
-HYBRID_*.md
-IMPLEMENTATION_*.md
-INTEGRATION_*.md
-ITERATIVE_*.md
-JAVASCRIPT_*.md
-JSON_*.md
-LEAFLY_*.md
-LLM_*.md
-MARKDOWN_*.md
-MARKET_*.md
-METACRITIC_*.md
-MILESTONE_*.md
-MISSION_*.md
-MODULAR_*.md
-MULTI_*.md
-NAVIGATION_*.md
-NEXT_*.md
-OPTIMIZATION_*.md
-OXYLABS_*.md
-PAGINATION_*.md
-PATTERN_*.md
-PDF_*.md
-PHASE*.md
-PIVOTAL_*.md
-PREP_*.md
-PREVIEW_*.md
-PRICE_*.md
-PRODUCTION_*.md
-PRODUCT_*.md
-PROJECT_*.md
-PROMPT_*.md
-PROPOSAL_*.md
-PROXY_*.md
-QA_*.md
-QUALITY_*.md
-QUICK_*.md
-RAW_*.md
-REAL_*.md
-REDDIT_*.md
-REDIS_*.md
-REGRESSION_*.md
-REINFORCEMENT_*.md
-RENDER*.md
-ROBUST_*.md
-ROOT_*.md
-SAMPLE_*.md
-SCHEMA_*.md
-SCRAPE*.md
-SEARCH_*.md
-SEMANTIC_*.md
-SESSION_*.md
-SIMPLIFIED_*.md
-SINGLE_*.md
-SMART_*.md
-SOURCE_*.md
-STACKOVERFLOW_*.md
-STATUS_*.md
-STRATEGY_*.md
-STRUCTURAL_*.md
-SUMMARY_*.md
-SYSTEM_*.md
-TECHNICAL_*.md
-TEST_*.md
-THRESHOLD_*.md
-TICKETMASTER_*.md
-TODAY_*.md
-TOKEN_*.md
-TREE_*.md
-TROUBLESHOOTING_*.md
-UNIFIED_*.md
-UNIVERSAL_*.md
-UPDATE_*.md
-URL_*.md
-VERIFICATION_*.md
-WEB_*.md
-WORKING_*.md
-KASADA_*.md
-
-# ===== SAMPLE AND CONFIG FILES (not core) =====
-*.sample.json
-*_sample.csv
-apify_sample.csv
-all_requests.json
-.scraping_strategies.json
-EBAY_APIFY_DEBUG_CONFIG.json
-firebase.json
-firestore.*
-.firebaserc
-.gcloudignore
-
-# ===== IMAGES AND ASSETS =====
-*.png
-!frontend/public/*.png
-!frontend/src/**/*.png
-
-# ===== DEPLOYMENT SCRIPTS =====
-# Ignore all deploy scripts except the main one
-deploy_*.sh
-!deploy_to_apify.sh
-
-# ===== TEMPORARY SCRIPTS =====
-diagnose_*.py
-fix_*.py
-generate_*.py
-inspect_*.py
-install_*.py
-save_*.py
-setup_*.sh
-# Keep setup.py
-!setup.py
-
-# ===== AUTH AND SECRETS =====
-auth/
-.env.local
-*.key
-secrets.json
-*-*-*-*.json
-
-# ===== APIFY LOCAL ARTIFACTS =====
-/.actor/
-/Dockerfile
-universal_scraper/apify/test_input.json
-universal_scraper/apify/test_output.json
-universal_scraper/apify/test-*.json
-universal_scraper/apify/test-*.sh
-universal_scraper/apify/deploy.log
-universal_scraper/apify/storage/
-universal_scraper/apify/cache/
-universal_scraper/apify/apify_storage_local/
-universal_scraper/apify_scrapegpt/apify_storage_local/
-
-# ===== APIFY SCRAPEGPT (duplicate, not needed) =====
-universal_scraper/apify_scrapegpt/
-
+debug_*.html

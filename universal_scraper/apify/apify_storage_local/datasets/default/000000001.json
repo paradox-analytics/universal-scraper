@@ -1,0 +1,27 @@
+{
+  "title": "Friends & Partners",
+  "imageHeight": "25px",
+  "images": [
+    {
+      "title": "American Express",
+      "image": "images/logo/amex.svg",
+      "link": "http://www.ticketmaster.com/americanexpress/?tm_link=amex_footer"
+    },
+    {
+      "title": "SAP",
+      "image": "images/logo/sap.svg",
+      "link": "http://www.sap.com/index.html"
+    },
+    {
+      "title": "Apple Music",
+      "image": "images/logo/applemusic.svg",
+      "link": "https://itunes.apple.com/foryou?itscg=9501&at=1000l4VP&ct=0002"
+    }
+  ],
+  "_metadata": {
+    "sourceUrl": "https://www.ticketmaster.com/discover/concerts?classificationId=KnvZfZ7vAvF",
+    "scrapedAt": 1762574404.349495,
+    "executionTime": 9.036310911178589,
+    "source": "json"
+  }
+}
