@@ -44,7 +44,7 @@ export function DataTable({ data, columns }: DataTableProps) {
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-gray-400">
         No data to display
       </div>
     );
@@ -62,33 +62,33 @@ export function DataTable({ data, columns }: DataTableProps) {
         />
       </div>
       
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+      <table className="min-w-full divide-y divide-gray-700">
+        <thead className="bg-gray-800">
           <tr>
             {detectedColumns.map((column) => (
               <th
                 key={column}
                 onClick={() => handleSort(column)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-700 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   {column}
                   {sortColumn === column && (
-                    <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
+                    <span className="text-purple-400">{sortDirection === 'asc' ? '↑' : '↓'}</span>
                   )}
                 </div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-gray-900 divide-y divide-gray-700">
           {sortedData.map((row, idx) => (
-            <tr key={idx} className="hover:bg-gray-50">
+            <tr key={idx} className="hover:bg-gray-800 transition-colors">
               {detectedColumns.map((column) => (
-                <td key={column} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td key={column} className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
                   {row[column] !== null && row[column] !== undefined
                     ? String(row[column])
-                    : '-'}
+                    : <span className="text-gray-500">-</span>}
                 </td>
               ))}
             </tr>
@@ -96,7 +96,7 @@ export function DataTable({ data, columns }: DataTableProps) {
         </tbody>
       </table>
       
-      <div className="mt-4 text-sm text-gray-500">
+      <div className="mt-4 text-sm text-gray-400">
         Showing {sortedData.length} of {data.length} items
       </div>
     </div>

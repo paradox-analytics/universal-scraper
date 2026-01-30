@@ -1,0 +1,31 @@
+{
+  "pattern": {
+    "container_selector": "div.s-result-item",
+    "fields": {
+      "product_title": {
+        "selector": "h2.s-line-clamp-2",
+        "extract": "text"
+      },
+      "price": {
+        "selector": "span.a-price",
+        "extract": "text"
+      },
+      "rating": {
+        "selector": "span.a-icon-alt",
+        "extract": "text"
+      }
+    }
+  },
+  "metadata": {
+    "domain": "amazon.com",
+    "fields": [
+      "product_title",
+      "price",
+      "rating"
+    ],
+    "example_url": "https://www.amazon.com/s?k=laptop",
+    "embedding_hash": "431e6febe1db30d2",
+    "created_at": "now",
+    "usage_count": 0
+  }
+}

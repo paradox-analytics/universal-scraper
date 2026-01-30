@@ -1,0 +1,38 @@
+{
+  "pattern": {
+    "container_selector": "div.s-item",
+    "fields": {
+      "product_title": {
+        "selector": "h3.s-item__title",
+        "extract": "text"
+      },
+      "price": {
+        "selector": "span.s-item__price",
+        "extract": "text"
+      },
+      "condition": {
+        "selector": "span.SECONDARY_INFO",
+        "extract": "text"
+      }
+    },
+    "validation": {
+      "min_items": 3,
+      "required_fields": [
+        "product_title",
+        "price"
+      ]
+    }
+  },
+  "metadata": {
+    "domain": "ebay.com",
+    "fields": [
+      "product_title",
+      "price",
+      "condition"
+    ],
+    "example_url": "https://www.ebay.com/itm/12345",
+    "embedding_hash": "18ea4fe6ff16aee8",
+    "created_at": "now",
+    "usage_count": 0
+  }
+}

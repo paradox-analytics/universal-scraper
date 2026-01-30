@@ -7,8 +7,11 @@ import json
 import logging
 import time
 from typing import List, Dict, Any, Optional, Union
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 import litellm
+import re
+import os
 
 from .html_fetcher import HTMLFetcher
 from .hybrid_fetcher import HybridFetcher
@@ -61,7 +64,7 @@ class UniversalScraper:
         enable_warming: bool = True,
         fetch_mode: str = "hybrid",  # 'hybrid', 'static', or 'browser'
         headless: bool = True,
-        browser_timeout: int = 60000,  # Browser navigation timeout in milliseconds
+        browser_timeout: int = 120000,  # Browser navigation timeout in milliseconds (default: 120s for slow-loading pages)
         use_camoufox: bool = True,  # NEW: Use Camoufox for better anti-detection (recommended)
         schema: Optional[SchemaDefinition] = None,  # Schema for stable output
         strict_schema: bool = False,  # Fail on schema validation errors
@@ -73,6 +76,8 @@ class UniversalScraper:
         quality_mode: str = "balanced",  # NEW: Quality mode for DirectLLM ('conservative', 'balanced', 'aggressive')
         web_unblocker_api_key: Optional[str] = None,  # NEW: Bright Data Web Unblocker API key (fallback for Kasada)
         web_unblocker_zone: str = "web_unlocker1",  # NEW: Web Unblocker zone name
+        web_unblocker_customer_id: Optional[str] = None,  # NEW: Customer ID for Web Unblocker
+        redis_cache=None,  # NEW: Optional Redis cache for multi-tenant SaaS
         log_level: int = logging.INFO
     ):
         """
@@ -116,19 +121,87 @@ class UniversalScraper:
                 logger.debug(" Using API key from environment variable")
         
         self.api_key = api_key
-        self.model_name = model_name
+        
+        # Detect provider and set default model if not provided
+        if not model_name and api_key:
+            if api_key.startswith('sk-'):
+                self.model_name = "gpt-4o-mini"
+                logger.info(" Detected OpenAI API key, defaulting to gpt-4o-mini")
+            elif len(api_key) > 30: # Gemini keys are typically long strings without prefix
+                self.model_name = "gemini/gemini-1.5-flash"
+                logger.info(" Detected Gemini API key, defaulting to gemini-1.5-flash")
+            else:
+                self.model_name = "gpt-4o-mini" # Fallback
+        else:
+            self.model_name = model_name
+            
         self.fetch_mode = fetch_mode
         
         # NEW: Create ProxyManager for per-request rotation (Oxylabs approach)
         proxy_manager = None
         if proxy_config:
             from .proxy_manager import ProxyManager
+            
+            # Detect provider intelligently
+            provider = 'static'
+            if os.environ.get('APIFY_IS_AT_HOME'):
+                provider = 'apify'
+            elif 'brd.superproxy.io' in str(proxy_config.get('server', '')):
+                provider = 'brightdata'
+            elif 'web_unlocker' in str(proxy_config.get('username', '')):
+                provider = 'brightdata'
+            
             proxy_manager = ProxyManager(
                 proxy_config=proxy_config,
-                provider='apify',  # Will detect Apify vs local automatically
+                provider=provider,
                 rotation_strategy='per_request'  # Rotate on every request
             )
-            logger.info(" ProxyManager created: Per-request rotation enabled")
+            
+            # If it's a static/brightdata proxy, add it to the pool immediately
+            if provider in ['static', 'brightdata'] and proxy_config.get('server'):
+                proxy_manager.add_proxy(
+                    server=proxy_config.get('server'),
+                    username=proxy_config.get('username'),
+                    password=proxy_config.get('password')
+                )
+            
+            logger.info(f" ProxyManager created: provider={provider}, strategy=per_request")
+        
+        # NEW: Adaptive Rate Limiter
+        from .rate_limiter import AdaptiveRateLimiter
+        # Use same redis client if we had one (currently not passed to scraper, but ready for future)
+        self.rate_limiter = AdaptiveRateLimiter(redis_client=None)
+        
+        # Store configuration for later use (e.g. strategy application)
+        self.proxy_config = proxy_config
+        # Auto-detect Web Unblocker from environment if not provided
+        if web_unblocker_api_key is None:
+            web_unblocker_api_key = os.environ.get('WEB_UNBLOCKER_API_KEY')
+            if web_unblocker_api_key:
+                logger.debug(" Using Web Unblocker API key from environment variable")
+                
+        if web_unblocker_zone == 'web_unlocker1' and os.environ.get('WEB_UNBLOCKER_ZONE'):
+            web_unblocker_zone = os.environ.get('WEB_UNBLOCKER_ZONE')
+            if web_unblocker_zone:
+                logger.debug(f" Using Web Unblocker zone from environment variable: {web_unblocker_zone}")
+
+        web_unblocker_customer_id = os.environ.get('WEB_UNBLOCKER_CUSTOMER_ID')
+        if not web_unblocker_customer_id and os.environ.get('WEB_UNBLOCKER_USER'):
+            # Try to extract hl_... from brd-customer-hl_...-zone-...
+            user = os.environ.get('WEB_UNBLOCKER_USER')
+            if 'customer-' in user:
+                parts = user.split('customer-')
+                if len(parts) > 1:
+                    customer_part = parts[1].split('-')[0]
+                    web_unblocker_customer_id = customer_part
+                    logger.debug(f" Derived Web Unblocker customer ID from user: {web_unblocker_customer_id}")
+
+        self.web_unblocker_api_key = web_unblocker_api_key
+        self.web_unblocker_zone = web_unblocker_zone
+        self.web_unblocker_customer_id = web_unblocker_customer_id
+        self.headless = headless
+        self.browser_timeout = browser_timeout
+        self.use_camoufox = use_camoufox
         
         # Initialize fetcher based on mode
         if fetch_mode == "hybrid":
@@ -143,7 +216,8 @@ class UniversalScraper:
                 browser_timeout=browser_timeout,
                 use_camoufox=use_camoufox,  # NEW: Pass Camoufox preference
                 web_unblocker_api_key=web_unblocker_api_key,  # NEW: Web Unblocker fallback
-                web_unblocker_zone=web_unblocker_zone  # NEW: Web Unblocker zone
+                web_unblocker_zone=web_unblocker_zone,  # NEW: Web Unblocker zone
+                web_unblocker_customer_id=web_unblocker_customer_id  # NEW: Web Unblocker customer ID
             )
         elif fetch_mode == "static":
             # Static HTML only (fast but no JS support)
@@ -165,7 +239,8 @@ class UniversalScraper:
                 force_mode="browser",
                 use_camoufox=use_camoufox,  # NEW: Pass Camoufox preference
                 web_unblocker_api_key=web_unblocker_api_key,  # NEW: Web Unblocker fallback
-                web_unblocker_zone=web_unblocker_zone  # NEW: Web Unblocker zone
+                web_unblocker_zone=web_unblocker_zone,  # NEW: Web Unblocker zone
+                web_unblocker_customer_id=web_unblocker_customer_id  # NEW: Web Unblocker customer ID
             )
         else:
             raise ValueError(f"Invalid fetch_mode: {fetch_mode}. Use 'hybrid', 'static', or 'browser'")
@@ -178,7 +253,8 @@ class UniversalScraper:
         self.code_cache = CodeCache(
             cache_dir=cache_dir,
             ttl=cache_ttl,
-            enable_cache=enable_cache
+            enable_cache=enable_cache,
+            redis_cache=redis_cache  # NEW: Pass Redis cache for multi-tenant SaaS
         )
         
         self.ai_generator = AICodeGenerator(
@@ -192,13 +268,102 @@ class UniversalScraper:
         if use_direct_llm and api_key:
             self.direct_llm_extractor = DirectLLMExtractor(
                 api_key=api_key,
-                model_name=model_name or "gpt-4o-mini",
-                quality_mode=quality_mode
+                model_name=self.model_name,
+                quality_mode=quality_mode,
+                redis_cache=redis_cache  # Pass Redis cache for multi-tenant SaaS
             )
             logger.info(f" Direct LLM Extractor enabled (quality={quality_mode})")
         elif use_direct_llm and not api_key:
             logger.warning(" Direct LLM extraction requested but no API key provided")
             self.use_direct_llm = False
+        
+        # Initialize Model Router (3-tier model selection)
+        self.model_router = None
+        if api_key:
+            try:
+                from .model_router import ModelRouter, ModelTier
+                self.model_router = ModelRouter(
+                    router_model=self.model_name,
+                    template_model=self.model_name,  # Can upgrade to sonnet-3.5 for better quality
+                    recovery_model="gpt-4o",
+                    api_key=api_key
+                )
+                logger.info(f"🎯 Model Router enabled (3-tier: router/template/recovery)")
+            except Exception as e:
+                logger.warning(f"⚠️ Model Router unavailable: {e}")
+        
+        # Initialize DOM Digest Cache (Layer 2: Fast fingerprint matching)
+        # Detects "same layout" without LLM (<10ms vs ~2s)
+        self.dom_digest_cache = None
+        if enable_cache:
+            try:
+                from .dom_digest_cache import DOMDigestCache
+                self.dom_digest_cache = DOMDigestCache(
+                    ttl_hours=24,
+                    enable_cache=enable_cache
+                )
+                logger.info(f"🔍 DOM Digest Cache enabled (fast template matching)")
+            except Exception as e:
+                logger.warning(f"⚠️ DOM Digest Cache unavailable: {e}")
+        
+        # Initialize Deterministic Extractor (for template spec execution)
+        self.deterministic_extractor = None
+        try:
+            from .deterministic_extractor import DeterministicExtractor
+            self.deterministic_extractor = DeterministicExtractor()
+            logger.info(f"⚙️ Deterministic Extractor enabled (template spec execution)")
+        except Exception as e:
+            logger.warning(f"⚠️ Deterministic Extractor unavailable: {e}")
+        
+        # Initialize Selector Library (bootstrapping system)
+        self.selector_library = None
+        if enable_cache:
+            try:
+                from .selector_library import SelectorLibrary
+                self.selector_library = SelectorLibrary(enable_cache=enable_cache)
+                logger.info(f"📚 Selector Library enabled (bootstrapping from successful extractions)")
+            except Exception as e:
+                logger.warning(f"⚠️ Selector Library unavailable: {e}")
+        
+        # Initialize Smart Pattern Cache (NEW: Caches extraction PATTERNS, not results)
+        # This is the key to fast subsequent scrapes - patterns are deterministic
+        self.smart_pattern_cache = None
+        # Initialize Scraping Strategy Detector (NEW: Unified strategy caching)
+        self.strategy_detector = None
+        try:
+            from .scraping_strategy_detector import ScrapingStrategyDetector
+            self.strategy_detector = ScrapingStrategyDetector(
+                redis_client=redis_cache
+            )
+            logger.info(f"🎯 Scraping Strategy Detector enabled (Redis={'✅' if redis_cache else '❌'})")
+        except Exception as e:
+            logger.warning(f"⚠️ Scraping Strategy Detector unavailable: {e}")
+
+        # Initialize Adaptive Anti-Blocking Agent (Layer 4: Dynamic evasion)
+        self.adaptive_agent = None
+        try:
+            from .adaptive_antiblocking_agent import AdaptiveAntiBlockingAgent
+            self.adaptive_agent = AdaptiveAntiBlockingAgent(
+                redis_cache=redis_cache,
+                llm_api_key=api_key,
+                enable_llm_optimization=True
+            )
+            logger.info(f"🛡️ Adaptive Anti-Blocking Agent enabled")
+        except Exception as e:
+            logger.warning(f"⚠️ Adaptive Anti-Blocking Agent unavailable: {e}")
+        
+        self.redis_cache = redis_cache
+        if api_key:
+            try:
+                from .smart_pattern_cache import SmartPatternCache
+                self.smart_pattern_cache = SmartPatternCache(
+                    redis_cache=redis_cache,
+                    api_key=api_key,
+                    model_name=self.model_name
+                )
+                logger.info(f"🧠 Smart Pattern Cache enabled (caches extraction strategies)")
+            except Exception as e:
+                logger.warning(f"⚠️ Smart Pattern Cache unavailable: {e}")
         
         # Initialize schema manager if schema provided
         self.schema_manager = None
@@ -257,7 +422,7 @@ class UniversalScraper:
             # Parse and enrich user's extraction context
             self.context_manager = ContextManager(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini",
+                model=self.model_name,
                 enable_cache=enable_cache,
                 cache_dir=f"{cache_dir}/context"
             )
@@ -274,14 +439,14 @@ class UniversalScraper:
             # JSON source analyzer (ranks multiple JSON sources)
             self.json_analyzer = LLMJsonAnalyzer(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini",
+                model=self.model_name,
                 enable_cache=enable_cache
             )
             
             # Data validator (validates extraction matches user's goal)
             self.data_validator = LLMDataValidator(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini",
+                model=self.model_name,
                 enable_cache=enable_cache
             )
             
@@ -291,21 +456,21 @@ class UniversalScraper:
         if api_key:
             self.html_structure_analyzer = HTMLStructureAnalyzer(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini"
+                model=self.model_name
             )
             logger.info(" HTML Structure Analyzer enabled (improves code generation)")
             
             # Initialize JSON Structure Analyzer (NEW: Like HTML but for JSON)
             self.json_structure_analyzer = JSONStructureAnalyzer(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini"
+                model=self.model_name
             )
             logger.info(" JSON Structure Analyzer enabled (improves JSON extraction)")
             
             # Initialize Adaptive DOM Detector (NEW: Reinforcement iteration)
             self.adaptive_dom_detector = AdaptiveDOMDetector(
                 api_key=api_key,
-                model_name=model_name or "gpt-4o-mini",
+                model_name=self.model_name,
                 max_passes=3
             )
             logger.info(" Adaptive DOM Detector enabled (reinforcement-style iteration)")
@@ -315,7 +480,7 @@ class UniversalScraper:
         if api_key:
             self.field_mapper = UniversalFieldMapper(
                 api_key=api_key,
-                model=model_name or "gpt-4o-mini",
+                model=self.model_name,
                 cache_dir=f"{cache_dir}/field_mappings",
                 enable_cache=enable_cache
             )
@@ -439,6 +604,8 @@ class UniversalScraper:
         self,
         url: str,
         fields: List[str],
+        target: Optional[str] = None,
+        html: Optional[str] = None,  # NEW: Allow passing HTML directly
         force_html: bool = False,
         force_generate: bool = False,
         scroll_to_bottom: bool = False,
@@ -451,6 +618,8 @@ class UniversalScraper:
         Args:
             url: Target URL
             fields: Fields to extract (empty list = auto-extraction)
+            target: Target description for extraction
+            html: Optional HTML content (bypasses fetch if provided)
             force_html: Skip JSON detection, use HTML parsing
             force_generate: Skip cache, generate new extraction code
             scroll_to_bottom: Scroll to bottom for infinite scroll pagination
@@ -462,7 +631,38 @@ class UniversalScraper:
         """
         start_time = time.time()
         
+        # Initialize hash variables (may be set in Direct LLM path)
+        hash_result = None
+        structure_hash = None
+        
         logger.info(f" Scraping: {url}")
+        
+        # Ensure fields is a list
+        if fields is None:
+            fields = []
+            
+        # NEW: Ensure context is initialized from target if provided
+        # This allows prompts like "Extract products only" to work even if not passed to __init__
+        if target and self.api_key:
+            if not self.context_manager:
+                from .context_manager import ContextManager
+                self.context_manager = ContextManager(
+                    api_key=self.api_key,
+                    model=self.model_name
+                )
+            
+            # Re-parse context using the target hint passed to this scrape call
+            try:
+                self.context_manager.parse_context(target, url)
+                logger.info(f" Updated Extraction Context from target: {self.context_manager.context}")
+                
+                # If fields were not provided, infer them from the new context
+                if not fields and self.context_manager.context.fields:
+                    fields = self.context_manager.context.fields
+                    logger.info(f" Inferred fields from prompt: {fields}")
+            except Exception as e:
+                logger.warning(f" Failed to parse target context: {e}")
+
         logger.info(f" Fields: {', '.join(fields) if fields else 'AUTO-EXTRACT ALL'}")
         
         if scroll_to_bottom:
@@ -483,16 +683,81 @@ class UniversalScraper:
                 logger.debug(f"Pre-warm cache check failed: {e}")
         
         # Step 1: Fetch HTML (with pagination support)
-        logger.info(" Step 1: Fetching HTML...")
-        fetch_result = await self.html_fetcher.fetch(
-            url,
-            wait_for_selector=wait_for_selector,
-            scroll_to_bottom=scroll_to_bottom,
-            click_load_more=click_load_more
-        )
+        if html:
+            logger.info(" Step 1: Using provided HTML...")
+            fetch_result = {
+                'html': html,
+                'status_code': 200,
+                'url': url,
+                'api_calls': [],
+                'json_data': []
+            }
+        else:
+            logger.info(" Step 1: Fetching content...")
+            
+            # Check for cached strategy (NEW: Unified strategy caching)
+            strategy = None
+            force_json_ld = False  # NEW: Force JSON-LD extraction if cached strategy recommends it
+            if self.strategy_detector:
+                strategy = self.strategy_detector.get_strategy(url)
+                if strategy:
+                    logger.info(f"🎯 Using cached strategy: {strategy['extraction_method']} via {strategy['proxy_type']}")
+                    
+                    # NEW: Force extraction method from cached strategy
+                    if strategy['extraction_method'] == 'json_ld':
+                        force_json_ld = True
+                        logger.info("   Will force JSON-LD extraction as recommended by cached strategy")
+                    
+                    # Apply strategy configuration
+                    if strategy['proxy_type'] == 'web_unblocker' and self.web_unblocker_api_key:
+                        # Use Web Unblocker if available
+                        pass # Handled in fetcher
+                    elif strategy['proxy_type'] == 'residential':
+                        # Use residential proxy
+                        pass # Handled in fetcher
+            
+            # Use adaptive fetch with automatic escalation
+            fetch_result = await self._fetch_with_adaptive_retry(
+                url=url,
+                initial_strategy=strategy,
+                wait_for_selector=wait_for_selector,
+                scroll_to_bottom=scroll_to_bottom,
+                max_attempts=3
+            )
         html = fetch_result['html']
         original_html = html  # NEW: Store original HTML for Direct LLM supplementation
-        captured_json = fetch_result.get('captured_json', [])  # Get captured JSON blobs
+        captured_json = fetch_result.get('json_data', [])  # Get captured JSON blobs
+        unblocker_log = fetch_result.get('unblocker_log', [])  # NEW: Get unblocker log
+        strategy_used = fetch_result.get('strategy_used')  # NEW: Get actual strategy used (including escalation)
+        
+        # EARLY EXIT: If HTML is empty or clearly blocked, don't waste time on AI extraction
+        if not html or len(html) < 500:
+            logger.error(f"❌ Scraped HTML is empty or too small ({len(html) if html else 0} bytes). Fast-failing.")
+            return {
+                'success': False,
+                'data': [],
+                'metadata': {
+                    'url': url,
+                    'error': 'Fetched HTML is empty or insufficient for extraction',
+                    'fetch_method': fetch_result.get('fetch_method', 'unknown'),
+                    'unblocker_log': unblocker_log
+                }
+            }
+        
+        # Also check for blocks
+        blocking_info = self._detect_blocking(html, fetch_result.get('status_code', 0), url)
+        if blocking_info['is_blocked'] and blocking_info['confidence'] > 0.8:
+            logger.error(f"❌ Scraped HTML is clearly blocked: {blocking_info['reason']}")
+            return {
+                'success': False,
+                'data': [],
+                'metadata': {
+                    'url': url,
+                    'error': f"Access blocked by target site: {blocking_info['reason']}",
+                    'fetch_method': fetch_result.get('fetch_method', 'unknown'),
+                    'unblocker_log': unblocker_log
+                }
+            }
         
         # Step 1.5: Smart Pagination Detection (fast patterns + LLM fallback)
         # Try to detect and handle pagination to get ALL items from listing pages
@@ -641,6 +906,7 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                         html=cleaned_html,
                                         fields=missing_fields,  # Only extract missing fields
                                         context=context_str,
+                                        target=target,  # Pass target hint
                                         url=url  # Use original URL, not paginated URL
                                     )
                                 else:
@@ -648,6 +914,7 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                         html=cleaned_html,
                                         fields=missing_fields,
                                         context=context_str,
+                                        target=target,  # Pass target hint
                                         url=url  # Use original URL, not paginated URL
                                     )
                                 
@@ -695,7 +962,14 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                 'pagination_detected': True,
                                 'total_pages_scraped': len(page_urls),
                                 'auto_pagination': True,
-                                'timestamp': time.time()
+                                'auto_pagination': True,
+                                'timestamp': time.time(),
+                                'strategy': {
+                                    'method': strategy_used.get('extraction_method') if strategy_used else extraction_source,
+                                    'proxy': strategy_used.get('proxy_type') if strategy_used else 'residential',
+                                    'confidence': 1.0,
+                                    'source': 'adaptive'
+                                } if strategy_used else None
                             },
                             'source': 'json'
                         }
@@ -759,10 +1033,16 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
         if not force_html:
             logger.info(" Step 2: Detecting JSON sources...")
             # Pass captured JSON blobs (from APIs, embedded JSON, etc.)
-            json_results = self.json_detector.detect_and_extract(html, url, captured_json=captured_json)
+            # NEW: Pass force_json_ld flag to prioritize JSON-LD if cached strategy recommends it
+            json_results = self.json_detector.detect_and_extract(
+                html, 
+                url, 
+                captured_json=captured_json,
+                force_json_ld=force_json_ld  # NEW: Force JSON-LD if cached strategy says so
+            )
             
             if json_results['json_found']:
-                logger.info(f" Found {len(json_results.get('sources', []))} JSON source(s)")
+                logger.info(f" Found {len(json_results.get('sources', []))} JSON source(s): {', '.join(json_results.get('sources', []))}")
                 
                 # CONTEXT-DRIVEN APPROACH: Rank and validate JSON sources
                 if context and self.json_analyzer and self.data_validator:
@@ -847,6 +1127,17 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                 
                                 if items:
                                     logger.info(f"    Extracted {len(items)} items")
+                                    
+                                    # NEW: Semantic Item Filtering
+                                    # If user provided a specific target, filter items to remove noise (related products, etc.)
+                                    if context and self.data_validator and len(items) > 1:
+                                        logger.info("    Applying semantic item filtering based on target...")
+                                        items = self.data_validator.filter_items_by_target(
+                                            items,
+                                            context.goal,
+                                            fields
+                                        )
+                                        logger.info(f"    {len(items)} items remaining after filtering")
                                     
                                     # QUALITY VALIDATION (fast, universal, no LLM)
                                     is_valid, reason, quality_score = self.json_quality_validator.validate(
@@ -940,8 +1231,15 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                                         'pagination_detected': pagination_strategy['type'] if pagination_strategy else None,
                                                         'total_pages_scraped': 1,
                                                         'auto_pagination': False,
+                                                        'auto_pagination': False,
                                                         'early_exit': True,  # NEW: Flag for early exit
-                                                        'timestamp': time.time()
+                                                        'timestamp': time.time(),
+                                                        'strategy': {
+                                                            'method': strategy_used.get('extraction_method') if strategy_used else extraction_source,
+                                                            'proxy': strategy_used.get('proxy_type') if strategy_used else 'residential',
+                                                            'confidence': 1.0,
+                                                            'source': 'adaptive'
+                                                        } if strategy_used else None
                                                     },
                                                     'source': extraction_source
                                                 }
@@ -1092,7 +1390,13 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                                 'early_exit': True,  # NEW: Flag for early exit
                                                 'quality_score': quality_score_improved,
                                                 'field_coverage': field_coverage,
-                                                'timestamp': time.time()
+                                                'timestamp': time.time(),
+                                                'strategy': {
+                                                    'method': strategy_used.get('extraction_method') if strategy_used else extraction_source,
+                                                    'proxy': strategy_used.get('proxy_type') if strategy_used else 'residential',
+                                                    'confidence': 1.0,
+                                                    'source': 'adaptive'
+                                                } if strategy_used else None
                                             },
                                             'source': 'json'
                                         }
@@ -1163,131 +1467,306 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
             cleaned_html = clean_result['html']
             logger.info(f"   HTML reduced: {clean_result['reduction_percent']:.1f}% ({len(html):,} → {len(cleaned_html):,} bytes)")
             
+            # Generate structural hash early (needed for pattern cache and learning)
+            hash_result = self.hash_generator.generate_hash(cleaned_html)
+            structure_hash = hash_result['hash']
+            
             # Get extraction context
             context_str = None
             if hasattr(self, 'context_manager') and self.context_manager and hasattr(self.context_manager, 'context') and self.context_manager.context:
                 context_str = self.context_manager.context.goal
             
-            try:
-                # Direct LLM extraction (async)
-                # Use CLEANED HTML to reduce chunk count (10x faster for large pages)
-                # HybridMarkdownExtractor will do additional cleaning if needed
-                import asyncio
-                if asyncio.iscoroutinefunction(self.direct_llm_extractor.extract):
-                    direct_llm_items = await self.direct_llm_extractor.extract(
-                        html=cleaned_html,  # CLEANED HTML - reduces chunks dramatically
-                        fields=fields,
-                        context=context_str,
-                        url=url  # NEW: Pass URL for cache key generation
-                    )
-                else:
-                    direct_llm_items = self.direct_llm_extractor.extract(
-                        html=cleaned_html,  # CLEANED HTML - reduces chunks dramatically
-                        fields=fields,
-                        context=context_str,
-                        url=url  # NEW: Pass URL for cache key generation
-                    )
-                
-                if direct_llm_items and len(direct_llm_items) > 0:
-                    logger.info(f" Direct LLM extracted {len(direct_llm_items)} items")
-                    
-                    # UNIVERSAL RULE: If JSON is healthy, supplement it (don't replace)
-                    # If JSON is unhealthy, use Direct LLM as primary
-                    if json_is_healthy and json_data and len(json_data) > 0:
-                        logger.info(f"    JSON data is healthy - supplementing missing fields with Direct LLM...")
-                        # Match items by position or merge fields
-                        merged_items = []
-                        for i, json_item in enumerate(json_data):
-                            merged_item = json_item.copy()
-                            # Try to find matching Direct LLM item (by position or by matching fields)
-                            if i < len(direct_llm_items):
-                                llm_item = direct_llm_items[i]
-                                # Add missing fields from Direct LLM (only if missing in JSON)
-                                for field in extraction_metadata.get('missing_fields', []):
-                                    if field not in merged_item or not merged_item.get(field):
-                                        if field in llm_item and llm_item.get(field):
-                                            merged_item[field] = llm_item[field]
-                            merged_items.append(merged_item)
-                        json_data = merged_items
-                        extraction_source = 'json+direct_llm'
-                        extraction_metadata['supplemented_with_direct_llm'] = True
-                        logger.info(f"    Supplemented {len(merged_items)} JSON items with Direct LLM fields")
-                        logger.info("    JSON remains primary source (Direct LLM only filled gaps)")
-                    else:
-                        # No JSON data or JSON is unhealthy, use Direct LLM as primary
-                        # Calculate quality using quality calculator (distinguishes required/optional)
-                        from .quality_calculator import QualityCalculator
-                        quality_calc = QualityCalculator()
-                        
-                        if fields:
-                            field_coverage = quality_calc.calculate_field_coverage(direct_llm_items, fields)
-                            quality = quality_calc.calculate_quality_score(direct_llm_items, fields)
-                            missing_fields = quality_calc.get_missing_fields(direct_llm_items, fields, required_only=False)
-                            missing_required_fields = quality_calc.get_missing_fields(direct_llm_items, fields, required_only=True)
-                            
-                            logger.info(f"    Field coverage: {field_coverage}")
-                            logger.info(f"    Quality: {quality:.1f}% (required/optional weighted)")
-                            if missing_fields:
-                                logger.info(f"    Missing fields: {missing_fields}")
-                                if missing_required_fields:
-                                    logger.warning(f"    Missing REQUIRED fields: {missing_required_fields}")
-                        else:
-                            # Fallback to simple calculation if no fields specified
-                            quality = 100.0 if direct_llm_items else 0.0
-                        
-                        # Accept if quality is reasonable (≥40% for aggressive, higher for others)
-                        quality_threshold = 40.0  # Lower threshold since we have quality modes
-                        if quality >= quality_threshold:
-                            logger.info(f" Direct LLM quality acceptable ({quality:.1f}% >= {quality_threshold:.1f}%)")
-                            json_data = direct_llm_items
-                            extraction_source = 'direct_llm'
-                            
-                            # PHASE 1 OPTIMIZATION: Early exit if Direct LLM quality is high
-                            if quality >= 60.0:  # High quality threshold
-                                logger.info(f" PHASE 1 OPTIMIZATION: Early exit - Direct LLM extraction high quality")
-                                logger.info(f"   Skipping HTML extraction (saved ~20-30% time)")
-                                
-                                # Calculate execution time
-                                execution_time = time.time() - start_time
-                                
-                                logger.info(f" Extraction complete: {len(json_data)} items in {execution_time:.2f}s")
-                                
-                                return {
-                                    'data': json_data,
-                                    'metadata': {
-                                        'url': url,
-                                        'fields': fields,
-                                        'items_extracted': len(json_data),
-                                        'execution_time': execution_time,
-                                        'extraction_source': extraction_source,
-                                        'code_cached': None,
-                                        'schema_quality': None,
-                                        'pagination_detected': pagination_strategy['type'] if pagination_strategy else None,
-                                        'total_pages_scraped': 1,
-                                        'auto_pagination': False,
-                                        'early_exit': True,  # NEW: Flag for early exit
-                                        'direct_llm_quality': quality,
-                                        'field_coverage': field_coverage if fields else {},
-                                        'missing_fields': missing_fields if fields else [],
-                                        'missing_required_fields': missing_required_fields if fields else [],
-                                        'timestamp': time.time()
-                                    },
-                                    'source': extraction_source
-                                }
-                            
-                            # Skip HTML extraction
-                            logger.info("   Skipping pattern-based extraction (Direct LLM succeeded)")
-                        else:
-                            logger.warning(f"    Direct LLM quality too low ({quality:.1f}% < {quality_threshold:.1f}%)")
-                            logger.info("   Falling back to pattern-based extraction...")
-                else:
-                    logger.warning("    Direct LLM extracted 0 items, falling back to pattern-based...")
+            # NEW: Check DOM Digest Cache FIRST (fastest: <10ms fingerprint matching)
+            # Detects "same layout" without LLM, enables template lookup
+            dom_digest_template = None
+            if self.dom_digest_cache:
+                try:
+                    dom_digest_template = await self.dom_digest_cache.get_template_for_digest(url, cleaned_html)
+                    if dom_digest_template:
+                        logger.info(f"🔍 DOM digest cache hit: {dom_digest_template.get('digest', '')[:16]}... (template: {dom_digest_template.get('template_id', 'unknown')})")
+                        extraction_metadata['dom_digest_cache_hit'] = True
+                        extraction_metadata['dom_digest_template_id'] = dom_digest_template.get('template_id')
+                        extraction_metadata['dom_digest_page_type'] = dom_digest_template.get('page_type')
+                except Exception as e:
+                    logger.debug(f"  DOM digest cache check failed: {e}")
             
-            except Exception as e:
-                logger.error(f"    Direct LLM extraction failed: {e}")
-                logger.info("   Falling back to pattern-based extraction...")
-                import traceback
-                logger.debug(traceback.format_exc())
+            # NEW: Check Smart Pattern Cache SECOND (instant extraction, no LLM needed)
+            # This is the key optimization - use cached PATTERNS instead of LLM every time
+            pattern_cache_hit = False
+            incremental_extraction = False
+            direct_llm_items = None
+            
+            if self.smart_pattern_cache and fields:
+                try:
+                    # Step 1: Try exact pattern match first
+                    pattern, match_type = await self.smart_pattern_cache.get_pattern(
+                        url=url,
+                        fields=fields,
+                        html=cleaned_html,
+                        structure_hash=structure_hash
+                    )
+                    
+                    if pattern:
+                        logger.info(f"⚡ PATTERN CACHE HIT ({match_type}): Using cached {pattern.pattern_type.value} pattern")
+                        logger.info(f"   Pattern ID: {pattern.pattern_id[:16]}... (success rate: {pattern.success_rate:.0%})")
+                        
+                        # Execute the cached pattern (instant, no LLM!)
+                        items, success = await self.smart_pattern_cache.execute_pattern(pattern, cleaned_html, url)
+                        
+                        if success and items:
+                            direct_llm_items = items
+                            pattern_cache_hit = True
+                            extraction_metadata['pattern_cache_hit'] = True
+                            extraction_metadata['pattern_type'] = pattern.pattern_type.value
+                            extraction_metadata['pattern_id'] = pattern.pattern_id
+                            logger.info(f"⚡ Pattern executed: {len(items)} items (NO LLM USED)")
+                        else:
+                            logger.info(f"⚠️ Cached pattern failed, trying incremental extraction...")
+                    
+                    # Step 2: If no exact match, try subset pattern + incremental extraction
+                    if not pattern_cache_hit:
+                        subset_pattern, matched_fields, missing_fields = await self.smart_pattern_cache.get_pattern_subset(
+                            url=url,
+                            fields=fields,
+                            html=cleaned_html,
+                            structure_hash=structure_hash
+                        )
+                        
+                        if subset_pattern and matched_fields and missing_fields:
+                            logger.info(f"📦 INCREMENTAL EXTRACTION: Found pattern for {len(matched_fields)}/{len(fields)} fields")
+                            logger.info(f"   Matched fields: {matched_fields}")
+                            logger.info(f"   Missing fields: {missing_fields}")
+                            
+                            # Extract using pattern + incremental extraction
+                            incremental_items, incremental_metadata = await self.smart_pattern_cache.extract_incremental_fields(
+                                pattern=subset_pattern,
+                                html=cleaned_html,
+                                matched_fields=matched_fields,
+                                missing_fields=missing_fields,
+                                url=url
+                            )
+                            
+                            if incremental_items and len(incremental_items) > 0:
+                                direct_llm_items = incremental_items
+                                pattern_cache_hit = True
+                                incremental_extraction = True
+                                extraction_metadata['pattern_cache_hit'] = True
+                                extraction_metadata['incremental_extraction'] = True
+                                extraction_metadata['pattern_fields'] = matched_fields
+                                extraction_metadata['incremental_fields'] = missing_fields
+                                extraction_metadata['pattern_type'] = subset_pattern.pattern_type.value
+                                extraction_metadata['incremental_source'] = incremental_metadata.get('incremental_source', 'unknown')
+                                logger.info(f"✅ Incremental extraction complete: {len(incremental_items)} items")
+                            else:
+                                logger.info(f"⚠️ Incremental extraction failed, falling back to Direct LLM")
+                except Exception as e:
+                    logger.warning(f"⚠️ Pattern cache check failed: {e}")
+            
+            # If no pattern cache hit (exact or incremental), use Direct LLM extraction
+            if not pattern_cache_hit:
+                try:
+                    # Direct LLM extraction (async)
+                    # Use CLEANED HTML to reduce chunk count (10x faster for large pages)
+                    # HybridMarkdownExtractor will do additional cleaning if needed
+                    
+                    # Track cache status before extraction
+                    direct_llm_cached = False
+                    if self.direct_llm_extractor and self.direct_llm_extractor.enable_cache and self.direct_llm_extractor.result_cache:
+                        # Generate cache key the same way Direct LLM extractor does
+                        # Use domain + fields for reliable caching (matches _generate_cache_key logic)
+                        from urllib.parse import urlparse
+                        import hashlib
+                        domain = urlparse(url).netloc.replace('www.', '') if url else None
+                        if domain:
+                            # Normalize domain (replace dots with underscores for Redis compatibility)
+                            domain_normalized = domain.replace('.', '_')
+                            # Generate key: direct_llm_{domain_normalized}_{fields_hash}
+                            fields_str = ','.join(sorted(fields))
+                            fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
+                            cache_key = f"direct_llm_{domain_normalized}_{fields_hash}"
+                            cached_result = await self.direct_llm_extractor.result_cache.backend.get(cache_key)
+                            direct_llm_cached = cached_result is not None
+                            if direct_llm_cached:
+                                logger.info(f" Direct LLM cache detected (will be used)")
+                    
+                    import asyncio
+                    if asyncio.iscoroutinefunction(self.direct_llm_extractor.extract):
+                        direct_llm_items = await self.direct_llm_extractor.extract(
+                            html=cleaned_html,  # CLEANED HTML - reduces chunks dramatically
+                            fields=fields,
+                            context=context_str,
+                            target=target,  # Pass target hint
+                            url=url  # NEW: Pass URL for cache key generation
+                        )
+                    else:
+                        direct_llm_items = self.direct_llm_extractor.extract(
+                            html=cleaned_html,  # CLEANED HTML - reduces chunks dramatically
+                            fields=fields,
+                            context=context_str,
+                            target=target,  # Pass target hint
+                            url=url  # NEW: Pass URL for cache key generation
+                        )
+                    
+                    # Store cache status in metadata
+                    extraction_metadata['direct_llm_cached'] = direct_llm_cached
+                    
+                    # NEW: Learn pattern from successful LLM extraction
+                    # This is the key - after LLM works, generate a reusable pattern
+                    if direct_llm_items and len(direct_llm_items) > 0 and self.smart_pattern_cache:
+                        try:
+                            learned_pattern = await self.smart_pattern_cache.learn_from_extraction(
+                                url=url,
+                                html=cleaned_html,
+                                extracted_items=direct_llm_items,
+                                fields=fields,
+                                structure_hash=structure_hash
+                            )
+                            if learned_pattern:
+                                extraction_metadata['pattern_learned'] = True
+                                extraction_metadata['pattern_type'] = learned_pattern.pattern_type.value
+                                logger.info(f"📚 Learned {learned_pattern.pattern_type.value} pattern - future scrapes will be instant!")
+                                
+                                # Store DOM digest association (Layer 2 cache)
+                                if self.dom_digest_cache:
+                                    try:
+                                        await self.dom_digest_cache.store_template_for_digest(
+                                            url=url,
+                                            html=cleaned_html,
+                                            template_id=learned_pattern.pattern_id,
+                                            page_type=extraction_metadata.get('dom_digest_page_type'),
+                                            version=1,
+                                            success_rate=learned_pattern.success_rate
+                                        )
+                                        logger.debug(f"  DOM digest cached for template: {learned_pattern.pattern_id[:16]}...")
+                                    except Exception as e:
+                                        logger.debug(f"  DOM digest cache store failed: {e}")
+                                
+                                # Learn selectors in selector library (bootstrapping)
+                                if self.selector_library:
+                                    try:
+                                        # Extract selectors from pattern if available
+                                        selectors_used = None
+                                        if hasattr(learned_pattern, 'selectors'):
+                                            selectors_used = learned_pattern.selectors
+                                        
+                                        await self.selector_library.learn_from_extraction(
+                                            url=url,
+                                            fields=fields,
+                                            extracted_items=direct_llm_items,
+                                            html=cleaned_html,
+                                            selectors_used=selectors_used
+                                        )
+                                        extraction_metadata['selector_library_updated'] = True
+                                        logger.debug(f"  Selector library updated for {urlparse(url).netloc}")
+                                    except Exception as e:
+                                        logger.debug(f"  Selector library learning failed: {e}")
+                        except Exception as e:
+                            logger.warning(f"⚠️ Failed to learn pattern: {e}")
+                
+                except Exception as e:
+                    logger.error(f"    Direct LLM extraction failed: {e}")
+                    logger.info("   Falling back to pattern-based extraction...")
+                    import traceback
+                    logger.debug(traceback.format_exc())
+            
+            # Process Direct LLM results (whether from pattern cache or fresh extraction)
+            if direct_llm_items and len(direct_llm_items) > 0:
+                logger.info(f" Direct LLM extracted {len(direct_llm_items)} items")
+                
+                # UNIVERSAL RULE: If JSON is healthy, supplement it (don't replace)
+                # If JSON is unhealthy, use Direct LLM as primary
+                if json_is_healthy and json_data and len(json_data) > 0:
+                    logger.info(f"    JSON data is healthy - supplementing missing fields with Direct LLM...")
+                    # Match items by position or merge fields
+                    merged_items = []
+                    for i, json_item in enumerate(json_data):
+                        merged_item = json_item.copy()
+                        # Try to find matching Direct LLM item (by position or by matching fields)
+                        if i < len(direct_llm_items):
+                            llm_item = direct_llm_items[i]
+                            # Add missing fields from Direct LLM (only if missing in JSON)
+                            for field in extraction_metadata.get('missing_fields', []):
+                                if field not in merged_item or not merged_item.get(field):
+                                    if field in llm_item and llm_item.get(field):
+                                        merged_item[field] = llm_item[field]
+                        merged_items.append(merged_item)
+                    json_data = merged_items
+                    extraction_source = 'json+direct_llm'
+                    extraction_metadata['supplemented_with_direct_llm'] = True
+                    logger.info(f"    Supplemented {len(merged_items)} JSON items with Direct LLM fields")
+                    logger.info("    JSON remains primary source (Direct LLM only filled gaps)")
+                else:
+                    # No JSON data or JSON is unhealthy, use Direct LLM as primary
+                    # Calculate quality using quality calculator (distinguishes required/optional)
+                    from .quality_calculator import QualityCalculator
+                    quality_calc = QualityCalculator()
+                    
+                    if fields:
+                        field_coverage = quality_calc.calculate_field_coverage(direct_llm_items, fields)
+                        quality = quality_calc.calculate_quality_score(direct_llm_items, fields)
+                        missing_fields = quality_calc.get_missing_fields(direct_llm_items, fields, required_only=False)
+                        missing_required_fields = quality_calc.get_missing_fields(direct_llm_items, fields, required_only=True)
+                        
+                        logger.info(f"    Field coverage: {field_coverage}")
+                        logger.info(f"    Quality: {quality:.1f}% (required/optional weighted)")
+                        if missing_fields:
+                            logger.info(f"    Missing fields: {missing_fields}")
+                            if missing_required_fields:
+                                logger.warning(f"    Missing REQUIRED fields: {missing_required_fields}")
+                    else:
+                        # Fallback to simple calculation if no fields specified
+                        quality = 100.0 if direct_llm_items else 0.0
+                    
+                    # Accept if quality is reasonable (≥40% for aggressive, higher for others)
+                    quality_threshold = 40.0  # Lower threshold since we have quality modes
+                    if quality >= quality_threshold:
+                        logger.info(f" Direct LLM quality acceptable ({quality:.1f}% >= {quality_threshold:.1f}%)")
+                        json_data = direct_llm_items
+                        extraction_source = 'direct_llm'
+                        
+                        # PHASE 1 OPTIMIZATION: Early exit if Direct LLM quality is high
+                        if quality >= 60.0:  # High quality threshold
+                            logger.info(f" PHASE 1 OPTIMIZATION: Early exit - Direct LLM extraction high quality")
+                            logger.info(f"   Skipping HTML extraction (saved ~20-30% time)")
+                            
+                            # Calculate execution time
+                            execution_time = time.time() - start_time
+                            
+                            logger.info(f" Extraction complete: {len(json_data)} items in {execution_time:.2f}s")
+                            
+                            return {
+                                'data': json_data,
+                                'metadata': {
+                                    'url': url,
+                                    'fields': fields,
+                                    'items_extracted': len(json_data),
+                                    'execution_time': execution_time,
+                                    'extraction_source': extraction_source,
+                                    'code_cached': None,
+                                    'schema_quality': None,
+                                    'pagination_detected': pagination_strategy['type'] if pagination_strategy else None,
+                                    'total_pages_scraped': 1,
+                                    'auto_pagination': False,
+                                    'early_exit': True,  # NEW: Flag for early exit
+                                    'direct_llm_quality': quality,
+                                    'field_coverage': field_coverage if fields else {},
+                                    'missing_fields': missing_fields if fields else [],
+                                    'missing_required_fields': missing_required_fields if fields else [],
+                                    'pattern_cache_hit': extraction_metadata.get('pattern_cache_hit', False),
+                                    'pattern_learned': extraction_metadata.get('pattern_learned', False),
+                                    'direct_llm_cached': extraction_metadata.get('direct_llm_cached', False),  # NEW: Track Direct LLM cache
+                                    'timestamp': time.time()
+                                },
+                                'source': extraction_source
+                            }
+                        
+                        # Skip HTML extraction
+                        logger.info("   Skipping pattern-based extraction (Direct LLM succeeded)")
+                    else:
+                        logger.warning(f"    Direct LLM quality too low ({quality:.1f}% < {quality_threshold:.1f}%)")
+                        logger.info("   Falling back to pattern-based extraction...")
+            else:
+                logger.warning("    Direct LLM extracted 0 items, falling back to pattern-based...")
         
         # Step 3: If JSON and Direct LLM not sufficient, use HTML extraction
         if not json_data:
@@ -1303,25 +1782,65 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
             
             logger.info(f"   Reduction: {clean_result['reduction_percent']:.1f}%")
             
-            # Step 4: Generate structural hash
-            logger.info(" Step 4: Generating structural hash...")
-            hash_result = self.hash_generator.generate_hash(cleaned_html)
-            structure_hash = hash_result['hash']
+            # Step 4: Generate structural hash (if not already generated in Direct LLM path)
+            if hash_result is None or structure_hash is None:
+                logger.info(" Step 4: Generating structural hash...")
+                hash_result = self.hash_generator.generate_hash(cleaned_html)
+                structure_hash = hash_result['hash']
+            else:
+                logger.info(" Step 4: Using existing structural hash (from Direct LLM path)")
             
-            # Step 5: Check cache (unless forced to generate)
+            # Step 5: Check template spec cache first (deterministic extraction)
+            template_spec = None
+            template_spec_cached = False
+            
+            if not force_generate and self.deterministic_extractor and self.model_router:
+                try:
+                    # Check if we have a cached template spec
+                    from urllib.parse import urlparse
+                    import hashlib
+                    domain = urlparse(url).netloc.replace('www.', '').replace('.', '_')
+                    fields_str = ','.join(sorted(fields))
+                    fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
+                    template_cache_key = f"template_spec_{domain}_{fields_hash}"
+                    
+                    cached_template = await self.code_cache.async_get(template_cache_key, domain=domain)
+                    if cached_template and isinstance(cached_template, dict):
+                        from .template_spec import TemplateSpec
+                        template_spec = TemplateSpec.from_dict(cached_template)
+                        template_spec_cached = True
+                        logger.info(f"⚡ Template spec cache hit: {template_spec.template_id[:16]}...")
+                        extraction_metadata['template_spec_cached'] = True
+                except Exception as e:
+                    logger.debug(f"  Template spec cache check failed: {e}")
+            
+            # Step 5.5: Check code cache (unless forced to generate or template spec found)
             extraction_code = None
             code_cached = False
             
-            if not force_generate:
+            if not template_spec and not force_generate:
                 logger.info(" Step 5: Checking code cache...")
-                # Generate field-aware cache key (fixes field mismatch issues)
-                cache_key = generate_cache_key(structure_hash, fields)
-                cached_entry = self.code_cache.get(cache_key)
+                # Extract domain for domain-based caching
+                from urllib.parse import urlparse
+                domain = urlparse(url).netloc
+                
+                # Try domain-based cache first (reusable across pages on same domain)
+                domain_cache_key = generate_cache_key("", fields, domain=domain)
+                cached_entry = await self.code_cache.async_get(domain_cache_key, domain=domain)
                 
                 if cached_entry:
                     extraction_code = cached_entry['code']
                     code_cached = True
-                    logger.info(" Using cached extraction code")
+                    logger.info(f" Using cached extraction code for domain: {domain}")
+                else:
+                    # Fallback to structure-based cache (page-specific)
+                    cache_key = generate_cache_key(structure_hash, fields)
+                    cached_entry = await self.code_cache.async_get(cache_key, domain=domain)
+                    
+                    if cached_entry:
+                        extraction_code = cached_entry['code']
+                        code_cached = True
+                        logger.info(" Using cached extraction code (structure-based)")
             
             # Step 5.5: Analyze HTML structure (NEW: From ScrapeGraphAI)
             structure_analysis = None
@@ -1363,8 +1882,95 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                 except Exception as e:
                     logger.warning(f"    Field mapping failed: {e}, continuing without semantic hints")
             
-            # Step 6: Generate code if needed
-            if not extraction_code:
+            # Step 6: Try template spec extraction first (deterministic, fast)
+            template_spec_succeeded = False
+            if template_spec and self.deterministic_extractor:
+                try:
+                    logger.info(" Step 6: Executing template spec (deterministic extraction)...")
+                    items = self.deterministic_extractor.extract(cleaned_html, template_spec)
+                    
+                    if items and len(items) > 0:
+                        logger.info(f"⚡ Template spec executed: {len(items)} items (deterministic, no LLM)")
+                        json_data = items
+                        extraction_source = 'template_spec'
+                        extraction_metadata['template_spec_used'] = True
+                        extraction_metadata['template_spec_id'] = template_spec.template_id
+                        template_spec_succeeded = True
+                    else:
+                        logger.warning("   Template spec returned 0 items, falling back to code generation...")
+                        template_spec = None  # Clear so we generate code
+                except Exception as e:
+                    logger.warning(f"   Template spec execution failed: {e}, falling back to code generation...")
+                    template_spec = None  # Clear so we generate code
+            
+            # Step 6.5: Generate template spec if not cached (optional, can fall back to code)
+            if not template_spec_succeeded and not template_spec and not extraction_code and self.model_router and self.ai_generator:
+                # Optionally try generating template spec first (can be disabled)
+                try:
+                    logger.info(" Step 6.5: Generating template spec (deterministic approach)...")
+                    context_str = None
+                    if hasattr(self, 'context_manager') and self.context_manager and hasattr(self.context_manager, 'context') and self.context_manager.context:
+                        context_str = self.context_manager.context.goal
+                    
+                    # Get training examples from selector library (bootstrapping)
+                    training_examples = None
+                    if self.selector_library:
+                        try:
+                            training_examples = await self.selector_library.get_training_examples(url, fields)
+                            if training_examples:
+                                logger.info(f"   Using {len(training_examples)} training examples from selector library")
+                        except Exception as e:
+                            logger.debug(f"   Failed to get training examples: {e}")
+                    
+                    template_result = self.ai_generator.generate_template_spec(
+                        cleaned_html,
+                        fields,
+                        url,
+                        extraction_context=context_str,
+                        structure_analysis=structure_analysis,
+                        model_router=self.model_router,
+                        temperature=0.0,  # Deterministic
+                        training_examples=training_examples  # NEW: Pass training examples
+                    )
+                    
+                    template_spec = template_result['template_spec']
+                    extraction_metadata['model_tier_used'] = 'template'  # Track model tier
+                    
+                    # Try executing immediately
+                    if self.deterministic_extractor:
+                        items = self.deterministic_extractor.extract(cleaned_html, template_spec)
+                        if items and len(items) > 0:
+                            logger.info(f"✅ Template spec generated and executed: {len(items)} items")
+                            json_data = items
+                            extraction_source = 'template_spec'
+                            extraction_metadata['template_spec_generated'] = True
+                            extraction_metadata['template_spec_id'] = template_spec.template_id
+                            template_spec_succeeded = True
+                            
+                            # Cache template spec
+                            from urllib.parse import urlparse
+                            import hashlib
+                            domain = urlparse(url).netloc.replace('www.', '').replace('.', '_')
+                            fields_str = ','.join(sorted(fields))
+                            fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
+                            template_cache_key = f"template_spec_{domain}_{fields_hash}"
+                            await self.code_cache.async_set(
+                                template_cache_key,
+                                template_spec.to_dict(),
+                                {'template_id': template_spec.template_id, 'confidence': template_spec.confidence},
+                                domain=domain
+                            )
+                        else:
+                            logger.warning("   Generated template spec returned 0 items, falling back to code generation...")
+                            template_spec = None
+                    else:
+                        template_spec = None
+                except Exception as e:
+                    logger.debug(f"   Template spec generation failed: {e}, falling back to code generation...")
+                    template_spec = None
+            
+            # Step 6: Generate code if needed (fallback - only if template spec didn't succeed)
+            if not extraction_code and not template_spec_succeeded:
                 logger.info(" Step 6: Generating extraction code with AI...")
                 # Pass extraction context to improve code generation
                 context_str = None
@@ -1382,15 +1988,24 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                 extraction_code = gen_result['code']
                 
                 # Cache the generated code with field-aware key
-                cache_key = generate_cache_key(structure_hash, fields)
-                self.code_cache.set(
+                # Extract domain from URL for domain-based caching
+                from urllib.parse import urlparse
+                parsed_url = urlparse(url)
+                domain = parsed_url.netloc
+                
+                cache_key = generate_cache_key(structure_hash, fields, domain=domain)
+                await self.code_cache.async_set(
                     cache_key,
                     extraction_code,
                     {
                         'model': gen_result['model_used'],
                         'fields': fields,
-                        'url': url
-                    }
+                        'url': url,
+                        'domain': domain,  # Add domain for cache lookup
+                        'structure_hash': structure_hash,
+                        'cache_type': 'structure'
+                    },
+                    domain=domain
                 )
             
             # Step 7: Execute extraction code with REINFORCEMENT LOOP
@@ -1526,8 +2141,43 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                         selector = structure_analysis['selector']
                         containers = soup.select(selector)
                         logger.info(f"   Found {len(containers)} containers with selector: {selector}")
+                        
+                        # If we found very few containers (1-2), try to find better containers
+                        if len(containers) < 3:
+                            logger.warning(f"    Only found {len(containers)} containers, trying alternative detection...")
+                            # Try common product/item container patterns
+                            alternative_selectors = [
+                                'article',
+                                '[role="article"]',
+                                'a[href*="/products/"]',  # Product Hunt product links
+                                'div[class*="item"]',
+                                'div[class*="card"]',
+                                'div[class*="product"]',
+                                'section > div',
+                                'main > div > div',
+                            ]
+                            
+                            for alt_selector in alternative_selectors:
+                                try:
+                                    alt_containers = soup.select(alt_selector)
+                                    if len(alt_containers) >= 3:  # Found multiple items
+                                        logger.info(f"    Found {len(alt_containers)} containers with alternative selector: {alt_selector}")
+                                        containers = alt_containers
+                                        break
+                                except:
+                                    continue
                     except Exception as e:
                         logger.warning(f"    Failed to find containers: {e}")
+                
+                # If still no good containers, try to auto-detect repeating items
+                if not containers or len(containers) < 3:
+                    logger.info("    Auto-detecting repeating item containers...")
+                    from .dom_pattern_detector import DOMPatternDetector
+                    detector = DOMPatternDetector()
+                    repeating_containers = detector.detect_repeating_containers(html)
+                    if repeating_containers and len(repeating_containers) >= 3:
+                        containers = repeating_containers
+                        logger.info(f"    Auto-detected {len(containers)} repeating containers")
                 
                 # Extract using semantic patterns
                 extractor = SemanticExtractor()
@@ -1616,7 +2266,27 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                 'pagination_detected': pagination_strategy['type'] if pagination_strategy else None,
                 'total_pages_scraped': len(pagination_strategy.get('generated_urls', [])) if pagination_strategy and pagination_strategy.get('generated_urls') else 1,
                 'auto_pagination': True if pagination_strategy and 'generated_urls' in pagination_strategy else False,
-                'timestamp': time.time()
+                'direct_llm_cached': extraction_metadata.get('direct_llm_cached', False),
+                'pattern_cache_hit': extraction_metadata.get('pattern_cache_hit', False),
+                # Phase 2/3 metadata
+                'template_spec_used': extraction_metadata.get('template_spec_used', False),
+                'template_spec_id': extraction_metadata.get('template_spec_id'),
+                'template_spec_generated': extraction_metadata.get('template_spec_generated', False),
+                'dom_digest_cache_hit': extraction_metadata.get('dom_digest_cache_hit', False),
+                'dom_digest_page_type': extraction_metadata.get('dom_digest_page_type'),
+                'model_tier_used': extraction_metadata.get('model_tier_used'),  # router/template/recovery
+                'pattern_learned': extraction_metadata.get('pattern_learned', False),
+                'pattern_type': extraction_metadata.get('pattern_type'),
+                'selector_library_updated': extraction_metadata.get('selector_library_updated', False),
+                'early_exit': extraction_metadata.get('early_exit', False),
+                'unblocker_log': unblocker_log if 'unblocker_log' in locals() else [],
+                'timestamp': time.time(),
+                'strategy': {
+                    'method': strategy_used.get('extraction_method') if strategy_used else extraction_source,
+                    'proxy': strategy_used.get('proxy_type') if strategy_used else 'residential',
+                    'confidence': 1.0,
+                    'source': 'adaptive'
+                } if strategy_used else None
             },
             'source': extraction_source
         }
@@ -1787,6 +2457,12 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                     logger.info("    Applying JSON structure analysis to improve extraction...")
                     items = self._apply_json_structure_analysis(items, json_structure_analysis, fields)
                 
+                # NEW: Filter items by target if provided (e.g. "products only")
+                # if target and items and len(items) > 0:
+                #     logger.info(f" Filtering {len(items)} items by target: '{target}'")
+                #     items = await self._filter_items_by_target(items, target)
+                #     logger.info(f"    Retained {len(items)} items after filtering")
+
                 if items:
                     logger.info(f" Extracted {len(items)} items from embedded JSON")
                     if return_html or return_json_data:
@@ -2135,6 +2811,38 @@ If you can't find the data, return an empty array: []
         """Import cache from file"""
         return self.code_cache.import_cache(import_path)
     
+    async def list_cached_patterns(self, domain: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        List cached extraction patterns by domain (async)
+        
+        Args:
+            domain: Optional domain filter
+            
+        Returns:
+            List of cached patterns with metadata
+        """
+        # Use async method if available (for Redis)
+        if hasattr(self.code_cache, 'async_list_by_domain'):
+            return await self.code_cache.async_list_by_domain(domain)
+        else:
+            # Fallback to sync method (for local cache)
+            return self.code_cache.list_by_domain(domain)
+    
+    async def get_cached_domains(self) -> List[str]:
+        """
+        Get list of all domains with cached patterns (async)
+        
+        Returns:
+            List of domain names
+        """
+        # Get domains from patterns
+        patterns = await self.list_cached_patterns()
+        domains = set()
+        for pattern in patterns:
+            if pattern.get('domain'):
+                domains.add(pattern['domain'])
+        return sorted(list(domains))
+    
     def _apply_json_structure_analysis(
         self,
         json_data: List[Dict[str, Any]],
@@ -2231,6 +2939,255 @@ If you can't find the data, return an empty array: []
         
         return result['sample_html']
     
+    def _detect_blocking(self, html: str, status_code: int, url: str) -> Dict[str, Any]:
+        """
+        Detect if response is blocked/challenged
+        
+        Analyzes status code, HTML size, and content patterns to determine
+        if the request was blocked by anti-bot protection.
+        
+        Returns:
+            Dict with 'is_blocked', 'block_type', 'confidence', 'indicators'
+        """
+        indicators = []
+        block_type = None
+        confidence = 0.0
+        
+        # 1. Status code analysis
+        if status_code in [403, 429, 503, 407]:
+            indicators.append(f'status_{status_code}')
+            block_type = 'http_error'
+            confidence = 0.9
+        
+        # 2. HTML size analysis (tiny responses are suspicious)
+        # Exception: API responses (JSON) might be small but valid
+        if html and len(html) < 10000: # Increased from 5000 to 10000
+            # Check if it's JSON (valid) or HTML (suspicious)
+            if not (html.strip().startswith('{') or html.strip().startswith('[')):
+                indicators.append('small_html')
+                confidence = max(confidence, 0.7)
+        
+        # 3. Content analysis
+        if html:
+            html_lower = html.lower()
+            
+            # Challenge pages
+            challenge_phrases = [
+                'verify you are human', 
+                'checking your browser',
+                'cloudflare', 
+                'captcha',
+                'access denied',
+                'security check',
+                'perimeterx',
+                'datadome',
+                'please wait...',
+                'just a moment...'
+            ]
+            
+            # Only check for challenge phrases if page is relatively small (< 50KB)
+            # Real product pages are usually large (> 100KB)
+            # Challenge pages are usually small (< 10KB)
+            if len(html) < 50000:
+                for phrase in challenge_phrases:
+                    if phrase in html_lower:
+                        indicators.append('challenge_page')
+                        block_type = 'challenge'
+                        confidence = 0.95
+                        logger.warning(f"⛔ Blocking detected due to phrase: '{phrase}' (size: {len(html)} bytes)")
+                        break
+            else:
+                # For large pages, be very specific or skip generic word checks
+                # to avoid false positives (e.g. "protected by reCAPTCHA" in footer)
+                pass
+        
+        # 4. Domain-specific validation (missing expected content)
+        if 'homedepot.com' in url and '/p/' in url:
+            # Product page should have product elements
+            expected_elements = ['add to cart', 'price', 'model', 'sku']
+            if html and not any(e in html_lower for e in expected_elements):
+                indicators.append('missing_product_elements')
+                confidence = max(confidence, 0.6)
+                if not block_type:
+                    block_type = 'missing_content'
+        
+        return {
+            'is_blocked': confidence > 0.5,
+            'block_type': block_type or 'unknown',
+            'confidence': confidence,
+            'indicators': indicators
+        }
+
+    async def _fetch_with_adaptive_retry(
+        self,
+        url: str,
+        initial_strategy: Optional[Dict[str, Any]] = None,
+        wait_for_selector: Optional[str] = None,
+        scroll_to_bottom: bool = False,
+        max_attempts: int = 3
+    ) -> Dict[str, Any]:
+        """
+        Fetch with automatic strategy adaptation on blocking
+        
+        - Attempt 1: Use cached strategy (if exists)
+        - Attempt 2: Escalate to more aggressive config
+        - Attempt 3: Try alternative proxy type
+        """
+        domain = urlparse(url).netloc
+        current_strategy = initial_strategy
+        
+        # Check if strategy is already degraded
+        if self.strategy_detector and self.strategy_detector.is_strategy_degraded(domain):
+            logger.warning(f"⚠️ Strategy for {domain} is degraded, escalating immediately...")
+            current_strategy = self.strategy_detector.get_escalated_strategy(domain, current_strategy)
+        
+        # NEW: Limit attempts in production to avoid Cloud Run timeouts
+        effective_max_attempts = min(max_attempts, 2) if self.web_unblocker_api_key else max_attempts
+        
+        for attempt in range(1, effective_max_attempts + 1):
+            logger.info(f"🔄 Adaptive Fetch Attempt {attempt}/{effective_max_attempts}")
+            
+            # Prepare config
+            proxy_type = current_strategy.get('proxy_type', 'residential') if current_strategy else 'residential'
+            browser_config = current_strategy.get('browser_config') if current_strategy else None
+            
+            # Configure fetcher
+            # Note: We create a new fetcher instance or reconfigure existing one?
+            # For simplicity, we'll use the existing hybrid fetcher but pass overrides
+            # However, HybridFetcher is initialized with fixed proxy config.
+            # We need to dynamically adjust it.
+            
+            # Dynamic Fetcher Configuration
+            # If proxy type changed, we need to adjust the fetcher's proxy config
+            fetcher_proxy_config = self.proxy_config
+            fetcher_unblocker_key = self.web_unblocker_api_key
+            
+            if proxy_type == 'web_unblocker':
+                # Ensure we use unblocker
+                if not fetcher_unblocker_key:
+                    logger.warning("   Web Unblocker requested but no API key available")
+            
+            # Execute fetch
+            try:
+                # Rate Limiting: Wait for token before every attempt
+                if self.rate_limiter:
+                    await self.rate_limiter.wait_for_token(url)
+                
+                # Use HybridFetcher with specific browser config
+                # We need to pass browser_config to scrape/fetch
+                # But HybridFetcher doesn't accept dynamic proxy config easily
+                # So we might need to instantiate a temp fetcher or rely on browser_config
+                
+                # For now, we rely on browser_config being passed to fetch()
+                # and HybridFetcher handling the proxy selection if possible
+                
+                # If using Web Unblocker, we might need to force it via browser_config
+                # or rely on the fetcher's existing setup
+                
+                # Let's use the existing fetcher but pass the browser_config
+                # which now supports per-request settings
+                
+                # If proxy_type is web_unblocker, we might need to signal that
+                # Currently HybridFetcher uses self.web_unblocker_api_key if available
+                
+                # Fetch!
+                result = await self.html_fetcher._fetch_with_browser(
+                    url=url,
+                    wait_for_selector=wait_for_selector,
+                    scroll_to_bottom=scroll_to_bottom,
+                    browser_config=browser_config
+                )
+                
+                # Detect blocking
+                blocking_info = self._detect_blocking(result.get('html', ''), result.get('status_code', 0), url)
+                
+                # NEW: Smart JSON-First Escalation
+                # If not blocked, but we are in a mode that prefers JSON and no JSON was found,
+                # we might want to escalate to browser to see if JS renders JSON artifacts.
+                is_json_missing = False
+                if not blocking_info['is_blocked'] and attempt == 1:
+                    # Check if JSON was found in this result
+                    has_json = False
+                    if result.get('json_data'):
+                        has_json = True
+                    else:
+                        # Use detector to check HTML for JSON-LD or other markers
+                        json_check = self.json_detector.detect_and_extract(result.get('html', ''), url)
+                        if json_check.get('json_found'):
+                            has_json = True
+                    
+                    if not has_json:
+                        # If no JSON found in static HTML, check if we should try browser
+                        # We use the same heuristic as HybridFetcher but specifically for JSON
+                        if self.html_fetcher._detect_js_required(result.get('html', ''), domain):
+                            logger.info(f"🔍 No JSON found in static HTML but JS indicators detected. Escalating to browser for Smart JSON-First.")
+                            is_json_missing = True
+                            blocking_info['is_blocked'] = True
+                            blocking_info['block_type'] = 'json_missing'
+                            blocking_info['confidence'] = 0.8
+
+                if not blocking_info['is_blocked'] and not is_json_missing:
+                    # Success - Log and return
+                    logger.info(f"✅ Fetch successful on attempt {attempt} using {proxy_type}")                
+                    # Record success
+                    if self.strategy_detector:
+                        self.strategy_detector.record_strategy(
+                            url=url,
+                            extraction_method='html', # Default, will be refined by extraction
+                            proxy_type=proxy_type,
+                            browser_config=browser_config,
+                            success=True,
+                            blocking_info=blocking_info
+                        )
+                    
+                    # Report to Rate Limiter (Success -> Relax limits)
+                    if self.rate_limiter:
+                        self.rate_limiter.report_result(url, result['status_code'], is_blocked=False)
+                    
+                    # Inject strategy used into result for metadata
+                    result['strategy_used'] = current_strategy
+                    
+                    return result
+                
+                # Blocked - Log and escalate
+                logger.warning(f"⛔ Blocked on attempt {attempt}: {blocking_info['block_type']}")
+                
+                # Report to Rate Limiter (Blocked -> Increase limits)
+                if self.rate_limiter:
+                    self.rate_limiter.report_result(url, result['status_code'], is_blocked=True)
+                
+                # Record failure
+                if self.strategy_detector:
+                    self.strategy_detector.record_strategy(
+                        url=url,
+                        extraction_method='html',
+                        proxy_type=proxy_type,
+                        browser_config=browser_config,
+                        success=False,
+                        blocking_info=blocking_info
+                    )
+                
+                # Escalate for next attempt
+                if self.strategy_detector:
+                    current_strategy = self.strategy_detector.get_escalated_strategy(
+                        domain, 
+                        current_strategy,
+                        blocking_info=blocking_info
+                    )
+                    logger.info(f"   Escalating strategy: {current_strategy}")
+                
+            except Exception as e:
+                logger.error(f"❌ Attempt {attempt} failed: {e}")
+        
+        # If all attempts fail, return last result (or empty)
+        logger.error("❌ All adaptive attempts failed")
+        return {
+            'html': '',
+            'status_code': 0,
+            'url': url,
+            'error': 'All adaptive attempts failed'
+        }
+
     async def close(self) -> None:
         """Clean up resources"""
         await self.html_fetcher.close()
@@ -2248,6 +3205,68 @@ If you can't find the data, return an empty array: []
             DeprecationWarning,
             stacklevel=2
         )
+
+
+    async def _filter_items_by_target(self, items: List[Dict[str, Any]], target: str) -> List[Dict[str, Any]]:
+        """
+        Filter extracted items based on target description using LLM
+        """
+        if not items or not target:
+            return items
+            
+        # If list is huge, sample it first to see if filtering is needed
+        # But for < 200 items, we can process in batches
+        
+        filtered_items = []
+        batch_size = 20  # Process in small batches to fit in context
+        
+        for i in range(0, len(items), batch_size):
+            batch = items[i:i+batch_size]
+            
+            # Use AI Generator to filter
+            # We'll use a specialized prompt
+            prompt = f"""
+            I have a list of extracted items. I need to filter them to keep ONLY items that match this target:
+            "{target}"
+            
+            Return a JSON list of indices (0-based) of items that match the target.
+            
+            Items:
+            {json.dumps(batch, indent=2, default=str)}
+            """
+            
+            try:
+                response = await self.ai_generator.generate_code(
+                    prompt=prompt,
+                    url="filter_context",
+                    mode="json" # Expect JSON response
+                )
+                
+                logger.info(f"    Filter response for batch {i}: {str(response)[:100]}...")
+
+                # Parse response (expecting list of indices)
+                if isinstance(response, list):
+                    indices = response
+                elif isinstance(response, dict) and 'indices' in response:
+                    indices = response['indices']
+                else:
+                    # Fallback: try to parse from string if it returned string
+                    try:
+                        indices = json.loads(response)
+                    except:
+                        logger.warning(f" Failed to parse filter response: {response}")
+                        indices = range(len(batch)) # Keep all if failed
+                
+                # Add kept items
+                for idx in indices:
+                    if isinstance(idx, int) and 0 <= idx < len(batch):
+                        filtered_items.append(batch[idx])
+                        
+            except Exception as e:
+                logger.warning(f" Error filtering batch {i}: {e}")
+                filtered_items.extend(batch) # Keep all on error
+                
+        return filtered_items
 
 
 # Convenience function for simple usage

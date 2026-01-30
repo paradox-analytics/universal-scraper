@@ -291,3 +291,111 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
         # Passed basic checks
         return True
 
+    
+    def filter_items_by_target(
+        self,
+        items: List[Dict[str, Any]],
+        target_description: str,
+        fields: List[str]
+    ) -> List[Dict[str, Any]]:
+        """
+        Filter extracted items to only keep those matching the specific target description.
+        Useful for separating "Main Product" from "Related Products" or "Nav Items".
+        
+        Args:
+            items: List of extracted items
+            target_description: User's specific target (e.g. "Main product only, no related items")
+            fields: list of fields to help context
+            
+        Returns:
+            List[Dict]: Filtered list of items
+        """
+        if not items or not target_description:
+            return items
+            
+        # If very few items, maybe no need to filter (unless strict single item requested)
+        if len(items) <= 1:
+            return items
+            
+        logger.info(f" Filtering {len(items)} items using target: '{target_description}'")
+        
+        # Create a condensed representation for the LLM (ID + Title/Name + 1-2 other fields)
+        condensed_items = []
+        for idx, item in enumerate(items):
+            # Find a "name" or "title" field
+            label = "Unknown"
+            for k, v in item.items():
+                if k.lower() in ['title', 'name', 'headline', 'productname']:
+                    label = str(v)[:50]
+                    break
+            
+            # Find an ID
+            item_id = item.get('id', item.get('sku', item.get('uuid', str(idx))))
+            
+            condensed_items.append({
+                'index': idx,
+                'label': label,
+                'id': str(item_id)[:20],
+                'sample_data': str(list(item.values())[:3])[:100] # First 3 values
+            })
+            
+        # Batch processing (LLM context limit)
+        # We'll validatethe first 20 items. If we find the "Main" one, we might stop?
+        # For now, process first 20 items.
+        batch = condensed_items[:20] 
+        
+        prompt = f"""You are a precise data filter.
+        
+TARGET DESCRIPTION: "{target_description}"
+
+CANDIDATE ITEMS (Index: Label):
+{json.dumps(batch, indent=1)}
+
+TASK:
+Identify which items in the list above MATCH the target description.
+For example, if the target is "Main Product", exclude "Related Products" or "Accessories".
+If the target implies a single item (e.g. "The product on this page"), select only the best match.
+If the target implies a list (e.g. "All reviews"), select all valid matches.
+
+Respond with a JSON object containing the INDICES of the matching items.
+{{
+    "matching_indices": [0, 2, ...],
+    "reasoning": "Item 0 matches because..."
+}}
+"""
+        try:
+            response = litellm.completion(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are a data filtering assistant. Output valid JSON only."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.0
+            )
+            
+            content = response.choices[0].message.content
+            result = json.loads(content)
+            
+            valid_indices = set(result.get('matching_indices', []))
+            
+            # Filter the original items
+            filtered_items = [item for i, item in enumerate(items) if i in valid_indices or i >= 20] # Keep items beyond 20 unchecked? Or discard? 
+            # Better safe approach: If we found matches in the first 20, assume the rest are noise if the goal was "Main Product".
+            # If the goal was "All reviews", the rest might be valid.
+            # Heuristic: If we selected < 50% of the batch, likely strictly filtering. Discard the rest.
+            
+            if len(valid_indices) < len(batch) / 2:
+                # We are filtering heavily (likely picking out a specific item)
+                filtered_items = [item for i, item in enumerate(items) if i in valid_indices]
+                logger.info(f" Strict filtering applied. kept {len(filtered_items)} items.")
+            else:
+                # We are keeping most things, so assume the tail is also valid
+                filtered_items = [item for i, item in enumerate(items) if i in valid_indices or i >= 20]
+                logger.info(f" Loose filtering applied. Kept {len(filtered_items)} items.")
+                
+            return filtered_items
+
+        except Exception as e:
+            logger.error(f" Item filtering failed: {e}")
+            return items # Fallback to original list

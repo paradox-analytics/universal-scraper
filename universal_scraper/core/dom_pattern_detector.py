@@ -589,6 +589,47 @@ class DOMPatternDetector:
             logger.debug(f"    Sibling analysis failed: {e}")
             return None
     
+    def detect_repeating_containers(self, html: str) -> Optional[List[Tag]]:
+        """
+        Detect repeating item containers from HTML
+        
+        Returns:
+            List of BeautifulSoup Tag elements representing repeating containers
+        """
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        # Try common product/item container patterns
+        selectors = [
+            'article',
+            '[role="article"]',
+            'a[href*="/products/"]',  # Product Hunt product links
+            'a[href*="/product/"]',
+            'div[class*="item"]',
+            'div[class*="card"]',
+            'div[class*="product"]',
+            'li[class*="item"]',
+            'li[class*="card"]',
+            'section > div',
+            'main > div > div',
+        ]
+        
+        for selector in selectors:
+            try:
+                containers = soup.select(selector)
+                if len(containers) >= 3:  # Found multiple items
+                    # Verify they're actually repeating (similar structure)
+                    if len(containers) >= 3:
+                        # Check if first few have similar classes
+                        first_classes = set(containers[0].get('class', []))
+                        second_classes = set(containers[1].get('class', []))
+                        if first_classes and second_classes and len(first_classes & second_classes) > 0:
+                            logger.info(f"    Detected {len(containers)} repeating containers with selector: {selector}")
+                            return containers
+            except Exception as e:
+                continue
+        
+        return None
+    
     def _identify_best_pattern(
         self,
         element_sigs: List[Dict],

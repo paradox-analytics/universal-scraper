@@ -44,7 +44,9 @@ class BrowserFetcher:
         timeout: int = 30000,  # 30 seconds
         wait_for_network_idle: bool = False,
         capture_api_requests: bool = True,
-        user_data_dir: Optional[str] = None
+        user_data_dir: Optional[str] = None,
+        web_unblocker_api_key: Optional[str] = None,
+        web_unblocker_zone: str = "web_unlocker1"
     ):
         """
         Initialize Browser Fetcher
@@ -72,6 +74,8 @@ class BrowserFetcher:
         self.page = None
         self.captured_requests = []
         self.discovered_apis = {}
+        self.web_unblocker_api_key = web_unblocker_api_key
+        self.web_unblocker_zone = web_unblocker_zone
         
         logger.info(f" Browser Fetcher initialized with {BROWSER_TYPE}")
     
@@ -91,6 +95,8 @@ class BrowserFetcher:
     
     async def _launch_browser(self) -> None:
         """Launch browser (Playwright or Camoufox)"""
+        import asyncio
+        
         logger.info(f" Launching {BROWSER_TYPE} browser...")
         
         # Browser configuration
@@ -99,25 +105,83 @@ class BrowserFetcher:
             'args': [
                 '--disable-blink-features=AutomationControlled',
                 '--disable-dev-shm-usage',
-                '--no-sandbox'
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-gpu'
             ]
         }
         
-        # Add proxy if configured
+        # Add proxy if configured and valid
         if self.proxy_config:
-            proxy_server = self.proxy_config['server']
-            if not proxy_server.startswith('http'):
-                proxy_server = f"http://{proxy_server}"
-            
-            launch_options['proxy'] = {
-                'server': proxy_server
-            }
-            
-            if self.proxy_config.get('username') and self.proxy_config.get('password'):
-                launch_options['proxy']['username'] = self.proxy_config['username']
-                launch_options['proxy']['password'] = self.proxy_config['password']
-            
-            logger.info(f" Using proxy: {proxy_server}")
+            try:
+                proxy_server = self.proxy_config.get('server')
+                # Validate proxy server is present, not None, and not empty
+                if proxy_server is None or not isinstance(proxy_server, str) or len(proxy_server.strip()) == 0:
+                    logger.warning("⚠️ Proxy config provided but 'server' field is missing, None, or empty. Continuing without proxy...")
+                else:
+                    # Ensure proxy server has protocol
+                    proxy_server = proxy_server.strip()
+                    if not proxy_server.startswith('http'):
+                        proxy_server = f"http://{proxy_server}"
+                    
+                    # Validate proxy server format (basic check)
+                    if '://' not in proxy_server or len(proxy_server.split('://')) != 2:
+                        logger.warning(f"⚠️ Invalid proxy server format: {proxy_server}. Continuing without proxy...")
+                    else:
+                        launch_options['proxy'] = {
+                            'server': proxy_server
+                        }
+                        
+                        # Add authentication if provided
+                        username = self.proxy_config.get('username')
+                        password = self.proxy_config.get('password')
+                        if username and password:
+                            launch_options['proxy']['username'] = str(username).strip()
+                            launch_options['proxy']['password'] = str(password).strip()
+                        
+                        logger.info(f"✅ Using proxy: {proxy_server}")
+            except Exception as e:
+                logger.warning(f"⚠️ Error configuring proxy: {e}. Continuing without proxy...")
+                # Don't fail browser launch if proxy config is invalid
+                # Remove proxy from launch_options if it was partially set
+                if 'proxy' in launch_options:
+                    del launch_options['proxy']
+        
+        # Add Web Unblocker as proxy if configured
+        if self.web_unblocker_api_key:
+            try:
+                # Detect if it's proxy credentials format or API key
+                separator = None
+                if ':' in self.web_unblocker_api_key and self.web_unblocker_api_key.count(':') >= 3:
+                    separator = ':'
+                elif ',' in self.web_unblocker_api_key and self.web_unblocker_api_key.count(',') >= 3:
+                    separator = ','
+                
+                if separator:
+                    # Proxy credentials format: host:port:username:password or host,port,username,password
+                    parts = self.web_unblocker_api_key.split(separator)
+                    if len(parts) >= 4:
+                        host = parts[0].strip()
+                        port = parts[1].strip()
+                        username = parts[2].strip()
+                        password = parts[3].strip()
+                        
+                        launch_options['proxy'] = {
+                            'server': f"http://{host}:{port}",
+                            'username': username,
+                            'password': password
+                        }
+                        logger.info(f"✅ Using Web Unblocker as proxy for {BROWSER_TYPE}")
+                else:
+                    # API key (Bearer token) format: use Bright Data API proxy endpoint
+                    # Format: brd-customer-<CUSTOMER_ID>-zone-<ZONE_NAME>:<PASSWORD>@brd.superproxy.io:22225
+                    # However, the Web Unblocker API (Direct API Access) is usually preferred for static.
+                    # For browser, we MUST use the proxy endpoint.
+                    # If the user provided a Bearer token, we might not have the proxy credentials.
+                    # But often the "API Key" field in our UI is used for both.
+                    logger.warning("⚠️ Web Unblocker API key provided but not in proxy format. Browser mode requires proxy format (host:port:user:pass).")
+            except Exception as e:
+                logger.warning(f"⚠️ Error configuring Web Unblocker proxy: {e}")
         
         # Launch browser based on type
         try:
@@ -219,6 +283,11 @@ class BrowserFetcher:
                 
                 self.page = await context.new_page()
                 
+                if not self.page:
+                    raise RuntimeError("Failed to create browser page - context.new_page() returned None")
+                
+                logger.info(f" Browser page created successfully")
+                
             else:  # camoufox
                 # Use Camoufox if preferred
                 if self.user_data_dir:
@@ -226,6 +295,13 @@ class BrowserFetcher:
                 from camoufox.sync_api import Camoufox
                 self.browser = Camoufox(**launch_options)
                 self.page = self.browser
+                
+                if not self.page:
+                    raise RuntimeError("Failed to create browser page - Camoufox returned None")
+            
+            # Verify page is valid before proceeding
+            if not self.page:
+                raise RuntimeError("Browser page is None after launch - this should not happen")
             
             # Add request interception if needed
             if self.capture_api_requests:
@@ -234,8 +310,17 @@ class BrowserFetcher:
             logger.info(" Browser launched successfully")
             
         except Exception as e:
-            logger.error(f" Failed to launch browser: {e}")
-            raise
+            logger.error(f" Failed to launch browser: {e}", exc_info=True)
+            # Reset state on failure
+            self.browser = None
+            self.page = None
+            if hasattr(self, 'playwright') and self.playwright:
+                try:
+                    await self.playwright.stop()
+                except:
+                    pass
+                self.playwright = None
+            raise RuntimeError(f"Browser launch failed: {str(e)}") from e
     
     def _setup_request_interception(self) -> None:
         """Setup network request interception to capture API calls"""
@@ -335,7 +420,9 @@ class BrowserFetcher:
         wait_for_selector: Optional[str] = None,
         additional_wait: int = 2000,
         scroll_to_bottom: bool = False,
-        click_load_more: Optional[str] = None
+        click_load_more: Optional[str] = None,
+        geoip: Optional[bool] = None,
+        browser_config: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Fetch page with JavaScript rendering
@@ -352,6 +439,30 @@ class BrowserFetcher:
         """
         if not self.browser:
             self._launch_browser()
+        
+        # Ensure page is initialized and still connected
+        if not self.page:
+            logger.warning(" Page not initialized, re-launching browser...")
+            self._launch_browser()
+        
+        # Check if page is still connected (browser might have been closed)
+        try:
+            if hasattr(self.page, 'is_closed') and self.page.is_closed():
+                logger.warning(" Page was closed, re-launching browser...")
+                self.browser = None
+                self.page = None
+                self._launch_browser()
+        except Exception as e:
+            logger.warning(f" Error checking page status: {e}, re-launching browser...")
+            self.browser = None
+            self.page = None
+            self._launch_browser()
+        
+        if not self.page:
+            # Don't raise here - let the caller handle the fallback
+            # This allows HybridFetcher to fall back to static HTML
+            logger.error("Browser page is None - browser launch failed")
+            raise RuntimeError("Browser page initialization failed. This may be due to resource constraints or missing dependencies. The system will attempt to fall back to static HTML fetching.")
         
         # Clear captured requests
         self.captured_requests = []
@@ -378,6 +489,122 @@ class BrowserFetcher:
             # Universal approach: Wait for content to actually appear, not just network idle
             logger.info("⏳ Waiting for JavaScript rendering...")
             
+            # Check for Cloudflare challenge page (IMPROVED detection)
+            html_preview = await self.page.content()
+            body_text_preview = await self.page.evaluate('document.body.innerText.toLowerCase()')
+            
+            # Multiple Cloudflare challenge indicators
+            cloudflare_indicators = [
+                'just a moment' in html_preview.lower(),
+                'checking your browser' in body_text_preview,
+                'cloudflare' in body_text_preview and 'verify you are human' in body_text_preview,
+                'cloudflare' in body_text_preview and 'ray id:' in body_text_preview,
+                'challenge-platform' in html_preview,
+                'turnstile' in html_preview,
+                'cf-browser-verification' in html_preview,
+                'cf-challenge' in html_preview
+            ]
+            
+            if any(cloudflare_indicators):
+                logger.warning("⚠️ Cloudflare challenge detected!")
+                
+                # Try to wait for challenge to complete
+                try:
+                    logger.info("⏳ Attempting to wait for Cloudflare challenge (45s max)...")
+                    # Wait for the challenge indicators to disappear
+                    await self.page.wait_for_function(
+                        '''
+                        () => {
+                            const html = document.documentElement.innerHTML.toLowerCase();
+                            const bodyText = document.body.innerText.toLowerCase();
+                            return !html.includes('just a moment') && 
+                                   !bodyText.includes('checking your browser') && 
+                                   !bodyText.includes('verify you are human') &&
+                                   !bodyText.includes('ray id:') &&
+                                   !html.includes('cf-browser-verification') &&
+                                   !html.includes('cf-challenge');
+                        }
+                        ''',
+                        timeout=45000
+                    )
+                    logger.info("✅ Cloudflare challenge passed!")
+                    await asyncio.sleep(3)  # Extra wait for content to stabilize
+                except Exception as e:
+                    logger.error(f"❌ Cloudflare challenge failed or timed out: {e}")
+                    # If we have Web Unblocker, we should have used it as a proxy, 
+                    # but if we're here, it means the proxy didn't bypass it or wasn't used.
+            else:
+                logger.info("✅ No Cloudflare challenge detected")
+            
+            # UNIVERSAL: Wait for React/Next.js/Vue/Angular hydration (ONLY if framework detected)
+            # This ONLY waits if we detect a framework, otherwise skips immediately
+            try:
+                # Quick check: Does this page use a framework?
+                framework_detected = await self.page.evaluate(
+                    """
+                    () => {
+                        // Quick framework detection (no waiting)
+                        return !!(
+                            document.getElementById('__NEXT_DATA__') ||
+                            document.getElementById('__next') ||
+                            document.getElementById('root') ||
+                            document.querySelector('[data-reactroot]') ||
+                            document.querySelector('[data-vue-app]') ||
+                            document.querySelector('[ng-app]') ||
+                            window.__NEXT_DATA__ ||
+                            window.React ||
+                            window.Vue ||
+                            window.angular
+                        );
+                    }
+                    """
+                )
+                
+                if framework_detected:
+                    logger.info("⏳ Framework detected, waiting for hydration...")
+                    # Wait for React/Next.js to hydrate (check for __NEXT_DATA__ execution or React root to populate)
+                    await self.page.wait_for_function(
+                        """
+                        () => {
+                            // Check if React/Next.js has hydrated
+                            const nextData = document.getElementById('__NEXT_DATA__');
+                            if (nextData) {
+                                try {
+                                    const data = JSON.parse(nextData.textContent);
+                                    // If __NEXT_DATA__ exists and has content, React is likely hydrated
+                                    return true;
+                                } catch (e) {
+                                    return false;
+                                }
+                            }
+                            
+                            // Check if React root has substantial content (not just empty div)
+                            const reactRoot = document.getElementById('__next') || document.getElementById('root') || document.querySelector('[data-reactroot]');
+                            if (reactRoot) {
+                                const textContent = reactRoot.innerText || reactRoot.textContent || '';
+                                // If root has substantial content (> 500 chars), likely hydrated
+                                return textContent.length > 500;
+                            }
+                            
+                            // Check for Vue/Angular apps
+                            const vueApp = document.querySelector('[data-vue-app]') || document.querySelector('[ng-app]');
+                            if (vueApp) {
+                                const textContent = vueApp.innerText || vueApp.textContent || '';
+                                return textContent.length > 500;
+                            }
+                            
+                            // If no framework indicators, assume content is ready
+                            return true;
+                        }
+                        """,
+                        timeout=10000  # Wait up to 10 seconds for hydration
+                    )
+                    logger.info("✅ Framework hydration complete")
+                else:
+                    logger.info("⚡ No framework detected, skipping hydration wait")
+            except Exception as e:
+                logger.info(f"⏱ Framework hydration timeout: {e}")
+            
             # Strategy: Wait for DOM to stabilize (content finished loading)
             # This handles lazy-loaded content universally
             await self._wait_for_content_loaded()
@@ -393,6 +620,15 @@ class BrowserFetcher:
             if scroll_to_bottom:
                 logger.info(" Scrolling to bottom...")
                 await self._scroll_to_bottom()
+                # CRITICAL: Wait after scrolling to ensure all content is loaded
+                logger.info(" Waiting for content to stabilize after scrolling...")
+                await asyncio.sleep(2)  # Give time for lazy-loaded content
+                # Wait for network idle again after scrolling
+                try:
+                    await self.page.wait_for_load_state('networkidle', timeout=10000)
+                    logger.info(" Network idle after scrolling")
+                except:
+                    logger.info(" Network idle timeout after scrolling (continuing)")
             
             # Click "Load More" button if requested
             if click_load_more:
@@ -403,7 +639,7 @@ class BrowserFetcher:
             if additional_wait > 0:
                 await asyncio.sleep(additional_wait / 1000)
             
-            # Get final HTML
+            # Get final HTML AFTER all scrolling/loading is complete
             html = await self.page.content()
             final_url = self.page.url
             
@@ -432,17 +668,17 @@ class BrowserFetcher:
             logger.error(f" Browser fetch failed: {str(e)}")
             raise
     
-    async def _wait_for_content_loaded(self, timeout: int = 15000) -> None:
+    async def _wait_for_content_loaded(self, timeout: int = 8000) -> None:
         """
         Universal method to wait for JavaScript-rendered content to appear
         
         Works for ANY site by waiting for:
-        1. Images to load
-        2. DOM to stabilize (no more mutations)
+        1. Images to load (70% threshold)
+        2. DOM to stabilize (no more mutations for 1 second)
         3. Reasonable timeout to prevent infinite waits
         
         Args:
-            timeout: Maximum wait time in milliseconds (default: 15s)
+            timeout: Maximum wait time in milliseconds (default: 8s, reduced for speed)
         """
         try:
             # Wait for images to load (universal content indicator)
@@ -471,7 +707,7 @@ class BrowserFetcher:
                             timeout = setTimeout(() => {
                                 observer.disconnect();
                                 resolve();
-                            }, 1000); // No changes for 1 second = stable
+                            }, 800); // Reduced: No changes for 0.8s = stable (faster)
                         });
                         
                         observer.observe(document.body, {
@@ -479,11 +715,11 @@ class BrowserFetcher:
                             subtree: true
                         });
                         
-                        // Initial timeout
+                        // Initial timeout - faster bailout
                         timeout = setTimeout(() => {
                             observer.disconnect();
                             resolve();
-                        }, 1000);
+                        }, 800);
                     });
                 }
                 """
@@ -496,32 +732,140 @@ class BrowserFetcher:
             # Fallback to simple wait
             await asyncio.sleep(3)
     
-    async def _scroll_to_bottom(self, max_scrolls: int = 5, scroll_pause: float = 1.0) -> None:
-        """Scroll to bottom to trigger lazy loading"""
+    async def _scroll_to_bottom(self, max_scrolls: int = 30, scroll_pause: float = 2.0) -> None:
+        """
+        Scroll to bottom to trigger lazy loading
+        
+        Enhanced for sites like Reddit, Product Hunt, etc. that use continuous infinite scroll.
+        Keeps scrolling until no new content loads or max_scrolls reached.
+        """
         total_scrolls = 0
+        no_change_count = 0  # Track consecutive scrolls with no change
+        max_no_change = 5  # Stop after 5 consecutive scrolls with no change (increased for slow sites)
+        
+        # Universal item detection - find repeating patterns dynamically
+        item_selector = await self.page.evaluate('''
+            () => {
+                // Common patterns for repeating items
+                const selectors = [
+                    'article',
+                    '[role="article"]',
+                    '[data-testid*="item"]',
+                    '[data-testid*="post"]',
+                    '[data-testid*="card"]',
+                    '[data-testid*="product"]',
+                    '[class*="item"]',
+                    '[class*="card"]',
+                    '[class*="product"]',
+                    '[class*="post"]',
+                    'div[class*="flex"][class*="gap"]',  // Product Hunt style
+                    'a[href*="/products/"]',  // Product Hunt product links
+                    'section > div > div',  // Generic section items
+                    'main > div > div > div',  // Generic main content items
+                ];
+                
+                for (const selector of selectors) {
+                    try {
+                        const items = document.querySelectorAll(selector);
+                        // If we find 3+ items with the same selector, likely a repeating pattern
+                        if (items.length >= 3) {
+                            // Check if items are actually repeating (similar structure)
+                            const firstItem = items[0];
+                            const secondItem = items[1];
+                            if (firstItem && secondItem) {
+                                const firstClasses = Array.from(firstItem.classList || []).join(' ');
+                                const secondClasses = Array.from(secondItem.classList || []).join(' ');
+                                // If items share classes/structure, it's a repeating pattern
+                                if (firstClasses && firstClasses === secondClasses) {
+                                    return selector;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                // Fallback: return a generic selector
+                return 'article, [role="article"], div[class*="item"], div[class*="card"], a[href*="/products/"]';
+            }
+        ''')
+        
+        logger.info(f" Detected item selector: {item_selector}")
         
         for i in range(max_scrolls):
-            # Get current scroll height
+            # Get current scroll height and item count
             prev_height = await self.page.evaluate('document.body.scrollHeight')
+            
+            # Count items using detected selector
+            try:
+                prev_item_count = await self.page.evaluate(f'''
+                    () => {{
+                        const items = document.querySelectorAll('{item_selector}');
+                        return items.length;
+                    }}
+                ''')
+            except:
+                prev_item_count = 0
             
             # Scroll to bottom
             await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+            total_scrolls += 1
             
-            # Wait for content to load
+            # Wait for content to load (longer pause for slow sites like Product Hunt)
             await asyncio.sleep(scroll_pause)
             
-            # Check if new content loaded
-            new_height = await self.page.evaluate('document.body.scrollHeight')
-            
-            if new_height > prev_height:
-                total_scrolls += 1
-                logger.info(f" Scroll #{total_scrolls}: Page grew from {prev_height}px to {new_height}px")
-            else:
-                logger.info(f" Scrolling complete: No more content to load (total scrolls: {total_scrolls})")
-                break  # No new content loaded
+            # Check if new content loaded (handle navigation errors)
+            try:
+                new_height = await self.page.evaluate('document.body.scrollHeight')
+                
+                # Count items again using detected selector
+                try:
+                    new_item_count = await self.page.evaluate(f'''
+                        () => {{
+                            const items = document.querySelectorAll('{item_selector}');
+                            return items.length;
+                        }}
+                    ''')
+                except:
+                    new_item_count = prev_item_count
+                
+                height_changed = new_height > prev_height
+                items_changed = new_item_count > prev_item_count
+                
+                if height_changed or items_changed:
+                    no_change_count = 0  # Reset no-change counter
+                    logger.info(f" Scroll #{total_scrolls}: Page grew from {prev_height}px to {new_height}px, items: {prev_item_count} → {new_item_count}")
+                else:
+                    no_change_count += 1
+                    logger.info(f" Scroll #{total_scrolls}: No new content (no-change count: {no_change_count}/{max_no_change})")
+                    
+                    if no_change_count >= max_no_change:
+                        logger.info(f" Scrolling complete: No new content after {max_no_change} consecutive scrolls (total scrolls: {total_scrolls})")
+                        break
+            except Exception as e:
+                # Handle navigation/redirect errors during scroll
+                if "Execution context was destroyed" in str(e) or "navigation" in str(e).lower():
+                    logger.warning(f" Page navigated during scroll (attempt {i+1}), stopping scroll")
+                    break
+                else:
+                    # Other errors - log and continue
+                    logger.warning(f" Error during scroll check: {e}, continuing...")
+                    no_change_count += 1
+                    if no_change_count >= max_no_change:
+                        break
         
         if total_scrolls == 0:
             logger.info("ℹ No infinite scroll detected (page height unchanged)")
+        else:
+            final_height = await self.page.evaluate('document.body.scrollHeight')
+            final_item_count = await self.page.evaluate(f'''
+                () => {{
+                    const items = document.querySelectorAll('{item_selector}');
+                    return items.length;
+                }}
+            ''')
+            logger.info(f"✅ Infinite scroll complete: {total_scrolls} scrolls performed, final page height: {final_height}px, final items: {final_item_count}")
     
     async def _click_load_more(self, selector: str, max_clicks: int = 10) -> None:
         """Click 'Load More' button multiple times"""

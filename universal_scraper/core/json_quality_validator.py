@@ -66,15 +66,8 @@ class JSONQualityValidator:
     ) -> Tuple[bool, str, float]:
         """
         Validate if extracted JSON items are likely to be real data (not metadata/tracking)
-        
-        Args:
-            extracted_items: List of extracted dictionaries
-            requested_fields: List of fields user requested
-            extraction_context: Optional context about what user wants to extract
-        
-        Returns:
-            Tuple of (is_valid, reason, confidence_score)
         """
+        requested_fields = requested_fields or []
         if not extracted_items:
             return False, "No items to validate", 0.0
         
@@ -154,13 +147,13 @@ class JSONQualityValidator:
         if metadata_ratio > 0.5:
             return False, f"High metadata content: {metadata_ratio:.0%}", confidence
         
-        if data_ratio < 0.1 and field_overlap_ratio < 0.2:
+        if data_ratio < 0.05 and field_overlap_ratio < 0.2:
             return False, "No data keywords found", confidence
         
         if value_density < 0.3:
             return False, f"Low value density: {value_density:.0%}", confidence
         
-        if field_overlap_ratio < self.min_field_overlap_ratio and data_ratio < 0.3:
+        if field_overlap_ratio < self.min_field_overlap_ratio and data_ratio < 0.15:
             return False, f"Insufficient field overlap and data keywords", confidence
         
         # Passed all checks
@@ -185,5 +178,80 @@ class JSONQualityValidator:
             return "Fall back to HTML extraction (JSON has too many null values)"
         elif "no data keywords" in failure_reason.lower():
             return "Fall back to HTML extraction (JSON lacks data keywords)"
+        elif "garbage" in failure_reason.lower():
+            return "Fall back to HTML extraction (JSON contains corrupted/obfuscated data)"
         else:
             return "Fall back to HTML extraction (JSON quality check failed)"
+
+    def is_high_quality_value(self, value: Any) -> bool:
+        """
+        Check if a single value is high quality (not garbage)
+        """
+        if value is None:
+            return True # null is okay
+            
+        if isinstance(value, (int, float, bool)):
+            return True
+            
+        if isinstance(value, str):
+            return not self.contains_garbage(value)
+            
+        if isinstance(value, list):
+            if not value:
+                return True
+            # Check a sample
+            sample = value[:5]
+            return all(self.is_high_quality_value(v) for v in sample)
+            
+        if isinstance(value, dict):
+            if not value:
+                return True
+            # Check a sample of values
+            sample_values = list(value.values())[:5]
+            return all(self.is_high_quality_value(v) for v in sample_values)
+            
+        return True
+
+    def contains_garbage(self, text: str) -> bool:
+        """
+        Detect if a string contains garbage/obfuscated content
+        """
+        if not text or len(text) < 2:
+            return False
+            
+        import re
+            
+        # 1. Check for high ratio of non-printable/control characters
+        # (excluding common whitespace)
+        control_chars = sum(1 for c in text if ord(c) < 32 and c not in "\n\r\t")
+        if len(text) > 10 and (control_chars / len(text)) > 0.1:
+            return True
+            
+        # 2. Check for high ratio of "weird" characters (non-ASCII, non-common-symbols)
+        # This is tricky for international sites, but for Product Hunt (English), 
+        # a high ratio of non-Latin characters in a JSON-LD context is suspicious.
+        # We'll use a conservative threshold.
+        weird_chars = sum(1 for c in text if ord(c) > 127 and ord(c) < 160) # C1 control chars
+        if weird_chars > 0:
+            return True
+            
+        # 2b. Check for replacement characters (explicit corruption signal)
+        if '\ufffd' in text:
+            return True
+            
+        # 3. Check for very long strings with no spaces (obfuscation signal)
+        # but ignore URLs and long IDs
+        if len(text) > 100 and ' ' not in text and 'http' not in text and '/' not in text:
+            # If it's a long hex/base64-like string with no spaces, it might be junk
+            if re.match(r'^[a-zA-Z0-9+/=]{50,}$', text):
+                return True
+                
+        # 4. Check for specific garbage patterns seen in Product Hunt/Kasada
+        # (e.g., strings with many \uXXXX escapes that are control characters)
+        if "\\u00" in text:
+            # Count occurrences of low control chars
+            low_escapes = len(re.findall(r'\\u00[0-1][0-9a-f]', text.lower()))
+            if low_escapes > 3:
+                return True
+                
+        return False

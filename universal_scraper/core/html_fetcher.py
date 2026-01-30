@@ -10,7 +10,7 @@ from typing import Optional, Dict, Any
 import cloudscraper
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 
 logger = logging.getLogger(__name__)
 
@@ -110,18 +110,34 @@ class HTMLFetcher:
             # Static proxy format: {'server': '...', 'username': '...', 'password': '...'}
             username = self.proxy_config.get('username', '')
             password = self.proxy_config.get('password', '')
-            server = self.proxy_config['server'].replace('http://', '').replace('https://', '')
+            server = self.proxy_config.get('server', '')
+            if server:
+                # Detect protocol - respect provided protocol if present
+                if "://" in server:
+                    protocol = server.split("://")[0]
+                else:
+                    protocol = "https" if ":33335" in server else "http"
+                
+                # Strip protocol for clean host:port
+                host_port = server.replace('http://', '').replace('https://', '')
+            else:
+                logger.warning("⚠️ Proxy config provided but 'server' field is missing or empty")
+                return None
             
             if username and password:
-                proxy_url = f"http://{username}:{password}@{server}"
+                safe_user = quote(username)
+                safe_pass = quote(password)
+                proxy_url = f"{protocol}://{safe_user}:{safe_pass}@{host_port}"
             else:
-                proxy_url = f"http://{server}"
+                proxy_url = f"{protocol}://{host_port}"
             
             self.session.proxies.update({
                 'http': proxy_url,
                 'https': proxy_url
             })
-            logger.info(f" Using static proxy: {self.proxy_config['server']}")
+            # Disable SSL verification for proxy connections (Bright Data uses self-signed certs)
+            self.session.verify = False
+            logger.info(f" Using static proxy: {self.proxy_config['server']} (SSL verification disabled)")
     
     def fetch(self, url: str, warm_session: bool = None) -> Dict[str, Any]:
         """

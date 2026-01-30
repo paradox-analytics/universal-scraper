@@ -19,6 +19,8 @@ jsonschema>=4.21.0
 
 # Caching
 diskcache>=5.6.3
+redis>=5.0.0
+hiredis>=2.2.0  # C extension for faster Redis performance
 
 # Hashing
 xxhash>=3.4.0
@@ -53,3 +55,29 @@ pytest-cov>=4.1.0
 tqdm>=4.66.0
 python-dateutil>=2.8.2
 
+# API Server (for Cloud Run)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+PyJWT>=2.8.0  # JWT token support for tenant authentication
+
+# Document Processing
+PyPDF2>=3.0.0
+python-docx>=1.1.0
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
+# Langchain for HTML to text conversion
+langchain-community>=0.0.20
+langchain-core>=0.1.23
+
+# html2text (used by hybrid_extractor)
+html2text>=2020.1.16
+
+# Browser automation (optional - Camoufox for anti-detection, Playwright as fallback)
+playwright>=1.40.0
+camoufox[geoip]>=0.4.0
+
+# Google Cloud (for Cloud Scheduler and Cloud Tasks)
+google-cloud-scheduler>=2.0.0
+google-cloud-tasks>=2.0.0

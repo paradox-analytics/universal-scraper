@@ -1,0 +1,31 @@
+{
+  "advancedConfig": {
+    "enableCache": false,
+    "headless": false,
+    "logLevel": "DEBUG",
+    "maxRetries": 3,
+    "retryDelay": 5,
+    "exponentialBackoff": true,
+    "randomUserAgent": true,
+    "enableLlmPagination": true,
+    "browserTimeout": 60000
+  },
+  "mode": "scrape_only",
+  "openaiApiKey": "WILL_USE_ENV_VAR",
+  "proxyConfiguration": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"],
+    "apifyProxyCountry": "US"
+  },
+  "scrapeConfig": {
+    "fetchMode": "browser",
+    "fields": [],
+    "waitForSelector": "body"
+  },
+  "startUrls": [
+    {
+      "url": "https://www.amazon.com/fmc/ssd-storefront?ref_=nav_cs_SSD_nav_storefron"
+    }
+  ]
+}
+

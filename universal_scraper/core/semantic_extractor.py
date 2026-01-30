@@ -40,6 +40,8 @@ class SemanticExtractor:
             'xpath': self._extract_xpath,  # Fallback to XPath if needed
             'first_text': self._extract_first_text,
             'semantic_element': self._extract_semantic_element,
+            'microdata': self._extract_microdata,
+            'rdfa': self._extract_rdfa,
         }
         logger.info(" Semantic Extractor initialized")
     
@@ -213,17 +215,47 @@ class SemanticExtractor:
         return None
     
     def _extract_currency(self, element: Tag, strategy: Dict) -> Optional[str]:
-        """Extract currency value (text with $, €, £, etc)."""
+        """Extract currency value (text with $, €, £, etc). Handles split elements."""
         currency_symbols = strategy.get('symbols', ['$', '€', '£', '¥', '₹'])
         
-        # Search all text in element
-        for text in element.stripped_strings:
+        # Get all text parts as a list to allow lookahead
+        text_parts = list(element.stripped_strings)
+        
+        for i, text in enumerate(text_parts):
+            # Check for currency symbol
+            found_symbol = None
             for symbol in currency_symbols:
                 if symbol in text:
-                    # Try to extract just the numeric part
-                    match = re.search(r'[\d,]+\.?\d*', text)
-                    if match:
-                        return text  # Return full text with symbol
+                    found_symbol = symbol
+                    break
+            
+            if found_symbol:
+                # Case 1: Symbol and number in same text ("$19.99")
+                if re.search(r'\d', text):
+                    return text
+                
+                # Case 2: Split price (Symbol in one tag, number in next)
+                # Look ahead up to 3 parts to find digits
+                # Example: ["$", "49", ".", "98"] -> "$49.98"
+                combined = text
+                parts_added = 0
+                has_digits = False
+                
+                for j in range(i + 1, min(i + 4, len(text_parts))):
+                    next_text = text_parts[j]
+                    combined += next_text
+                    parts_added += 1
+                    
+                    if re.search(r'\d', next_text):
+                        has_digits = True
+                    
+                    # If we have digits and it looks like a complete price, stop
+                    # Heuristic: stop if we have digits and current part ends with digit
+                    # But be careful of decimals split across tags
+                    pass
+                
+                if has_digits:
+                    return combined
         
         return None
     
@@ -372,3 +404,53 @@ class SemanticExtractor:
 
 
 
+    def _extract_microdata(self, element: Tag, strategy: Dict) -> Optional[str]:
+        """Extract value from Microdata (itemprop)."""
+        field_name = strategy.get('field')
+        if not field_name:
+            return None
+            
+        target_props = strategy.get('synonyms', [field_name])
+        
+        for prop_name in target_props:
+            prop_elem = element.find(attrs={"itemprop": prop_name})
+            if prop_elem:
+                # Microdata value extraction rules
+                if prop_elem.name == 'meta':
+                    return prop_elem.get('content')
+                elif prop_elem.name == 'img':
+                    return prop_elem.get('src')
+                elif prop_elem.name == 'a':
+                    return prop_elem.get('href')
+                elif prop_elem.name == 'time':
+                    return prop_elem.get('datetime', prop_elem.get_text(strip=True))
+                else:
+                    return prop_elem.get_text(strip=True)
+        
+        return None
+
+    def _extract_rdfa(self, element: Tag, strategy: Dict) -> Optional[str]:
+        """Extract value from RDFa (property)."""
+        field_name = strategy.get('field')
+        if not field_name:
+            return None
+            
+        target_props = strategy.get('synonyms', [field_name])
+        
+        for prop_name in target_props:
+            # RDFa properties can be 'property' or 'rel'
+            prop_elem = element.find(attrs={"property": lambda x: x and (x == prop_name or x.endswith(':' + prop_name))})
+            if not prop_elem:
+                prop_elem = element.find(attrs={"rel": lambda x: x and (x == prop_name or x.endswith(':' + prop_name))})
+                
+            if prop_elem:
+                if prop_elem.has_attr('content'):
+                    return prop_elem['content']
+                elif prop_elem.name == 'img':
+                    return prop_elem.get('src')
+                elif prop_elem.name == 'a':
+                    return prop_elem.get('href')
+                else:
+                    return prop_elem.get_text(strip=True)
+        
+        return None

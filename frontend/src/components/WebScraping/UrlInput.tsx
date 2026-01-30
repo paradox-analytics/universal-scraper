@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 interface UrlInputProps {
-  onScrape: (url: string) => void;
+  onScrape?: (url: string) => void;
+  onChange?: (url: string) => void;
   initialUrl?: string;
 }
 
-export function UrlInput({ onScrape, initialUrl = '' }: UrlInputProps) {
+export function UrlInput({ onScrape, onChange, initialUrl = '' }: UrlInputProps) {
   const [url, setUrl] = useState(initialUrl);
   const [error, setError] = useState<string>('');
 
@@ -32,12 +33,26 @@ export function UrlInput({ onScrape, initialUrl = '' }: UrlInputProps) {
       return;
     }
 
-    onScrape(url);
+    // Call onChange if provided, otherwise call onScrape
+    if (onChange) {
+      onChange(url);
+    } else if (onScrape) {
+      onScrape(url);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    setUrl(newUrl);
+    setError('');
+    if (onChange) {
+      onChange(newUrl);
+    }
   };
 
   return (
     <div>
-      <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+      <label htmlFor="url" className="block text-sm font-medium text-gray-300 mb-2">
         URL to Scrape
       </label>
       <form onSubmit={handleSubmit} className="flex gap-2">
@@ -45,19 +60,18 @@ export function UrlInput({ onScrape, initialUrl = '' }: UrlInputProps) {
           id="url"
           type="text"
           value={url}
-          onChange={(e) => {
-            setUrl(e.target.value);
-            setError('');
-          }}
+          onChange={handleChange}
           placeholder="https://example.com/products"
           className={`input-field flex-1 ${error ? 'border-red-500' : ''}`}
         />
-        <button type="submit" className="btn-primary whitespace-nowrap">
-          Scrape
-        </button>
+        {onScrape && (
+          <button type="submit" className="btn-primary whitespace-nowrap">
+            Scrape
+          </button>
+        )}
       </form>
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-1 text-sm text-red-400">{error}</p>
       )}
     </div>
   );

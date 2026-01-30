@@ -15,6 +15,7 @@ import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 import random
+from urllib.parse import quote
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +90,9 @@ class ProxyManager:
         
         # Build URL with auth
         if username and password:
-            return f"{protocol}://{username}:{password}@{host}"
+            safe_user = quote(username)
+            safe_pass = quote(password)
+            return f"{protocol}://{safe_user}:{safe_pass}@{host}"
         else:
             return f"{protocol}://{host}"
     

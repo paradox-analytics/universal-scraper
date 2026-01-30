@@ -104,6 +104,18 @@ class SmartHTMLCleaner:
         
         logger.info(f" Cleaning HTML ({self.original_size:,} bytes)")
         
+        # Step 0: Strip non-printable characters (control characters)
+        # This prevents binary-looking noise from reaching the LLM
+        # Keep \n, \r, \t
+        html = "".join(c for c in html if ord(c) >= 32 or c in "\n\r\t")
+        
+        # Step 0.1: Strip replacement characters (explicit corruption)
+        html = html.replace('\ufffd', '')
+        
+        # Step 0.2: Strip common garbage escape sequences (e.g., \u0010)
+        # These are often used in obfuscated JSON-LD or scripts
+        html = re.sub(r'\\u00[0-1][0-9a-f]', '', html, flags=re.IGNORECASE)
+        
         # Parse HTML
         soup = BeautifulSoup(html, 'html.parser')
         

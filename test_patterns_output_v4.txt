@@ -1,0 +1,12 @@
+Saving pattern...
+Response: 200
+{'success': True, 'message': 'Pattern saved successfully'}
+
+Listing patterns...
+Response: 200
+Found 1 patterns
+ - example.com: ['title', 'price']
+
+Deleting pattern...
+Response: 200
+{'success': True, 'message': 'Pattern deleted successfully'}

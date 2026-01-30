@@ -25,6 +25,8 @@ class InlineJSONExtractor:
             r'"products":\s*\[\s*\{',
             r'"posts":\s*\[\s*\{',
             r'"results":\s*\[\s*\{',
+            r'"edges":\s*\[\s*\{',
+            r'"nodes":\s*\[\s*\{',
             r'\{"__typename":\s*"[A-Z]\w+"',
             
             # Common data patterns
@@ -58,16 +60,127 @@ class InlineJSONExtractor:
         # 1. Extract from Next.js RSC streaming format
         rsc_data = self._extract_rsc_payload(html)
         if rsc_data:
-            results.extend(rsc_data)
+            results.append({'_source': 'nextjs-rsc', 'data': rsc_data})
             logger.info(f" Extracted {len(rsc_data)} items from Next.js RSC payload")
             
         # 2. Scan for inline JSON objects/arrays
         inline_data = self._scan_for_inline_json(html)
         if inline_data:
             results.extend(inline_data)
-            logger.info(f" Extracted {len(inline_data)} items from inline JSON scan")
+            logger.info(f" Extracted {len(inline_data)} containers from inline JSON scan")
+
+        # 3. Extract from Apollo SSR Data Transport
+        apollo_data = self._extract_apollo_ssr_payload(html)
+        if apollo_data:
+            results.append({'_source': 'apollo-ssr', 'data': apollo_data})
+            logger.info(f" Extracted {len(apollo_data)} items from Apollo SSR payload")
             
         return results
+
+
+
+
+    def _extract_apollo_ssr_payload(self, html: str) -> List[Dict[str, Any]]:
+        """
+        Extract data from Apollo SSR Data Transport (common in modern React apps)
+        Pattern: (window[Symbol.for("ApolloSSRDataTransport")] ??= []).push({...})
+        """
+        results = []
+        # Search for the start of the push call
+        search_str = 'window[Symbol.for("ApolloSSRDataTransport")]'
+        start_pos = 0
+        
+        while True:
+            idx = html.find(search_str, start_pos)
+            if idx == -1:
+                logger.debug(f" Apollo search string not found after pos {start_pos}")
+                break
+            
+            logger.debug(f" Found Apollo search string at {idx}")
+                
+            # Find the .push( part
+            push_idx = html.find('.push(', idx)
+            if push_idx != -1:
+                logger.debug(f" Found .push( at {push_idx}")
+                # The JSON object starts after .push(
+                json_start = push_idx + 6
+                
+                # Extract the balanced JSON object
+                json_str = self._extract_balanced_block(html, json_start)
+                
+                if json_str:
+                    logger.debug(f" Extracted JSON string of length {len(json_str)}")
+                    logger.debug(f" JSON Content (first 500): {json_str[:500]}")
+                    try:
+                        # Replace JavaScript 'undefined' with JSON-compliant 'null'
+                        json_str_clean = json_str.replace(':undefined', ':null').replace(',undefined', ',null')
+                        parsed = json.loads(json_str_clean)
+                        
+                        # Structure is usually {"rehydrate": {"key": {"data": ...}, ...}}
+                        if isinstance(parsed, dict) and 'rehydrate' in parsed:
+                            rehydrate_data = parsed['rehydrate']
+                            logger.debug(f" Found rehydrate data with {len(rehydrate_data)} keys")
+                            if isinstance(rehydrate_data, dict):
+                                for key, value in rehydrate_data.items():
+                                    if isinstance(value, dict) and 'data' in value:
+                                        data_content = value['data']
+                                        # Recursively search for arrays in nested structures
+                                        arrays_found = self._find_arrays_in_nested_structure(data_content)
+                                        for arr in arrays_found:
+                                            if self._validate_content_quality(arr):
+                                                # Extend results with individual items, not the whole array
+                                                results.extend(arr)
+                    except json.JSONDecodeError as e:
+                        logger.debug(f" JSON decode error: {e}")
+                        pass
+                else:
+                    logger.debug(" Failed to extract balanced block")
+            else:
+                logger.debug(" .push( not found")
+            
+            start_pos = idx + len(search_str)
+            
+        return results
+
+    def _find_arrays_in_nested_structure(self, data: Any, max_depth: int = 5, current_depth: int = 0) -> List[List[Dict]]:
+        """
+        Recursively search for arrays in nested GraphQL structures
+        Returns all arrays found that contain dictionaries
+        """
+        results = []
+        
+        if current_depth >= max_depth:
+            return results
+            
+        if isinstance(data, list):
+            # Check if this is an array of dicts (potential product list)
+            # Filter out any non-dict items
+            dict_items = [item for item in data if isinstance(item, dict)]
+            if dict_items:
+                results.append(dict_items)
+            # Also search within each item
+            for item in data:
+                results.extend(self._find_arrays_in_nested_structure(item, max_depth, current_depth + 1))
+                
+        elif isinstance(data, dict):
+            # Special handling for GraphQL edge/node patterns
+            if 'edges' in data and isinstance(data['edges'], list):
+                # Extract nodes from edges
+                nodes = []
+                for edge in data['edges']:
+                    if isinstance(edge, dict) and 'node' in edge:
+                        node = edge['node']
+                        if isinstance(node, dict):  # Ensure node is a dict
+                            nodes.append(node)
+                if nodes:
+                    results.append(nodes)
+            
+            # Search all nested values
+            for value in data.values():
+                results.extend(self._find_arrays_in_nested_structure(value, max_depth, current_depth + 1))
+                
+        return results
+
 
     def _extract_rsc_payload(self, html: str) -> List[Dict[str, Any]]:
         """
@@ -164,10 +277,7 @@ class InlineJSONExtractor:
                 try:
                     data = json.loads(json_str)
                     if self._validate_content_quality(data):
-                        results.append({
-                            '_source': 'rsc_payload',
-                            'data': data
-                        })
+                        results.append(data)
                 except json.JSONDecodeError:
                     continue
                     
@@ -225,10 +335,21 @@ class InlineJSONExtractor:
             # Arrays should have multiple items
             if len(data) < 2:
                 return False
+            # Prefer validating the unwrapped node if present
+            first_item = data[0]
+            if isinstance(first_item, dict) and 'node' in first_item and isinstance(first_item.get('node'), dict):
+                return self._validate_content_quality(first_item.get('node'))
             # Check first item
-            return self._validate_content_quality(data[0])
+            return self._validate_content_quality(first_item)
             
         if isinstance(data, dict):
+            # GraphQL edge/node wrapper
+            if 'node' in data and isinstance(data.get('node'), dict):
+                return self._validate_content_quality(data.get('node'))
+            if 'edges' in data and isinstance(data.get('edges'), list):
+                return self._validate_content_quality(data.get('edges'))
+            if 'nodes' in data and isinstance(data.get('nodes'), list):
+                return self._validate_content_quality(data.get('nodes'))
             # Check for analytics keywords
             json_str = json.dumps(data).lower()
             for pattern in self.ignore_patterns:

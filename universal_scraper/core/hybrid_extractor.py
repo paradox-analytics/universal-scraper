@@ -23,6 +23,13 @@ import html2text
 logger = logging.getLogger(__name__)
 
 
+def _clean_text(text: str) -> str:
+    """Strip non-printable characters (control characters) except \n, \r, \t"""
+    if not text:
+        return ""
+    return "".join(c for c in text if ord(c) >= 32 or c in "\n\r\t")
+
+
 @dataclass
 class ExtractedContent:
     """Container for extracted content from hybrid extraction"""
@@ -132,7 +139,11 @@ class ExtractedContent:
             if button_items:
                 parts.append(f"BUTTON/ACTION DATA (upvotes, likes, votes):\n" + "\n".join(button_items))
         
-        return "\n\n".join(parts) if parts else ""
+        summary = "\n\n".join(parts) if parts else ""
+        
+        # Final sanitization
+        return _clean_text(summary)
+    
 
 
 class HybridMarkdownExtractor:
@@ -275,6 +286,10 @@ class HybridMarkdownExtractor:
         markdown = self.h.handle(cleaned_html)
         markdown = self._clean_markdown(markdown)
         
+        # Final sanitization of markdown
+        # Remove non-printable characters that might have slipped through
+        markdown = _clean_text(markdown)
+        
         logger.info(f"    Converted to markdown ({len(markdown):,} chars)")
         
         return ExtractedContent(
@@ -342,7 +357,10 @@ class HybridMarkdownExtractor:
                         if parsed and isinstance(parsed, dict) and len(parsed) > 0:
                             # Skip large objects (likely framework data)
                             json_str = json.dumps(parsed, indent=2)
-                            if len(json_str) < 2000:
+                            
+                            # NEW: Check for binary-looking data in JSON
+                            # If it contains many non-printable chars or looks like a binary blob, skip
+                            if len(json_str) < 2000 and not self._is_binary_looking(json_str):
                                 script_content.append(f"Variable '{var_name}': {json_str}")
                     except json.JSONDecodeError:
                         pass
@@ -392,6 +410,24 @@ class HybridMarkdownExtractor:
                     script_content.append(f"Script content: {content.strip()[:400]}")
         
         return script_content[:10]  # Limit to 10 items to avoid overwhelming the LLM
+    
+    def _is_binary_looking(self, text: str) -> bool:
+        """Check if text contains many non-printable characters or looks like a binary blob"""
+        if not text:
+            return False
+        
+        # Count non-printable characters
+        non_printable = sum(1 for c in text if ord(c) < 32 and c not in "\n\r\t")
+        
+        # If more than 5% are non-printable, it's likely binary/corrupt
+        if len(text) > 0 and (non_printable / len(text)) > 0.05:
+            return True
+            
+        # Check for common binary patterns (e.g., long strings of hex or base64 without spaces)
+        if len(text) > 100 and " " not in text[:100] and any(c in text[:100] for c in ['\\x', '\\u']):
+            return True
+            
+        return False
     
     def _extract_data_attributes(self, soup: BeautifulSoup) -> Dict[str, List[str]]:
         """Extract all data-* attributes from elements"""

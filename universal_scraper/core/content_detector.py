@@ -104,3 +104,7 @@ class ContentDetector:
         return content_type in ['pdf', 'docx', 'xlsx']
 
 
+
+
+
+
