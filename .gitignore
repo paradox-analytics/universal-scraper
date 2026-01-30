@@ -19,7 +19,6 @@
 !/CHANGELOG.md
 !/requirements.txt
 !/setup.py
-!/deploy_to_apify.sh
 
 # ==============================================================================
 # STANDARD IGNORES (Apply to content within whitelisted directories)
