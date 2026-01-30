@@ -1,8 +1,0 @@
-{
-  "pagination_type": "none",
-  "strategy": {
-    "extraction_method": "static_html"
-  },
-  "confidence": "high",
-  "reasoning": "The page appears to load all items without pagination, as there are no visible 'Load More' buttons or pagination controls in the provided HTML structure."
-}

@@ -9,7 +9,6 @@ A powerful, AI-driven universal web scraper that can extract structured data fro
 - **Code Caching**: Generates extraction code once, reuses for similar pages
 - **Multi-Provider AI**: Supports OpenAI, Gemini, Claude, and 100+ models via LiteLLM
 - **Residential Proxies**: Built-in support for proxy rotation and anti-blocking
-- **Apify Ready**: Deployable to Apify platform with one command
 - **Cost Optimized**: Uses LLMs only for understanding structure, not extraction
 
 ## Architecture
@@ -171,27 +170,6 @@ result = scraper.scrape(
 )
 ```
 
-## Apify Deployment
-
-### Deploy to Apify
-
-```bash
-cd universal-scraper
-./deploy_to_apify.sh
-```
-
-### Apify Input Schema
-
-```json
-{
-  "urls": ["https://example.com/page1", "https://example.com/page2"],
-  "fields": ["field1", "field2", "field3"],
-  "proxyType": "residential",
-  "aiModel": "gpt-4o-mini",
-  "outputFormat": "json"
-}
-```
-
 ## Advanced Features
 
 ### JSON Detection Priority
@@ -249,10 +227,8 @@ universal-scraper/
 │   │   └── proxy_manager.py    # Proxy rotation
 │   ├── cli.py                  # Command-line interface
 │   └── apify/
-│       ├── __init__.py
-│       ├── actor.py            # Apify actor main
-│       ├── Dockerfile
-│       └── INPUT_SCHEMA.json
+│   │   ├── proxy_manager.py    # Proxy rotation
+│   └── cli.py                  # Command-line interface
 ├── examples/
 │   ├── basic_usage.py
 │   ├── batch_scraping.py
