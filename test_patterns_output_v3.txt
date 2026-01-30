@@ -1,7 +1,0 @@
-Saving pattern...
-Response: 200
-{'success': True, 'message': 'Pattern saved successfully'}
-
-Listing patterns...
-Response: 200
-Found 0 patterns

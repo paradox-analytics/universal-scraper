@@ -53,17 +53,17 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Flask stuff:
+# Flask stuff
 instance/
 .webassets-cache
 
-# Scrapy stuff:
+# Scrapy stuff
 .scrapy
 
 # Sphinx documentation
@@ -130,72 +130,220 @@ dmypy.json
 *~
 .DS_Store
 
-# Project specific
-cache/
-*.cache
-logs/
-*.log
+# ===== NODE MODULES (CRITICAL - should never be tracked) =====
+node_modules/
+frontend/node_modules/
 
-# Apify deployment artifacts (created by deploy_to_apify.sh)
-# These are temporary copies in root directory
-/.actor/
-/Dockerfile
-
-# Apify local testing
-universal_scraper/apify/test_input.json
-universal_scraper/apify/test_output.json
-
-# API Keys and secrets
-.env.local
-*.key
-secrets.json
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Test outputs and results
-test_output_*.txt
-test_results.json
-*_test_results.json
-threshold_tuning_results.json
+# ===== TEMPORARY AND DEBUG FILES =====
 *.log
 *.tmp
 *.bak
 *.swp
-.DS_Store
+cache/
+*.cache
+logs/
+tmp/
+temp/
 
-# Test scripts and temporary exploration files
+# ===== TEST SCRIPTS AND EXPLORATION FILES =====
 test_*.py
-quick_*.py
 test_*.json
 test_*.sh
+test_*.html
+test_*.txt
+test_*.csv
+quick_*.py
 verify_*.py
 update_*.py
 update_*.sh
 reproduce_*.py
 extract_*.py
+debug_*.py
+debug_*.html
+debug_*.json
+analyze_*.py
+check_*.py
 tests/
 test_cache/
+
+# ===== DEBUG OUTPUT DIRECTORIES =====
+debug_output/
 apify_storage_local/
+
+# ===== RESULT AND DATA FILES (not needed in repo) =====
+*_results.json
+*_results.csv
+*.html
+!frontend/**/*.html
+!universal_scraper/**/*.html
+
+# ===== DOCUMENTATION (internal notes, not needed for core engine) =====
+# Keep only README.md, CONTRIBUTING.md, LICENSE, CHANGELOG.md
+ACTUAL_QA_RESULTS.md
+AGENT_TYPE_SPLIT*.md
+AMAZON_*.md
+APIFY_*.md
+API_TESTING*.md
+ARCHITECTURE_*.md
+AUTH_DETECTION.md
+AUTO_PAGINATION*.md
+BROWSER_*.md
+BUG*.md
+CACHE_*.md
+CAMOUFOX_*.md
+CATALANT_*.md
+CHEWY_*.md
+CLEANING_*.md
+CLOUDFLARE_*.md
+CODEBASE_*.md
+CODE_EXAMPLES.md
+COMPETITIVE_*.md
+COMPETITOR_*.md
+COMPREHENSIVE_*.md
+CONTENT_*.md
+CONTEXT_*.md
+COST_*.md
+CRAWLER_*.md
+CRAWL_*.md
+CRITICAL_*.md
+CSS_*.md
+CSV_*.md
+CURRENT_*.md
+DATA_*.md
+DEEP_*.md
+DEPLOYMENT_*.md
+DEPLOY_*.md
+DIRECT_LLM_*.md
+DOCUMENTATION_*.md
+DOCUMENT_*.md
+DOM_*.md
+EBAY_*.md
+EMBEDDING_*.md
+ENHANCED_*.md
+EXTRACTED_*.md
+EXTRACTION_*.md
+FETCHER_*.md
+FIELD_*.md
+FINAL_*.md
+FIREBASE_*.md
+FIXES_*.md
+FREQUENCY_*.md
+FUNDAMENTAL_*.md
+GAP_*.md
+GCP_*.md
+GET_*.md
+GLOBAL_*.md
+GPT4O_*.md
+HOW_*.md
+HYBRID_*.md
+IMPLEMENTATION_*.md
+INTEGRATION_*.md
+ITERATIVE_*.md
+JAVASCRIPT_*.md
+JSON_*.md
+LEAFLY_*.md
+LLM_*.md
+MARKDOWN_*.md
+MARKET_*.md
+METACRITIC_*.md
+MILESTONE_*.md
+MISSION_*.md
+MODULAR_*.md
+MULTI_*.md
+NAVIGATION_*.md
+NEXT_*.md
+OPTIMIZATION_*.md
+OXYLABS_*.md
+PAGINATION_*.md
+PATTERN_*.md
+PDF_*.md
+PHASE*.md
+PIVOTAL_*.md
+PREP_*.md
+PREVIEW_*.md
+PRICE_*.md
+PRODUCTION_*.md
+PRODUCT_*.md
+PROJECT_*.md
+PROMPT_*.md
+PROPOSAL_*.md
+PROXY_*.md
+QA_*.md
+QUALITY_*.md
+QUICK_*.md
+RAW_*.md
+REAL_*.md
+REDDIT_*.md
+REDIS_*.md
+REGRESSION_*.md
+REINFORCEMENT_*.md
+RENDER*.md
+ROBUST_*.md
+ROOT_*.md
+SAMPLE_*.md
+SCHEMA_*.md
+SCRAPE*.md
+SEARCH_*.md
+SEMANTIC_*.md
+SESSION_*.md
+SIMPLIFIED_*.md
+SINGLE_*.md
+SMART_*.md
+SOURCE_*.md
+STACKOVERFLOW_*.md
+STATUS_*.md
+STRATEGY_*.md
+STRUCTURAL_*.md
+SUMMARY_*.md
+SYSTEM_*.md
+TECHNICAL_*.md
+TEST_*.md
+THRESHOLD_*.md
+TICKETMASTER_*.md
+TODAY_*.md
+TOKEN_*.md
+TREE_*.md
+TROUBLESHOOTING_*.md
+UNIFIED_*.md
+UNIVERSAL_*.md
+UPDATE_*.md
+URL_*.md
+VERIFICATION_*.md
+WEB_*.md
+WORKING_*.md
+KASADA_*.md
+
+# ===== SAMPLE AND CONFIG FILES (not core) =====
+*.sample.json
+*_sample.csv
+apify_sample.csv
+all_requests.json
+.scraping_strategies.json
+EBAY_APIFY_DEBUG_CONFIG.json
+
+# ===== DEPLOYMENT SCRIPTS (keep only essential) =====
+deploy_*.sh
+
+# ===== AUTH AND SECRETS =====
 auth/
-METACRITIC_DIAGNOSIS.md
-geoip=false_*.html
+.env.local
+*.key
+secrets.json
+*-*-*-*.json
 
-# Documentation and guides (not needed for core scraping jobs)
-KASADA_BYPASS_GUIDE.md
-EDGE_CASE_TESTING.md
-FIELD_DISCOVERY_GUIDE.md
-LOCAL_TESTING.md
-DEPLOYMENT_GUIDE.md
-WEB_UNBLOCKER_DEPLOYMENT.md
-TEST_WITH_RESIDENTIAL_IPS.md
-
-# Apify specific temporary/test files
+# ===== APIFY LOCAL ARTIFACTS =====
+/.actor/
+/Dockerfile
+universal_scraper/apify/test_input.json
+universal_scraper/apify/test_output.json
 universal_scraper/apify/test-*.json
 universal_scraper/apify/test-*.sh
 universal_scraper/apify/deploy.log
 universal_scraper/apify/storage/
 universal_scraper/apify/cache/
 universal_scraper/apify/apify_storage_local/
+universal_scraper/apify_scrapegpt/apify_storage_local/
+
+# ===== APIFY SCRAPEGPT (duplicate, not needed) =====
+universal_scraper/apify_scrapegpt/
+
