@@ -273,6 +273,55 @@ See the `examples/` directory for comprehensive examples:
 - `with_proxies.py`: Using residential proxies
 - `cache_management.py`: Managing the code cache
 
+## 🔧 Configuration Reference
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `OPENAI_API_KEY` | OpenAI API key for LLM integration | Yes (or other provider) |
+| `ANTHROPIC_API_KEY` | Anthropic key if using Claude models | No |
+| `GEMINI_API_KEY` | Google Gemini key | No |
+| `PROXY_URL` | Default proxy URL (e.g., `http://user:pass@host:port`) | No |
+| `HEADLESS` | Run browser in headless mode (`true`/`false`) | No (default: true) |
+
+### UniversalScraper Options
+
+```python
+scraper = UniversalScraper(
+    api_key="...",              # API Key for LLM
+    model_name="gpt-4o",        # Model to use
+    headless=True,              # Run browser invisibly
+    proxy_config={...},         # Proxy settings
+    cache_dir="./cache",        # Custom cache location
+    enable_cache=True,          # Enable structural caching
+    extraction_context="..."    # Optional hint for extractor
+)
+```
+
+## ❓ Troubleshooting
+
+### Common Issues
+
+**1. 403/407 Forbidden Errors**
+- **Cause**: The site is blocking the request or proxy authentication failed.
+- **Solution**: 
+  - Ensure you are using high-quality residential proxies.
+  - Verify your proxy credentials in `proxy_config`.
+  - Try enabling `web_unblocker=True` (if configured) or switching proxy providers.
+
+**2. "No JSON found"**
+- **Cause**: The page renders content via complex JavaScript that doesn't expose data in standard JSON blobs.
+- **Solution**: 
+  - The scraper will automatically fallback to LLM-based HTML extraction.
+  - Ensure the page is fully loaded (increase `timeout` if needed).
+
+**3. Slow Performance**
+- **Cause**: Browser launching or LLM latency.
+- **Solution**: 
+  - Enable caching (`enable_cache=True`) to skip LLM generation for known structures.
+  - Reuse the `scraper` instance instead of creating a new one for every request.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

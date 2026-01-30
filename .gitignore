@@ -320,9 +320,31 @@ apify_sample.csv
 all_requests.json
 .scraping_strategies.json
 EBAY_APIFY_DEBUG_CONFIG.json
+firebase.json
+firestore.*
+.firebaserc
+.gcloudignore
 
-# ===== DEPLOYMENT SCRIPTS (keep only essential) =====
+# ===== IMAGES AND ASSETS =====
+*.png
+!frontend/public/*.png
+!frontend/src/**/*.png
+
+# ===== DEPLOYMENT SCRIPTS =====
+# Ignore all deploy scripts except the main one
 deploy_*.sh
+!deploy_to_apify.sh
+
+# ===== TEMPORARY SCRIPTS =====
+diagnose_*.py
+fix_*.py
+generate_*.py
+inspect_*.py
+install_*.py
+save_*.py
+setup_*.sh
+# Keep setup.py
+!setup.py
 
 # ===== AUTH AND SECRETS =====
 auth/
