@@ -1,6 +1,0 @@
-@context,@type,BannerPushesDown,Conditions,Countries,Default,EnableJWTAuthForKnownUsers,GCEnable,Global,Id
-,,,,['us'],,,True,,0195f047-3446-7608-a99a-b9fba5214b31
-,,,,"['no', 'de', 'be', 'fi', 'pt', 'bg', 'dk', 'lt', 'lu', 'hr', 'lv', 'fr', 'hu', 'br', 'se', 'si', 'mc', 'sk', 'mf', 'sm', 'gb', 'yt', 'ie', 'gf', 'ee', 'mq', 'ch', 'mt', 'gp', 'is', 'it', 'gr', 'es', '",,,True,,0195f047-3446-72a4-a3b8-bf170fbda5e9
-,,,,"['pr', 'ps', 'pw', 'py', 'qa', 'ad', 'ae', 'af', 'ag', 'ai', 'al', 'am', 'ao', 'aq', 'ar', 'as', 'au', 'aw', 'az', 'ba', 'bb', 'rs', 'bd', 'ru', 'bf', 'rw', 'bh', 'bi', 'bj', 'bl', 'bm', 'bn', 'bo', '",True,,True,True,0195f047-3445-7111-b4c2-70fd65054b9d
-https://schema.org,WebPage,,,,,,,,
-,,,,,,,,,
