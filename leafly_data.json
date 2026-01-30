@@ -1,0 +1,3088 @@
+{
+  "data": [
+    {
+      "product_name": "Home"
+    },
+    {
+      "product_name": "Jungle Juice - 3.5g",
+      "price": 64,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 11,
+        "percentile50": 11,
+        "percentile75": 11
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 13403,
+        "slug": "upnorth-humboldt",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [],
+        "claimed": true,
+        "description": "Trusted craft cannabis with roots in Humboldt, CA.",
+        "featureTierName": "pro",
+        "informationWebsite": null,
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://s3-us-west-2.amazonaws.com/leafly-public/Qfl5Y45FT2207jCLlYbL_e0fe7b41-3db0-4bba-9dbd-5f9a5f72f233",
+        "name": "UpNorth",
+        "tagline": "Fresh air. Tall trees. Big clouds."
+      },
+      "strain_type": {
+        "slug": "jungle-juice",
+        "id": 210736,
+        "aka": null,
+        "averageRating": 4.428571428571429,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 11,
+            "percentile50": 11,
+            "percentile75": 11
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Bred by Golden State Genetics, Jungle Juice is a hybrid strain that crosses <a href=\"/strains/animal-cookies\">Animal Cookies</a> and their in-house <a href=\"/strains/tangie\">Tangie</a> male. Balancing sweet and sour citrus flavors, this strain offers a flavorful release from stress, sleeplessness, and pain.</p>\n",
+        "descriptionPlain": "Bred by Golden State Genetics, Jungle Juice is a hybrid strain that crosses Animal Cookies and their in-house Tangie male. Balancing sweet and sour citrus flavors, this strain offers a flavorful release from stress, sleeplessness, and pain.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 20,
+            "score": 0.8613929945,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 14,
+            "score": 0.578138703,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 13,
+            "score": 1.054078903,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 11,
+            "score": 0.5863284319,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 10,
+            "score": 0.9918212814,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 9,
+            "score": 0.6999017249,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 9,
+            "score": 0.3018407625,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.6084227134,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.3962925771,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.5120819212,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.1455485033,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": 0.04247167514,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.01366933929,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -0.3272023101,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Jungle Juice",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 421,
+        "reviewCount": 42,
+        "shortDescriptionPlain": "Bred by Golden State Genetics, Jungle Juice is a hybrid strain that crosses Animal Cookies and their in-house Tangie male.",
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/generic/strain-15.png",
+        "strainId": 210736,
+        "subtitle": null,
+        "symbol": "Jju",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.115
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.046
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.213
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.006
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.178
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.046
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.006
+          }
+        },
+        "topEffect": "Sleepy",
+        "topTerp": {
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.213
+          }
+        }
+      }
+    },
+    {
+      "product_name": "Kiwi Strawberry - 1:1:1 100 MG |THC 100MG CBD | 100MG CBG",
+      "price": 30,
+      "brand": {
+        "id": 37030,
+        "slug": "good-tide",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "MC11-0000192-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "REC404R-00416",
+            "state": "CO"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "030-1003109E26A",
+            "state": "OR"
+          }
+        ],
+        "claimed": true,
+        "description": "Bursting with tropical goodness, Good Tide gummies transport you to a place where the sun is always shining.\n\nMade with solventless hash rosin, and full of naturally occurring terpenes and minor cannabinoids, Good Tide is made for fun in the sun, hanging with friends, and turning on your inner chill. Take a tropical vacation and enjoy all that cannabis has to offer.\n\nWe want to make the world a better place, and we take that seriously. With compostable packaging, carbon neutral operations, and community partnerships, we work hard to contribute to healthy communities and ecosystems. We make waves with our products and approach, staying true to what we believe in. Good Tide challenges norms and sets the bar higher.\n\nGood Tide is vegan and made with real fruit. We are proud to be a Climate Neutral Certified brand.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.goodtidecannabis.com/",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/6bH4q9LRQbGjn11Wubhr_GoodTide_Badge-Primary_Blue.png",
+        "name": "Good Tide",
+        "tagline": "Make Waves"
+      }
+    },
+    {
+      "product_name": "Baklava | 3.5g",
+      "product_type": {
+        "id": 110200,
+        "slug": "alienlabs-baklava-flower",
+        "avgApprovedPublicReviewRating": 5,
+        "brand": {
+          "id": 5477,
+          "slug": "alienlabs",
+          "availableCountries": [
+            "United States"
+          ],
+          "brandLicenses": [],
+          "claimed": true,
+          "description": "We are a craft Cannabis company from Northern California. Specializing in high quality and exotic strains.",
+          "informationWebsite": "https://www.alienlabs.org/",
+          "isPaid": true,
+          "isProductAffiliateLinksEnabled": false,
+          "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/Y1JPhJTtTZ6B5o37zqMe_logo-ideas-aliens2_1x.jpg",
+          "name": "AlienLabs",
+          "tagline": "AlienLabs"
+        },
+        "categoryName": "Cannabis",
+        "categorySlug": "cannabis",
+        "countApprovedPublicReviews": 14,
+        "description": "Baklava from Alien Labs is a potent hybrid strain that delivers a full body relaxation effect that is hard to compete with. With Kosher Kush and Gelato 41 as its parents, Baklava proudly distinguishes itself with a pure OG gas nose and a creamy gelato style back end.",
+        "imageUrl": "https://s3-us-west-2.amazonaws.com/leafly-images/products/photos/h2heiW89TLWNmt3kSsFd_202530_Copy_of_Alien_-_Baklava.jpeg",
+        "msrp": null,
+        "name": "Baklava",
+        "shortDescription": null,
+        "strain": null,
+        "subcategoryName": "Flower",
+        "subcategorySlug": "flower",
+        "thumbnailImageUrl": null
+      },
+      "price": 60,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 20,
+        "percentile50": 21,
+        "percentile75": 22
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 3,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 5477,
+        "slug": "alienlabs",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [],
+        "claimed": true,
+        "description": "We are a craft Cannabis company from Northern California. Specializing in high quality and exotic strains.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.alienlabs.org/",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/Y1JPhJTtTZ6B5o37zqMe_logo-ideas-aliens2_1x.jpg",
+        "name": "AlienLabs",
+        "tagline": "AlienLabs"
+      },
+      "strain_type": {
+        "slug": "baklava",
+        "id": 510261,
+        "aka": null,
+        "averageRating": 4.617021276595745,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 3,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": 1,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 20,
+            "percentile50": 21,
+            "percentile75": 22
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Baklava is a <a href=\"https://www.leafly.com/strains/lists/category/hybrid\" rel=\"noopener noreferrer\" target=\"_blank\">hybrid</a> weed strain made from a genetic cross between <a href=\"https://www.leafly.com/strains/kosher-kush\" rel=\"noopener noreferrer\" target=\"_blank\">Kosher Kush</a> and <a href=\"https://www.leafly.com/strains/gelato-41\" rel=\"noopener noreferrer\" target=\"_blank\">Gelato 41</a>. This strain is a potent hybrid that delivers a full body relaxation effect that is hard to compete with. Baklava proudly distinguishes itself with a pure OG gas nose and a creamy gelato style back end. Baklava has 21% THC, making this strain an ideal choice for experienced cannabis consumers. Leafly customers tell us Baklava effects include <a href=\"https://www.leafly.com/strains/lists/effect/creative\" rel=\"noopener noreferrer\" target=\"_blank\">creative</a>, <a href=\"https://www.leafly.com/strains/lists/effect/tingly\" rel=\"noopener noreferrer\" target=\"_blank\">tingly</a>, and <a href=\"https://www.leafly.com/strains/lists/effect/uplifted\" rel=\"noopener noreferrer\" target=\"_blank\">uplifted</a>. Medical marijuana patients often choose Baklava when dealing with symptoms associated with <a href=\"https://www.leafly.com/strains/lists/condition/anxiety\" rel=\"noopener noreferrer\" target=\"_blank\">anxiety</a>, <a href=\"https://www.leafly.com/strains/lists/condition/depression\" rel=\"noopener noreferrer\" target=\"_blank\">depression</a>, and <a href=\"https://www.leafly.com/strains/lists/condition/stress\" rel=\"noopener noreferrer\" target=\"_blank\">stress</a>. Bred by Alien Labs, Baklava features flavors like <a href=\"https://www.leafly.com/strains/lists/flavor/vanilla\" rel=\"noopener noreferrer\" target=\"_blank\">vanilla</a>, <a href=\"https://www.leafly.com/strains/lists/flavor/tar\" rel=\"noopener noreferrer\" target=\"_blank\">tar</a>, and <a href=\"https://www.leafly.com/strains/lists/flavor/sweet\" rel=\"noopener noreferrer\" target=\"_blank\">sweet</a>. The dominant terpene of this strain is <a href=\"https://www.leafly.com/strains/lists/terpenes/limonene\" rel=\"noopener noreferrer\" target=\"_blank\">limonene</a>. The average price of Baklava typically ranges from $15-$20 per gram. If you\u2019ve smoked, dabbed, or consumed Baklava, tell us about your experience by leaving a strain review.</p>",
+        "descriptionPlain": "Baklava is a hybrid weed strain made from a genetic cross between Kosher Kush and Gelato 41. This strain is a potent hybrid that delivers a full body relaxation effect that is hard to compete with. Baklava proudly distinguishes itself with a pure OG gas nose and a creamy gelato style back end. Baklava has 21% THC, making this strain an ideal choice for experienced cannabis consumers. Leafly customers tell us Baklava effects include creative, tingly, and uplifted. Medical marijuana patients often choose Baklava when dealing with symptoms associated with anxiety, depression, and stress. Bred by Alien Labs, Baklava features flavors like vanilla, tar, and sweet. The dominant terpene of this strain is limonene. The average price of Baklava typically ranges from $15-$20 per gram. If you\u2019ve smoked, dabbed, or consumed Baklava, tell us about your experience by leaving a strain review.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 23,
+            "score": 0.4964383704,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 18,
+            "score": 0.5320372445,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 18,
+            "score": 0.4285226862,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 17,
+            "score": 0.3071873858,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 17,
+            "score": 0.7752162857,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 16,
+            "score": 0.8042935351,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 13,
+            "score": 0.8530723945,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 11,
+            "score": 0.4367989816,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 9,
+            "score": 0.3200884313,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 8,
+            "score": 0.1519463064,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 0.1836198862,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.05008532385,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.2479229582,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 0.3656576198,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Baklava",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 562,
+        "reviewCount": 47,
+        "shortDescriptionPlain": null,
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/generic/strain-25.png",
+        "strainId": 510261,
+        "subtitle": null,
+        "symbol": "Blv",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.31
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.098
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.896
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.158
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.398
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.272
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.04
+          }
+        },
+        "topEffect": "Tingly",
+        "topTerp": {
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.896
+          }
+        }
+      }
+    },
+    {
+      "product_name": "GM-UHOH - 3.5 g",
+      "price": 61.11,
+      "brand": {
+        "id": 6810,
+        "slug": "cannabiotix",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000040-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CCL18-0001019-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "C9-0000253-LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabiotix is a boutique cannabis company based in both California and Nevada founded by two expert cultivators who set out to develop and cultivate the most elite genetics in the cannabis industry today. Our foundation is built on using natural and sustainable farming techniques in symphony with the latest methods in science and technology to cultivate clean, PGR free, award winning cannabis flowers. \nSince the days when the trade was largely underground, our founders have been building a genetic catalog of rare and highly potent cultivars.\u00a0We breed these unique varietals to create exclusive, in-house strains that showcase one of a kind cannabinoid and terpene profiles.\nWith over two decades of experience, the team at Cannabiotix is made up of avid cannabis enthusiasts that give each strain customized individual attention. We believe this is a craft that can never be mastered, a belief that drives us to constantly evolve and hone our techniques to ensure we provide enthusiasts with the best flowers and cannabis products possible. #CbxLife #AllWeKnowIsHeat\n\nVisit us on Instagram @Cannabiotix\nwww.Cannabiotix.com",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.cannabiotix.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/rGsvTdCQy66HerJiKXjp_IMG_5362.JPG",
+        "name": "Cannabiotix",
+        "tagline": "All We Know Is Heat"
+      }
+    },
+    {
+      "product_name": "GRAPE GASBY - 3.5G",
+      "price": 61.11,
+      "brand": {
+        "id": 6810,
+        "slug": "cannabiotix",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000040-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CCL18-0001019-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "C9-0000253-LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabiotix is a boutique cannabis company based in both California and Nevada founded by two expert cultivators who set out to develop and cultivate the most elite genetics in the cannabis industry today. Our foundation is built on using natural and sustainable farming techniques in symphony with the latest methods in science and technology to cultivate clean, PGR free, award winning cannabis flowers. \nSince the days when the trade was largely underground, our founders have been building a genetic catalog of rare and highly potent cultivars.\u00a0We breed these unique varietals to create exclusive, in-house strains that showcase one of a kind cannabinoid and terpene profiles.\nWith over two decades of experience, the team at Cannabiotix is made up of avid cannabis enthusiasts that give each strain customized individual attention. We believe this is a craft that can never be mastered, a belief that drives us to constantly evolve and hone our techniques to ensure we provide enthusiasts with the best flowers and cannabis products possible. #CbxLife #AllWeKnowIsHeat\n\nVisit us on Instagram @Cannabiotix\nwww.Cannabiotix.com",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.cannabiotix.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/rGsvTdCQy66HerJiKXjp_IMG_5362.JPG",
+        "name": "Cannabiotix",
+        "tagline": "All We Know Is Heat"
+      }
+    },
+    {
+      "product_name": "CANNABIOTIX SUPER MANGO HAZE - 3.5G",
+      "price": 61.11,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 16,
+        "percentile50": 20,
+        "percentile75": 22
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 6810,
+        "slug": "cannabiotix",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000040-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CCL18-0001019-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "C9-0000253-LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabiotix is a boutique cannabis company based in both California and Nevada founded by two expert cultivators who set out to develop and cultivate the most elite genetics in the cannabis industry today. Our foundation is built on using natural and sustainable farming techniques in symphony with the latest methods in science and technology to cultivate clean, PGR free, award winning cannabis flowers. \nSince the days when the trade was largely underground, our founders have been building a genetic catalog of rare and highly potent cultivars.\u00a0We breed these unique varietals to create exclusive, in-house strains that showcase one of a kind cannabinoid and terpene profiles.\nWith over two decades of experience, the team at Cannabiotix is made up of avid cannabis enthusiasts that give each strain customized individual attention. We believe this is a craft that can never be mastered, a belief that drives us to constantly evolve and hone our techniques to ensure we provide enthusiasts with the best flowers and cannabis products possible. #CbxLife #AllWeKnowIsHeat\n\nVisit us on Instagram @Cannabiotix\nwww.Cannabiotix.com",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.cannabiotix.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/rGsvTdCQy66HerJiKXjp_IMG_5362.JPG",
+        "name": "Cannabiotix",
+        "tagline": "All We Know Is Heat"
+      },
+      "strain_type": {
+        "slug": "mango-haze",
+        "id": 105103,
+        "aka": null,
+        "averageRating": 4.5,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 16,
+            "percentile50": 20,
+            "percentile75": 22
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Sativa",
+        "chemotype": "THC Dominant",
+        "description": "<p>Mango Haze is a <a href=\"https://www.leafly.com/strains/lists/category/sativa\">sativa marijuana strain</a> made by crossing <a href=\"/strains/northern-lights--5\">Northern Lights #5</a>,&nbsp;<a href=\"/strains/skunk-1\">Skunk</a>, and&nbsp;<a href=\"/strains/haze\">Haze</a>. Mango Haze produces <a href=\"https://www.leafly.com/strains/lists/effect/uplifted\">uplifting</a> and <a href=\"https://www.leafly.com/strains/lists/effect/happy\">happy effects</a> that will put you into a cerebral mood. This strain features a <a href=\"https://www.leafly.com/strains/lists/flavor/mango\">mango aroma and flavor</a> that consumers love. Medical marijuana patients choose this strain to help relieve symptoms associated with <a href=\"https://www.leafly.com/strains/lists/condition/depression\">depression</a>. </p>",
+        "descriptionPlain": "Mango Haze is a sativa marijuana strain made by crossing Northern Lights #5,\u00a0Skunk, and\u00a0Haze. Mango Haze produces uplifting and happy effects that will put you into a cerebral mood. This strain features a mango aroma and flavor that consumers love. Medical marijuana patients choose this strain to help relieve symptoms associated with depression.",
+        "distanceMi": null,
+        "effects": {
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 183,
+            "score": 0.5995809487,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 159,
+            "score": 0.6534512674,
+            "type": "effect"
+          },
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 157,
+            "score": 0.4977553561,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 136,
+            "score": 0.389101604,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 134,
+            "score": 0.6936730607,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 104,
+            "score": 0.6885779005,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 88,
+            "score": 0.2899623907,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 84,
+            "score": 0.5498990524,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 68,
+            "score": 0.3857413422,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 68,
+            "score": 0.273230183,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 60,
+            "score": 0.5283969149,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 44,
+            "score": -0.1107804844,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 39,
+            "score": 0.2760426849,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 0.6588425085,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Mango Haze",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": "https://s3-us-west-2.amazonaws.com/leafly-images/flower-images/zT6M2MASsyZK8U9tZ9JA_MANGO HAZE-251-edited.jpg",
+        "nugImageAltText": null,
+        "phenotype": "Sativa",
+        "populationRank": 182,
+        "reviewCount": 366,
+        "shortDescriptionPlain": null,
+        "stockNugImage": null,
+        "strainId": 105103,
+        "subtitle": null,
+        "symbol": "Mgh",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.288333333333333
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.1025
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.151666666666667
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0308333333333333
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.5525
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.210833333333333
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.283333333333333
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.735833333333333
+          }
+        },
+        "topEffect": "Energetic",
+        "topTerp": {
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.735833333333333
+          }
+        }
+      }
+    },
+    {
+      "product_name": "Casino Kush - 3.5g",
+      "price": 61.11,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": null,
+        "percentile50": 20,
+        "percentile75": null
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "brand": {
+        "id": 6810,
+        "slug": "cannabiotix",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000040-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CCL18-0001019-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "C9-0000253-LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabiotix is a boutique cannabis company based in both California and Nevada founded by two expert cultivators who set out to develop and cultivate the most elite genetics in the cannabis industry today. Our foundation is built on using natural and sustainable farming techniques in symphony with the latest methods in science and technology to cultivate clean, PGR free, award winning cannabis flowers. \nSince the days when the trade was largely underground, our founders have been building a genetic catalog of rare and highly potent cultivars.\u00a0We breed these unique varietals to create exclusive, in-house strains that showcase one of a kind cannabinoid and terpene profiles.\nWith over two decades of experience, the team at Cannabiotix is made up of avid cannabis enthusiasts that give each strain customized individual attention. We believe this is a craft that can never be mastered, a belief that drives us to constantly evolve and hone our techniques to ensure we provide enthusiasts with the best flowers and cannabis products possible. #CbxLife #AllWeKnowIsHeat\n\nVisit us on Instagram @Cannabiotix\nwww.Cannabiotix.com",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.cannabiotix.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/rGsvTdCQy66HerJiKXjp_IMG_5362.JPG",
+        "name": "Cannabiotix",
+        "tagline": "All We Know Is Heat"
+      },
+      "strain_type": {
+        "slug": "casino-kush",
+        "id": 507105,
+        "aka": null,
+        "averageRating": 4.620689655172414,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": null,
+            "percentile50": 20,
+            "percentile75": null
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "Unknown",
+        "description": "<p>Casino Kush is an indica-dominant weed strain released by Rythm. Casino Kush has a pungent smell of <a href=\"https://www.leafly.com/strains/lists/flavor/spicy-herbal\" rel=\"noopener noreferrer\" target=\"_blank\">spicy</a> and <a href=\"https://www.leafly.com/strains/lists/flavor/earthy\" rel=\"noopener noreferrer\" target=\"_blank\">earthy</a> notes, with a <a href=\"https://www.leafly.com/strains/lists/flavor/woody\" rel=\"noopener noreferrer\" target=\"_blank\">woodsy</a> twist when inhaled. This is a stony strain ideal for <a href=\"https://www.leafly.com/strains/lists/effect/relaxed\" rel=\"noopener noreferrer\" target=\"_blank\">relaxation</a> and mitigating <a href=\"https://www.leafly.com/strains/lists/condition/pain\" rel=\"noopener noreferrer\" target=\"_blank\">pain</a>, <a href=\"https://www.leafly.com/strains/lists/condition/insomnia\" rel=\"noopener noreferrer\" target=\"_blank\">insomnia</a>, or <a href=\"https://www.leafly.com/strains/lists/condition/nausea\" rel=\"noopener noreferrer\" target=\"_blank\">nausea</a>. If you\u2019ve smoked, dabbed, or consumed Casino Kush, tell us about your experience by leaving a strain review.</p>",
+        "descriptionPlain": "Casino Kush is an indica-dominant weed strain released by Rythm. Casino Kush has a pungent smell of spicy and earthy notes, with a woodsy twist when inhaled. This is a stony strain ideal for relaxation and mitigating pain, insomnia, or nausea. If you\u2019ve smoked, dabbed, or consumed Casino Kush, tell us about your experience by leaving a strain review.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 40,
+            "score": 1.759543759,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 27,
+            "score": 1.011113713,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 24,
+            "score": 1.912535362,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 23,
+            "score": 0.9320207314,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 14,
+            "score": 1.11218324,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 8,
+            "score": 0.08196482316,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 0.2086048473,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.06118646668,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.0003692194816,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.03894389859,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.1170553489,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.3457331863,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": -0.1034073469,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -1.125274635,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Casino Kush",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": "https://leafly-public.s3-us-west-2.amazonaws.com/strains/photos/R5P58rdUTYuZkVaLhJg3_20240520_143024%20-%20Lord%20Figo.jpg",
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 2350,
+        "reviewCount": 58,
+        "shortDescriptionPlain": null,
+        "stockNugImage": null,
+        "strainId": 507105,
+        "subtitle": null,
+        "symbol": "Cnk",
+        "terpeneDataProducerCount": 0,
+        "terps": {},
+        "topEffect": "Sleepy",
+        "topTerp": {}
+      }
+    },
+    {
+      "product_name": "TANGIE DREAM LIVE RESIN DIAMONDS | 1G",
+      "price": 22.22,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 18,
+        "percentile50": 19,
+        "percentile75": 20
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 44393,
+        "slug": "tempo-crackers",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C110001516LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabis is about bringing people together. As a LGBTQ founded company, Tempo is specially formulated with inclusivity in mind. Each product is specially formulated so you can find your tempo. Tempo empowers you to confidently invite cannabis into your lifestyle from - canna-curious to master connoisseur everyone can find their tempo.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.tempocrackers.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.imgix.net/brands/brand-placeholder.svg",
+        "name": "Tempo",
+        "tagline": "Find Your Tempo"
+      },
+      "strain_type": {
+        "slug": "tangie-dream",
+        "id": 257072,
+        "aka": null,
+        "averageRating": 4.454545454545454,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 18,
+            "percentile50": 19,
+            "percentile75": 20
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Tangie Dream is a sativa-dominant hybrid strain that reeks of orange peel and rock candy. The strain&rsquo;s overall sweetness permeates the flavor, leaving consumers with a subtle tartness on the exhale. Enjoy Tangie Dream throughout the day to elevate mood and stimulate the imagination. This strain can be motivating in smaller doses, but it has a tendency to insulate the consumer in an whimsical euphoria with continuous use.&nbsp;</p>\n",
+        "descriptionPlain": "Tangie Dream is a sativa-dominant hybrid strain that reeks of orange peel and rock candy. The strain\u2019s overall sweetness permeates the flavor, leaving consumers with a subtle tartness on the exhale. Enjoy Tangie Dream throughout the day to elevate mood and stimulate the imagination. This strain can be motivating in smaller doses, but it has a tendency to insulate the consumer in an whimsical euphoria with continuous use.\u00a0",
+        "distanceMi": null,
+        "effects": {
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 11,
+            "score": 1.33883815,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 10,
+            "score": 0.8426317751,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 9,
+            "score": 0.8928089503,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 8,
+            "score": 0.6640301402,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 1.057138913,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.7973416482,
+            "type": "effect"
+          },
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.28858698,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.7732464218,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.6054571132,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": 0.5317856631,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": 0.149186978,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.02581165145,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": -0.2004515679,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 1.181456878,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Tangie Dream",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 2033,
+        "reviewCount": 22,
+        "shortDescriptionPlain": "Tangie Dream is a sativa-dominant hybrid strain that reeks of orange peel and rock candy. The strain\u2019s overall sweetness permeates the flavor, leaving consumers with a subtle tartness on the exhale.",
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/red-orange-amber/strain-3.png",
+        "strainId": 257072,
+        "subtitle": null,
+        "symbol": "Tnd",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.269666666666667
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0913333333333333
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.166333333333333
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.07
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 1.56133333333333
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0263333333333333
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.501333333333333
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0266666666666666
+          }
+        },
+        "topEffect": "Creative",
+        "topTerp": {
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 1.56133333333333
+          }
+        }
+      }
+    },
+    {
+      "product_name": "Rainbow Runtz | 1g",
+      "price": 22.22,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": null,
+        "percentile50": 25,
+        "percentile75": null
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "brand": {
+        "id": 4278,
+        "slug": "punch-edibles",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000174-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDHP-10003615",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-T000001503",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": " PAAA-OYJ9-AZLV",
+            "state": "OK"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "OCM-AUCP-22-000022",
+            "state": "NY"
+          }
+        ],
+        "claimed": true,
+        "description": "Punch Edibles & Extracts was born on the idea of providing sensibly\nsized,high-dose edibles at affordable prices. All of our edible products\ntaste great, contain minimal calories and sugar, and are accurately dosed\nto ensure a safe and consistent experience. Since launching in 2013, we\nhave developed into a \u201cfull service\u201d cannabis brand by adding an array of\ntop tier solventless products to our catalog. From vape pens to pre-rolls,\nwe have trusted products for every cannabis consumer.",
+        "featureTierName": "pro",
+        "informationWebsite": "http://punchedibles.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/hqoTGVolTqqN64icdAfi_PEfist_300x300.jpg",
+        "name": "Punch",
+        "tagline": "Quality Product-Fair Prices"
+      },
+      "strain_type": {
+        "slug": "rainbow-runtz",
+        "id": 510646,
+        "aka": null,
+        "averageRating": 4.555555555555555,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": null,
+            "percentile50": 25,
+            "percentile75": null
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Indica",
+        "chemotype": "Unknown",
+        "description": "<p>Rainbow Runtz, also known as \u201cRainbow Runts,\u201d was an <a href=\"https://www.leafly.com/strains/lists/category/indica\">indica weed strain</a> made from a double cross of <a href=\"https://www.leafly.com/strains/zkittlez\">Zkittlez</a> and <a href=\"https://www.leafly.com/strains/do-si-dos\">DoSiDos</a>. In 2024, Rainbow Runtz is also Wizard Trees' cross of <a href=\"https://www.leafly.com/strains/runtz\" rel=\"noopener noreferrer\" target=\"_blank\">Runtz</a> x <a href=\"https://www.leafly.com/strains/rs11\" rel=\"noopener noreferrer\" target=\"_blank\">RS11</a>. The effects of modern Rainbow Runtz are hybrid great for daytime and afternoon smoking. Reviewers on Leafly who have smoked this strain say it makes them feel happy, and <a href=\"https://www.leafly.com/strains/lists/effect/relaxed\">relaxed</a>, and it pairs well with your favorite hobbies. The flavor of Rainbow Runtz is a candy front with a pungent fuel back.</p>",
+        "descriptionPlain": "Rainbow Runtz, also known as \u201cRainbow Runts,\u201d was an indica weed strain made from a double cross of Zkittlez and DoSiDos. In 2024, Rainbow Runtz is also Wizard Trees' cross of Runtz x RS11. The effects of modern Rainbow Runtz are hybrid great for daytime and afternoon smoking. Reviewers on Leafly who have smoked this strain say it makes them feel happy, and relaxed, and it pairs well with your favorite hobbies. The flavor of Rainbow Runtz is a candy front with a pungent fuel back.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 82,
+            "score": 0.5900616601,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 50,
+            "score": 0.1899924701,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 39,
+            "score": 0.1202370987,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 39,
+            "score": 0.4385653731,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 36,
+            "score": 0.4201048094,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 23,
+            "score": -0.04753606031,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 22,
+            "score": 0.2737061668,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 18,
+            "score": 0.0574857982,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 18,
+            "score": 0.001457031736,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 16,
+            "score": 0.2082120664,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 16,
+            "score": 0.001906669686,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 13,
+            "score": -0.1167629022,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": -0.2334063538,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -0.9196472775,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Rainbow Runtz",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Indica",
+        "populationRank": 95,
+        "reviewCount": 117,
+        "shortDescriptionPlain": null,
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/generic/strain-19.png",
+        "strainId": 510646,
+        "subtitle": "aka Rainbow Runts",
+        "symbol": "RRz",
+        "terpeneDataProducerCount": 0,
+        "terps": {},
+        "topEffect": "Hungry",
+        "topTerp": {}
+      }
+    },
+    {
+      "product_name": "Jack Herer LR | 1g",
+      "price": 22.22,
+      "brand": {
+        "id": 44393,
+        "slug": "tempo-crackers",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C110001516LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabis is about bringing people together. As a LGBTQ founded company, Tempo is specially formulated with inclusivity in mind. Each product is specially formulated so you can find your tempo. Tempo empowers you to confidently invite cannabis into your lifestyle from - canna-curious to master connoisseur everyone can find their tempo.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.tempocrackers.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.imgix.net/brands/brand-placeholder.svg",
+        "name": "Tempo",
+        "tagline": "Find Your Tempo"
+      }
+    },
+    {
+      "product_name": "CHEMDAWG DIAMONDS | 1G",
+      "price": 22.22,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 16,
+        "percentile50": 18,
+        "percentile75": 21
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 3,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 44393,
+        "slug": "tempo-crackers",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C110001516LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabis is about bringing people together. As a LGBTQ founded company, Tempo is specially formulated with inclusivity in mind. Each product is specially formulated so you can find your tempo. Tempo empowers you to confidently invite cannabis into your lifestyle from - canna-curious to master connoisseur everyone can find their tempo.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.tempocrackers.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.imgix.net/brands/brand-placeholder.svg",
+        "name": "Tempo",
+        "tagline": "Find Your Tempo"
+      },
+      "strain_type": {
+        "slug": "chemdawg",
+        "id": 2,
+        "aka": "Chem Dawg, Chem dog, chem/dawg, chemdog, chemdawg",
+        "averageRating": 4.264505802320929,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 3,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": 1,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 16,
+            "percentile50": 18,
+            "percentile75": 21
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Chemdawg, officially named \"Chemdog,\"&nbsp;is a hybrid marijuana strain grown and spread by the breeder Chemdog since 1991. In a Leafly interview, Chemdog relates how Chemdog came from what was thought to be Northern California bag seed, via a Colorado Grateful Dead concert. Chem 91, Chem 4, and Chem Sis are all variations on Chemdog. The original name Chemdog came from two names for the same bud \"Chem\" and \"Dog bud.\" Chemdog evolved into the variation 'Chemdawg' over time and distance as other growers and breeders propagated it, with the latter name becoming more dominant. Leafly customers tell us Chemdawg effects include<strong> </strong>feeling <a href=\"https://www.leafly.com/strains/chemdawg#strain-sensations-section\" rel=\"noopener noreferrer\" target=\"_blank\">euphoric</a>, <a href=\"https://www.leafly.com/strains/chemdawg#strain-sensations-section\" rel=\"noopener noreferrer\" target=\"_blank\">uplifted</a>, and <a href=\"https://www.leafly.com/strains/chemdawg#strain-sensations-section\" rel=\"noopener noreferrer\" target=\"_blank\">creative</a>. Medical marijuana patients often choose Chemdawg when dealing with symptoms associated with<strong> </strong><a href=\"https://www.leafly.com/strains/chemdawg#helps-with-section\" rel=\"noopener noreferrer\" target=\"_blank\">stress</a>, <a href=\"https://www.leafly.com/strains/chemdawg#helps-with-section\" rel=\"noopener noreferrer\" target=\"_blank\">anxiety</a>, and <a href=\"https://www.leafly.com/strains/chemdawg#helps-with-section\" rel=\"noopener noreferrer\" target=\"_blank\">pain</a>. Chemdog is a staple strain in cannabis and may be a source of powerhouse strains like <a href=\"/strains/sour-diesel\">Sour Diesel</a> and <a href=\"/strains/og-kush\">OG Kush</a>, Chemdog is known for its distinct, <a href=\"/strains/lists/flavor/diesel\">diesel</a>-like aroma. <a href=\"/strains/lists/flavor/pungent\">Pungent</a> and sharp, you\u2019ll be able to smell this strain&nbsp;from a mile away. Cannabis newbies be warned: Chemdog tends to be very potent.&nbsp;Consumers can expect to have a cerebral experience, coupled with a strong heavy-bodied feeling.&nbsp;</p>",
+        "descriptionPlain": "Chemdawg, officially named \"Chemdog,\"\u00a0is a hybrid marijuana strain grown and spread by the breeder Chemdog since 1991. In a Leafly interview, Chemdog relates how Chemdog came from what was thought to be Northern California bag seed, via a Colorado Grateful Dead concert. Chem 91, Chem 4, and Chem Sis are all variations on Chemdog. The original name Chemdog came from two names for the same bud \"Chem\" and \"Dog bud.\" Chemdog evolved into the variation 'Chemdawg' over time and distance as other growers and breeders propagated it, with the latter name becoming more dominant. Leafly customers tell us Chemdawg effects include feeling euphoric, uplifted, and creative. Medical marijuana patients often choose Chemdawg when dealing with symptoms associated with stress, anxiety, and pain. Chemdog is a staple strain in cannabis and may be a source of powerhouse strains like Sour Diesel and OG Kush, Chemdog is known for its distinct, diesel-like aroma. Pungent and sharp, you\u2019ll be able to smell this strain\u00a0from a mile away. Cannabis newbies be warned: Chemdog tends to be very potent.\u00a0Consumers can expect to have a cerebral experience, coupled with a strong heavy-bodied feeling.\u00a0",
+        "distanceMi": null,
+        "effects": {
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1055,
+            "score": 1.34348845,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1052,
+            "score": 1.035291443,
+            "type": "effect"
+          },
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 997,
+            "score": 1.119436722,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 880,
+            "score": 1.031909599,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 616,
+            "score": 0.8378376236,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 501,
+            "score": 0.303327671,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 474,
+            "score": 0.6885548487,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 450,
+            "score": 0.7504792572,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 420,
+            "score": 0.6599654853,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 405,
+            "score": 0.7562712446,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 357,
+            "score": 1.084657393,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 333,
+            "score": 0.1500174396,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 225,
+            "score": 0.5406888954,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 0.3327358947,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Chemdawg",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 59,
+        "reviewCount": 2499,
+        "shortDescriptionPlain": "The parent of strains like Sour Diesel and OG Kush, Chemdog is known for its distinct, diesel-like aroma.",
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/generic/strain-1.png",
+        "strainId": 2,
+        "subtitle": "aka Chemdog",
+        "symbol": "Cd",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.449714258360016
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.1528273011589
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.284038091660809
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0481023101741697
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.378438917301927
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0079275673236384
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.102327157925865
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0193003069146055
+          }
+        },
+        "topEffect": "Euphoric",
+        "topTerp": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.449714258360016
+          }
+        }
+      }
+    },
+    {
+      "product_name": "Lemon Zkittles | 1g",
+      "price": 22.22,
+      "brand": {
+        "id": 4278,
+        "slug": "punch-edibles",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000174-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDHP-10003615",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-T000001503",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": " PAAA-OYJ9-AZLV",
+            "state": "OK"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "OCM-AUCP-22-000022",
+            "state": "NY"
+          }
+        ],
+        "claimed": true,
+        "description": "Punch Edibles & Extracts was born on the idea of providing sensibly\nsized,high-dose edibles at affordable prices. All of our edible products\ntaste great, contain minimal calories and sugar, and are accurately dosed\nto ensure a safe and consistent experience. Since launching in 2013, we\nhave developed into a \u201cfull service\u201d cannabis brand by adding an array of\ntop tier solventless products to our catalog. From vape pens to pre-rolls,\nwe have trusted products for every cannabis consumer.",
+        "featureTierName": "pro",
+        "informationWebsite": "http://punchedibles.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/hqoTGVolTqqN64icdAfi_PEfist_300x300.jpg",
+        "name": "Punch",
+        "tagline": "Quality Product-Fair Prices"
+      }
+    },
+    {
+      "product_name": "Thin Mint GSC LR | 1g",
+      "price": 22.22,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 17,
+        "percentile50": 20,
+        "percentile75": 22
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 3,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 44393,
+        "slug": "tempo-crackers",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C110001516LIC",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "Cannabis is about bringing people together. As a LGBTQ founded company, Tempo is specially formulated with inclusivity in mind. Each product is specially formulated so you can find your tempo. Tempo empowers you to confidently invite cannabis into your lifestyle from - canna-curious to master connoisseur everyone can find their tempo.",
+        "featureTierName": "pro",
+        "informationWebsite": "https://www.tempocrackers.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.imgix.net/brands/brand-placeholder.svg",
+        "name": "Tempo",
+        "tagline": "Find Your Tempo"
+      },
+      "strain_type": {
+        "slug": "thin-mint",
+        "id": 58962,
+        "aka": "Thin Mint, Thin Mints",
+        "averageRating": 4.559417040358745,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 3,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": 1,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 17,
+            "percentile50": 20,
+            "percentile75": 22
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Thin Mint is a hybrid marijuana strain that was one of the main sub-types of the legendary <a href=\"/strains/gsc\">GSC</a>&nbsp;strain. Dark green and royal purple hues peek through a heavy coat of crystals, with a sweet minty smell that gives a full explanation of this strain\u2019s name. Thin Mint calls upon the powers of its indica, sativa, and hybrid ancestors for a powerful full-body effect that gives this strain its sterling reputation. The high psychoactivity of this strain is not for novice consumers, but patients with a variety of symptoms are giving Thin Mint their seal of approval: severe pain, nausea, swelling, insomnia, and appetite loss are no match for the potency of Thin Mint.</p><p> </p>",
+        "descriptionPlain": "Thin Mint is a hybrid marijuana strain that was one of the main sub-types of the legendary GSC\u00a0strain. Dark green and royal purple hues peek through a heavy coat of crystals, with a sweet minty smell that gives a full explanation of this strain\u2019s name. Thin Mint calls upon the powers of its indica, sativa, and hybrid ancestors for a powerful full-body effect that gives this strain its sterling reputation. The high psychoactivity of this strain is not for novice consumers, but patients with a variety of symptoms are giving Thin Mint their seal of approval: severe pain, nausea, swelling, insomnia, and appetite loss are no match for the potency of Thin Mint.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 453,
+            "score": 0.6547754071,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 400,
+            "score": 0.3973323679,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 374,
+            "score": 0.4579576179,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 349,
+            "score": 0.4448607619,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 203,
+            "score": 0.1725953711,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 191,
+            "score": 0.2874757308,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 176,
+            "score": 0.2848034049,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 156,
+            "score": -0.07797528081,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 147,
+            "score": 0.4993411685,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 147,
+            "score": 0.2152455412,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 146,
+            "score": 0.1388975933,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 140,
+            "score": 0.04370854198,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 90,
+            "score": 0.1954705634,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 0.1399854464,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Thin Mint",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": "https://s3-us-west-2.amazonaws.com/leafly-images/flower-images/i7NqIuuQRd2ZQQ89VFbg_THIN MINT-207-edited.jpg",
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 146,
+        "reviewCount": 892,
+        "shortDescriptionPlain": "Thin Mint, a hybrid cross of Durban Poison and OG Kush, is a phenotype of the legendary GSC strain.",
+        "stockNugImage": null,
+        "strainId": 58962,
+        "subtitle": "aka Thin Mint GSC, Thin Mints, Thin Mint Cookies, Thin Mint Girl Scout Cookies",
+        "symbol": "Tm",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.520659519423805
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.1871484984581
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.293706211064429
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.214042655794027
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.200917006436658
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0966739449883063
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.0075263157894736
+          }
+        },
+        "topEffect": "Uplifted",
+        "topTerp": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.520659519423805
+          }
+        }
+      }
+    },
+    {
+      "product_name": "TOPPER BUBBLE HASH | 1G",
+      "price": 27.5,
+      "brand": {
+        "id": 1157,
+        "slug": "nasha",
+        "availableCountries": [
+          "Canada",
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-10004342",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "\u0928\u0936\u093e {nasha} = The state of transformed consciousness; \n                                 exhilaration or excitement of the mind(Noun)\n\nNASHA is a word used in India to describe a \u201chigh\u201d. Our brand has a deep connection to India and its hash producing history. Our founder spent numerous years in India living at the foothills of the Himalayas studying the origins of Hashish and the culture that surrounds it. After living in both India and California NASHA was finally born in the beautiful mountains of Humboldt County. We use pure mountain water to gently extract intact trichomes from the highest quality of raw materials. We use traditional techniques, mixed with state of the art machinery to produce high potency and terpene rich extracts, without the use of chemicals. All of the products are Lab tested to ensure purity, cleanliness, and potency. We invite you to try the next generation of cold water extract.\n\u201cMelt with Us\u201d",
+        "featureTierName": "pro",
+        "informationWebsite": "http://www.nashax.com/",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/Vnn2mre2R76TgieIRFiG_Logo.jpg",
+        "name": "NASHA",
+        "tagline": "Melt With Us"
+      }
+    },
+    {
+      "product_name": "KUSH CRASHER - GREEN UNPRESSED - 1.2G",
+      "price": 32,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "brand": {
+        "id": 1157,
+        "slug": "nasha",
+        "availableCountries": [
+          "Canada",
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-10004342",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "\u0928\u0936\u093e {nasha} = The state of transformed consciousness; \n                                 exhilaration or excitement of the mind(Noun)\n\nNASHA is a word used in India to describe a \u201chigh\u201d. Our brand has a deep connection to India and its hash producing history. Our founder spent numerous years in India living at the foothills of the Himalayas studying the origins of Hashish and the culture that surrounds it. After living in both India and California NASHA was finally born in the beautiful mountains of Humboldt County. We use pure mountain water to gently extract intact trichomes from the highest quality of raw materials. We use traditional techniques, mixed with state of the art machinery to produce high potency and terpene rich extracts, without the use of chemicals. All of the products are Lab tested to ensure purity, cleanliness, and potency. We invite you to try the next generation of cold water extract.\n\u201cMelt with Us\u201d",
+        "featureTierName": "pro",
+        "informationWebsite": "http://www.nashax.com/",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/Vnn2mre2R76TgieIRFiG_Logo.jpg",
+        "name": "NASHA",
+        "tagline": "Melt With Us"
+      },
+      "strain_type": {
+        "slug": "kush-crasher",
+        "id": 515323,
+        "aka": null,
+        "averageRating": 4.666666666666667,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "Unknown",
+        "description": "<p>Kush Crasher is an <a href=\"https://www.leafly.com/strains/lists/category/indica\" rel=\"noopener noreferrer\" target=\"_blank\">indica</a>-dominant <a href=\"https://www.leafly.com/strains/lists/category/hybrid\" rel=\"noopener noreferrer\" target=\"_blank\">hybrid</a> weed strain made from a genetic cross between <a href=\"https://www.leafly.com/strains/pure-kush\" rel=\"noopener noreferrer\" target=\"_blank\">Pure Kush</a> and <a href=\"https://www.leafly.com/strains/wedding-crasher\" rel=\"noopener noreferrer\" target=\"_blank\">Wedding Crasher</a>. This strain is 30% <a href=\"https://www.leafly.com/strains/lists/category/sativa\" rel=\"noopener noreferrer\" target=\"_blank\">sativa</a> and 70% indica. Kush Crasher is a high-potency strain that can produce THC levels up to 32%. This strain is ideal for experienced cannabis consumers who are looking for a relaxing and <a href=\"https://www.leafly.com/strains/lists/effect/euphoric\" rel=\"noopener noreferrer\" target=\"_blank\">euphoric</a> high. Leafly customers tell us Kush Crasher effects include feeling <a href=\"https://www.leafly.com/strains/lists/effect/happy\" rel=\"noopener noreferrer\" target=\"_blank\">happy</a>, <a href=\"https://www.leafly.com/strains/lists/effect/uplifted\" rel=\"noopener noreferrer\" target=\"_blank\">uplifted</a>, and <a href=\"https://www.leafly.com/strains/lists/effect/sleepy\" rel=\"noopener noreferrer\" target=\"_blank\">sleepy</a>. Medical marijuana patients often choose Kush Crasher when dealing with symptoms associated with <a href=\"https://www.leafly.com/strains/lists/condition/stress\" rel=\"noopener noreferrer\" target=\"_blank\">stress</a>, <a href=\"https://www.leafly.com/strains/lists/condition/pain\" rel=\"noopener noreferrer\" target=\"_blank\">pain</a>, and <a href=\"https://www.leafly.com/strains/lists/condition/insomnia\" rel=\"noopener noreferrer\" target=\"_blank\">insomnia</a>. Bred by Seed Junkies, Kush Crasher features flavors like <a href=\"https://www.leafly.com/strains/lists/flavor/diesel\" rel=\"noopener noreferrer\" target=\"_blank\">diesel</a>, <a href=\"https://www.leafly.com/strains/lists/flavor/earthy\" rel=\"noopener noreferrer\" target=\"_blank\">earthy</a>, and <a href=\"https://www.leafly.com/strains/lists/flavor/sweet\" rel=\"noopener noreferrer\" target=\"_blank\">sweet</a>. The dominant terpene of this strain is <a href=\"https://www.leafly.com/strains/lists/terpene/pinene\" rel=\"noopener noreferrer\" target=\"_blank\">pinene</a>, which is known for its anti-inflammatory and bronchodilator properties. The average price of Kush Crasher typically ranges from $10-$15 per gram. Kush Crasher is a couch-locking and sedating strain that can help you unwind and sleep at night. It has dark purple buds with pink hues and a thick layer of trichomes. If you\u2019ve smoked, dabbed, or consumed Kush Crasher, tell us about your experience by leaving a strain review.</p>",
+        "descriptionPlain": "Kush Crasher is an indica-dominant hybrid weed strain made from a genetic cross between Pure Kush and Wedding Crasher. This strain is 30% sativa and 70% indica. Kush Crasher is a high-potency strain that can produce THC levels up to 32%. This strain is ideal for experienced cannabis consumers who are looking for a relaxing and euphoric high. Leafly customers tell us Kush Crasher effects include feeling happy, uplifted, and sleepy. Medical marijuana patients often choose Kush Crasher when dealing with symptoms associated with stress, pain, and insomnia. Bred by Seed Junkies, Kush Crasher features flavors like diesel, earthy, and sweet. The dominant terpene of this strain is pinene, which is known for its anti-inflammatory and bronchodilator properties. The average price of Kush Crasher typically ranges from $10-$15 per gram. Kush Crasher is a couch-locking and sedating strain that can help you unwind and sleep at night. It has dark purple buds with pink hues and a thick layer of trichomes. If you\u2019ve smoked, dabbed, or consumed Kush Crasher, tell us about your experience by leaving a strain review.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 10,
+            "score": 0.6887856266,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 0.9166379603,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.5844085245,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 5,
+            "score": 0.4294612166,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": 0.5835838358,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 3,
+            "score": -0.1297026637,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": 0.01494763073,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": -0.02751752695,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.1200080302,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.02853145352,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": -0.5797602453,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.5214155541,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -1.241644032,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Kush Crasher",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 587,
+        "reviewCount": 15,
+        "shortDescriptionPlain": null,
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/purple/strain-6.png",
+        "strainId": 515323,
+        "subtitle": null,
+        "symbol": "KshCrshr",
+        "terpeneDataProducerCount": 0,
+        "terps": {},
+        "topEffect": "Sleepy",
+        "topTerp": {}
+      }
+    },
+    {
+      "product_name": "Gush Mints Green Unpressed Hash - 1.2g",
+      "price": 32,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": null,
+        "percentile50": 30,
+        "percentile75": null
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "brand": {
+        "id": 1157,
+        "slug": "nasha",
+        "availableCountries": [
+          "Canada",
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-10004342",
+            "state": "CA"
+          }
+        ],
+        "claimed": true,
+        "description": "\u0928\u0936\u093e {nasha} = The state of transformed consciousness; \n                                 exhilaration or excitement of the mind(Noun)\n\nNASHA is a word used in India to describe a \u201chigh\u201d. Our brand has a deep connection to India and its hash producing history. Our founder spent numerous years in India living at the foothills of the Himalayas studying the origins of Hashish and the culture that surrounds it. After living in both India and California NASHA was finally born in the beautiful mountains of Humboldt County. We use pure mountain water to gently extract intact trichomes from the highest quality of raw materials. We use traditional techniques, mixed with state of the art machinery to produce high potency and terpene rich extracts, without the use of chemicals. All of the products are Lab tested to ensure purity, cleanliness, and potency. We invite you to try the next generation of cold water extract.\n\u201cMelt with Us\u201d",
+        "featureTierName": "pro",
+        "informationWebsite": "http://www.nashax.com/",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/Vnn2mre2R76TgieIRFiG_Logo.jpg",
+        "name": "NASHA",
+        "tagline": "Melt With Us"
+      },
+      "strain_type": {
+        "slug": "gush-mints_jjxwupg0jdi",
+        "id": 518415,
+        "aka": null,
+        "averageRating": 4.769230769230769,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": null,
+            "percentile50": 30,
+            "percentile75": null
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "Unknown",
+        "description": "<p>Gush Mints is a cannabis strain Purple City Genetics. Gush Mints is an indica hybrid cannabis strain and a cross of Kush Mints x F1 Durb x TK41 (aka Gushers). Gush Mints averages 30% THC. We're still learning more about Gush Mints, so leave a review.</p>",
+        "descriptionPlain": "Gush Mints is a cannabis strain Purple City Genetics. Gush Mints is an indica hybrid cannabis strain and a cross of Kush Mints x F1 Durb x TK41 (aka Gushers). Gush Mints averages 30% THC. We're still learning more about Gush Mints, so leave a review.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 19,
+            "score": 1.422145859,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 14,
+            "score": 1.113876241,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 13,
+            "score": 1.143289037,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 13,
+            "score": 1.354246532,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 11,
+            "score": 1.430321944,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 0.8420708265,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.7479599865,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 6,
+            "score": 0.6391737309,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": 0.5496967518,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": 0.4456964267,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": 0.1058830596,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": 0.4688407918,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 2,
+            "score": -0.1073444632,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -0.353172335,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Gush Mints",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": null,
+        "reviewCount": 26,
+        "shortDescriptionPlain": null,
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/purple/strain-4.png",
+        "strainId": 518415,
+        "subtitle": null,
+        "symbol": "GsM",
+        "terpeneDataProducerCount": 0,
+        "terps": {},
+        "topEffect": null,
+        "topTerp": {}
+      }
+    },
+    {
+      "product_name": "Apricot Octane LR Tier 4 | 1g",
+      "price": 41.67,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": 22,
+        "percentile50": 24,
+        "percentile75": 26
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 3,
+        "percentile25": 0,
+        "percentile50": 0,
+        "percentile75": 0
+      },
+      "brand": {
+        "id": 4278,
+        "slug": "punch-edibles",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000174-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDHP-10003615",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-T000001503",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": " PAAA-OYJ9-AZLV",
+            "state": "OK"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "OCM-AUCP-22-000022",
+            "state": "NY"
+          }
+        ],
+        "claimed": true,
+        "description": "Punch Edibles & Extracts was born on the idea of providing sensibly\nsized,high-dose edibles at affordable prices. All of our edible products\ntaste great, contain minimal calories and sugar, and are accurately dosed\nto ensure a safe and consistent experience. Since launching in 2013, we\nhave developed into a \u201cfull service\u201d cannabis brand by adding an array of\ntop tier solventless products to our catalog. From vape pens to pre-rolls,\nwe have trusted products for every cannabis consumer.",
+        "featureTierName": "pro",
+        "informationWebsite": "http://punchedibles.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/hqoTGVolTqqN64icdAfi_PEfist_300x300.jpg",
+        "name": "Punch",
+        "tagline": "Quality Product-Fair Prices"
+      },
+      "strain_type": {
+        "slug": "apricot-octane",
+        "id": 514933,
+        "aka": null,
+        "averageRating": 5,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 3,
+            "percentile25": 0,
+            "percentile50": 0,
+            "percentile75": 0
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": 2,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": 22,
+            "percentile50": 24,
+            "percentile75": 26
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": 0,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "THC Dominant",
+        "description": "<p>Apricot Octane is a 40% sativa and 60% indica weed strain made from a genetic cross between High Octane OG and <a href=\"https://www.leafly.com/strains/orange-apricot\" rel=\"noopener noreferrer\" target=\"_blank\">Legend Orange Apricot</a>. This strain is a citrusy and floral hybrid that offers a relaxing and euphoric high. Apricot Octane has a tart and fruity aroma with hints of kerosene and apricot. The buds are dense and sticky, with neon green and orange hues. Apricot Octane is 24% THC, making this strain an ideal choice for experienced cannabis consumers. Leafly customers tell us Apricot Octane effects include <a href=\"https://www.leafly.com/strains/lists/effect/relaxed\" rel=\"noopener noreferrer\" target=\"_blank\">relaxed</a>, <a href=\"https://www.leafly.com/strains/lists/effect/happy\" rel=\"noopener noreferrer\" target=\"_blank\">happy</a>, and <a href=\"https://www.leafly.com/strains/lists/effect/sleepy\" rel=\"noopener noreferrer\" target=\"_blank\">sleepy</a>. Medical marijuana patients often choose Apricot Octane when dealing with symptoms associated with <a href=\"https://www.leafly.com/strains/lists/condition/pain\" rel=\"noopener noreferrer\" target=\"_blank\">pain</a>, <a href=\"https://www.leafly.com/strains/lists/condition/insomnia\" rel=\"noopener noreferrer\" target=\"_blank\">insomnia</a>, and <a href=\"https://www.leafly.com/strains/lists/condition/stress\" rel=\"noopener noreferrer\" target=\"_blank\">stress</a>. Bred by Compound Genetics, Apricot Octane features flavors like <a href=\"https://www.leafly.com/strains/lists/flavor/citrus\" rel=\"noopener noreferrer\" target=\"_blank\">citrus</a>, <a href=\"https://www.leafly.com/strains/lists/flavor/floral\" rel=\"noopener noreferrer\" target=\"_blank\">floral</a>, and <a href=\"https://www.leafly.com/strains/lists/flavor/diesel\" rel=\"noopener noreferrer\" target=\"_blank\">diesel</a>. The dominant terpene of this strain is caryophyllene. The average price of Apricot Octane typically ranges from $15-$20 per gram. If you\u2019re looking for a citrusy and floral hybrid that can help you relax and sleep, Apricot Octane might be the strain for you. If you\u2019ve smoked, dabbed, or consumed Apricot Octane, tell us about your experience by leaving a strain review.</p>",
+        "descriptionPlain": "Apricot Octane is a 40% sativa and 60% indica weed strain made from a genetic cross between High Octane OG and Legend Orange Apricot. This strain is a citrusy and floral hybrid that offers a relaxing and euphoric high. Apricot Octane has a tart and fruity aroma with hints of kerosene and apricot. The buds are dense and sticky, with neon green and orange hues. Apricot Octane is 24% THC, making this strain an ideal choice for experienced cannabis consumers. Leafly customers tell us Apricot Octane effects include relaxed, happy, and sleepy. Medical marijuana patients often choose Apricot Octane when dealing with symptoms associated with pain, insomnia, and stress. Bred by Compound Genetics, Apricot Octane features flavors like citrus, floral, and diesel. The dominant terpene of this strain is caryophyllene. The average price of Apricot Octane typically ranges from $15-$20 per gram. If you\u2019re looking for a citrusy and floral hybrid that can help you relax and sleep, Apricot Octane might be the strain for you. If you\u2019ve smoked, dabbed, or consumed Apricot Octane, tell us about your experience by leaving a strain review.",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.1080273876,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.5797402005,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.4599997816,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.255564303,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 1,
+            "score": 0.4970510402,
+            "type": "effect"
+          }
+        },
+        "energizeScore": 0.2960938705,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Apricot Octane",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 3550,
+        "reviewCount": 1,
+        "shortDescriptionPlain": null,
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/red-orange-amber/strain-2.png",
+        "strainId": 514933,
+        "subtitle": null,
+        "symbol": "AprctOctn",
+        "terpeneDataProducerCount": 0,
+        "terps": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.61
+          },
+          "humulene": {
+            "name": "humulene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.16
+          },
+          "limonene": {
+            "name": "limonene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.41
+          },
+          "linalool": {
+            "name": "linalool",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.18
+          },
+          "myrcene": {
+            "name": "myrcene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.315
+          },
+          "ocimene": {
+            "name": "ocimene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.02
+          },
+          "pinene": {
+            "name": "pinene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.155
+          },
+          "terpinolene": {
+            "name": "terpinolene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.055
+          }
+        },
+        "topEffect": "Talkative",
+        "topTerp": {
+          "caryophyllene": {
+            "name": "caryophyllene",
+            "description": "",
+            "icon": "https://via.placeholder.com/150",
+            "score": 0.61
+          }
+        }
+      }
+    },
+    {
+      "product_name": "Peanut Butter Han Solo - Tier 4 | 1 g",
+      "price": 41.67,
+      "thc_content": {
+        "displayName": "THC",
+        "order": 1,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "cbd_content": {
+        "displayName": "CBD",
+        "order": 2,
+        "percentile25": null,
+        "percentile50": null,
+        "percentile75": null
+      },
+      "brand": {
+        "id": 4278,
+        "slug": "punch-edibles",
+        "availableCountries": [
+          "United States"
+        ],
+        "brandLicenses": [
+          {
+            "country": "US",
+            "licenseNumber": "C11-0000174-LIC",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDHP-10003615",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "CDPH-T000001503",
+            "state": "CA"
+          },
+          {
+            "country": "US",
+            "licenseNumber": " PAAA-OYJ9-AZLV",
+            "state": "OK"
+          },
+          {
+            "country": "US",
+            "licenseNumber": "OCM-AUCP-22-000022",
+            "state": "NY"
+          }
+        ],
+        "claimed": true,
+        "description": "Punch Edibles & Extracts was born on the idea of providing sensibly\nsized,high-dose edibles at affordable prices. All of our edible products\ntaste great, contain minimal calories and sugar, and are accurately dosed\nto ensure a safe and consistent experience. Since launching in 2013, we\nhave developed into a \u201cfull service\u201d cannabis brand by adding an array of\ntop tier solventless products to our catalog. From vape pens to pre-rolls,\nwe have trusted products for every cannabis consumer.",
+        "featureTierName": "pro",
+        "informationWebsite": "http://punchedibles.com",
+        "isProductAffiliateLinksEnabled": false,
+        "logo": "https://leafly-public.s3-us-west-2.amazonaws.com/brands/logos/hqoTGVolTqqN64icdAfi_PEfist_300x300.jpg",
+        "name": "Punch",
+        "tagline": "Quality Product-Fair Prices"
+      },
+      "strain_type": {
+        "slug": "han-solo-burger",
+        "id": 504561,
+        "aka": null,
+        "averageRating": 4.565217391304348,
+        "cannabinoidDataProducerCount": 0,
+        "cannabinoids": {
+          "cbc": {
+            "displayName": "CBC",
+            "order": 3,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbd": {
+            "displayName": "CBD",
+            "order": 2,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "cbg": {
+            "displayName": "CBG",
+            "order": 4,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thc": {
+            "displayName": "THC",
+            "order": 1,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          },
+          "thcv": {
+            "displayName": "THCV",
+            "order": 5,
+            "percentile25": null,
+            "percentile50": null,
+            "percentile75": null
+          }
+        },
+        "category": "Hybrid",
+        "chemotype": "Unknown",
+        "description": "<p>Home of the Burger genetics, Skunk House Genetics bred Han Solo Burger by crossing <a href=\"/strains/gmo-cookies\">GMO Cookies</a> and <a href=\"/strains/larry-og\">Larry OG</a>. Offering a savory, funky, and spicy terpene profile, this strain not only tastes delicious but also looks beautiful with green and purple hues alongside gigantic stinky trichomes. Its potent high will tame any inability to relax.&nbsp;</p>\n",
+        "descriptionPlain": "Home of the Burger genetics, Skunk House Genetics bred Han Solo Burger by crossing GMO Cookies and Larry OG. Offering a savory, funky, and spicy terpene profile, this strain not only tastes delicious but also looks beautiful with green and purple hues alongside gigantic stinky trichomes. Its potent high will tame any inability to relax.\u00a0",
+        "distanceMi": null,
+        "effects": {
+          "relaxed": {
+            "name": "relaxed",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 71,
+            "score": 1.203994442,
+            "type": "effect"
+          },
+          "sleepy": {
+            "name": "sleepy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 36,
+            "score": 1.042434563,
+            "type": "effect"
+          },
+          "euphoric": {
+            "name": "euphoric",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 35,
+            "score": 0.4586532405,
+            "type": "effect"
+          },
+          "happy": {
+            "name": "happy",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 34,
+            "score": 0.3493044889,
+            "type": "effect"
+          },
+          "hungry": {
+            "name": "hungry",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 22,
+            "score": 0.5203519257,
+            "type": "effect"
+          },
+          "tingly": {
+            "name": "tingly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 17,
+            "score": 0.5282033757,
+            "type": "effect"
+          },
+          "giggly": {
+            "name": "giggly",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 15,
+            "score": 0.287410407,
+            "type": "effect"
+          },
+          "creative": {
+            "name": "creative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 14,
+            "score": 0.1308536314,
+            "type": "effect"
+          },
+          "uplifted": {
+            "name": "uplifted",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 14,
+            "score": 0.003280777746,
+            "type": "effect"
+          },
+          "focused": {
+            "name": "focused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 10,
+            "score": 0.00423116878,
+            "type": "effect"
+          },
+          "aroused": {
+            "name": "aroused",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 7,
+            "score": 0.01343317494,
+            "type": "effect"
+          },
+          "talkative": {
+            "name": "talkative",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.2094786406,
+            "type": "effect"
+          },
+          "energetic": {
+            "name": "energetic",
+            "icon": "https://via.placeholder.com/150",
+            "votes": 4,
+            "score": -0.157517111,
+            "type": "effect"
+          }
+        },
+        "energizeScore": -1.090740131,
+        "flowerImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "flowerImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "name": "Han Solo Burger",
+        "nucleusImagePng": "https://public.leafly.com/strains/flowers/default.png",
+        "nucleusImageSvg": "https://public.leafly.com/strains/flowers/default.svg",
+        "nugImage": null,
+        "nugImageAltText": null,
+        "phenotype": "Hybrid",
+        "populationRank": 299,
+        "reviewCount": 92,
+        "shortDescriptionPlain": "Home of the Burger genetics, Skunk House Genetics bred Han Solo Burger by crossing GMO Cookies and Larry OG.",
+        "stockNugImage": "https://images.leafly.com/flower-images/defaults/purple/strain-15.png",
+        "strainId": 504561,
+        "subtitle": null,
+        "symbol": "Hbg",
+        "terpeneDataProducerCount": 0,
+        "terps": {},
+        "topEffect": "Relaxed",
+        "topTerp": {}
+      }
+    }
+  ],
+  "metadata": {
+    "url": "https://www.leafly.com/dispensary-info/mammoth-holistics/menu",
+    "fields": [
+      "product_name",
+      "product_type",
+      "price",
+      "thc_content",
+      "cbd_content",
+      "brand",
+      "strain_type"
+    ],
+    "items_extracted": 19,
+    "execution_time": 8.601562976837158,
+    "extraction_source": "json",
+    "code_cached": null,
+    "timestamp": 1762468654.507721
+  },
+  "source": "json"
+}

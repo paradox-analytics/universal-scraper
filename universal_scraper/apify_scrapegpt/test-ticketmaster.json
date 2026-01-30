@@ -1,0 +1,34 @@
+{
+  "advancedConfig": {
+    "enableCache": false,
+    "headless": false,
+    "logLevel": "DEBUG",
+    "maxRetries": 3,
+    "retryDelay": 5,
+    "exponentialBackoff": true,
+    "randomUserAgent": true,
+    "enableLlmPagination": true,
+    "browserTimeout": 60000
+  },
+  "mode": "scrape_only",
+  "openaiApiKey": "WILL_USE_ENV_VAR",
+  "scrapeConfig": {
+    "fetchMode": "browser",
+    "fields": [],
+    "waitForSelector": "body",
+    "scrollToBottom": true
+  },
+  "startUrls": [
+    {
+      "url": "https://www.ticketmaster.com/"
+    }
+  ]
+}
+
+
+
+
+
+
+
+

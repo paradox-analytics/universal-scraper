@@ -11,6 +11,7 @@ import logging
 import json
 import time
 from typing import Dict, Any, Optional
+from urllib.parse import quote
 import requests
 import urllib3
 
@@ -68,10 +69,11 @@ class WebUnblockerFetcher:
             # Proxy credentials format: use Native Proxy-Based Access
             parts = api_key.split(separator)
             if len(parts) >= 4:
-                self.proxy_host = parts[0]
-                self.proxy_port = parts[1]
-                self.proxy_username = parts[2]
-                self.proxy_password = parts[3]
+                # Handle both host:port:user:pass and host,port,user,pass
+                self.proxy_host = parts[0].strip()
+                self.proxy_port = parts[1].strip()
+                self.proxy_username = parts[2].strip()
+                self.proxy_password = parts[3].strip()
                 self.use_proxy_method = True
                 self.api_key = None  # Not using API key method
                 logger.info(f" Using Native Proxy-Based Access (proxy credentials)")
@@ -149,16 +151,19 @@ class WebUnblockerFetcher:
         logger.info(f"   Username: {self.proxy_username[:30]}...")
         
         # Build proxy URL
-        proxy_url = f"http://{self.proxy_username}:{self.proxy_password}@{self.proxy_host}:{self.proxy_port}"
+        safe_user = quote(self.proxy_username)
+        safe_pass = quote(self.proxy_password)
+        
+        # Bright Data port 33335 requires HTTPS
+        protocol = "https" if str(self.proxy_port) == "33335" else "http"
+        proxy_url = f"{protocol}://{safe_user}:{safe_pass}@{self.proxy_host}:{self.proxy_port}"
         
         proxies = {
             'http': proxy_url,
             'https': proxy_url
         }
         
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        }
+        headers = {}
         
         # Retry logic
         last_error = None
@@ -203,6 +208,7 @@ class WebUnblockerFetcher:
                     
                     return {
                         'html': html,
+                        'status_code': 200,
                         'status': 200,
                         'url': response.url,
                         'api_calls': [],
@@ -211,6 +217,22 @@ class WebUnblockerFetcher:
                         'success': True
                     }
                 else:
+                    html = response.text
+                    # If we got substantial content, return it even if status is not 200
+                    # Some sites return 404/403 but still include the content (soft block)
+                    if len(html) > 10000:
+                        logger.info(f" Web Unblocker (Proxy) returned status {response.status_code} but substantial content ({len(html):,} bytes). Returning content.")
+                        return {
+                            'html': html,
+                            'status_code': response.status_code,
+                            'status': response.status_code,
+                            'url': response.url,
+                            'api_calls': [],
+                            'json_data': [],
+                            'source': 'web_unblocker_proxy',
+                            'success': True
+                        }
+                    
                     error_msg = f"Proxy returned status {response.status_code}: {response.text[:200]}"
                     logger.warning(f"    {error_msg}")
                     if attempt < self.max_retries - 1:
@@ -276,8 +298,11 @@ class WebUnblockerFetcher:
         }
         
         # Add optional parameters
-        if wait_time > 0:
-            payload["wait"] = wait_time * 1000  # Convert to milliseconds
+        # Always set wait parameter for JS-heavy sites (React/Next.js need time to hydrate)
+        # Minimum 5 seconds, or use provided wait_time
+        effective_wait = max(5, wait_time) if wait_time > 0 else 5
+        payload["wait"] = effective_wait * 1000  # Convert to milliseconds
+        logger.info(f"   Web Unblocker wait: {effective_wait}s ({payload['wait']}ms)")
         
         headers = {
             "Content-Type": "application/json",
@@ -324,6 +349,7 @@ class WebUnblockerFetcher:
                     
                     return {
                         'html': html,
+                        'status_code': 200,
                         'status': 200,
                         'url': url,
                         'api_calls': [],  # Web Unblocker doesn't expose API calls
@@ -364,6 +390,20 @@ class WebUnblockerFetcher:
                     raise Exception(error_msg)
                 
                 else:
+                    html = response.text
+                    # If we got substantial content, return it even if status is not 200
+                    if len(html) > 10000:
+                        logger.info(f" Web Unblocker (API) returned status {response.status_code} but substantial content ({len(html):,} bytes). Returning content.")
+                        return {
+                            'html': html,
+                            'status': response.status_code,
+                            'url': url,
+                            'api_calls': [],
+                            'json_data': [],
+                            'source': 'web_unblocker',
+                            'success': True
+                        }
+
                     error_msg = f"API returned status {response.status_code}: {response.text[:200]}"
                     logger.warning(f"    {error_msg}")
                     if attempt < self.max_retries - 1:

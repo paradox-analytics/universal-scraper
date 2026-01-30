@@ -12,6 +12,10 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uvicorn
+from urllib.parse import quote
+import re
+import json as json_module
+from bs4 import BeautifulSoup
 
 from universal_scraper.core.scraper import UniversalScraper
 from universal_scraper.core.direct_llm_extractor import DirectLLMExtractor
@@ -24,6 +28,10 @@ from api.middleware.auth import get_tenant_id, get_tenant_context, get_current_u
 from api.middleware.rate_limit import RateLimiter
 from api.middleware.usage_tracking import UsageTracker
 from fastapi import Depends
+from api.models.adaptive_scrape_models import AdaptiveScrapeRequest, AdaptiveScrapeResponse
+from universal_scraper.core.adaptive_antiblocking_agent import AdaptiveAntiBlockingAgent
+from universal_scraper.core.browser_config_generator import ConfigPreset
+from universal_scraper.core.camoufox_fetcher import CamoufoxFetcher
 
 # Configure logging
 logging.basicConfig(
@@ -155,6 +163,7 @@ def convert_proxy_config(frontend_config: Optional[Dict[str, Any]]) -> Optional[
         'password': None,
         'web_unlocker_api_key': None,
         'web_unlocker_zone': 'web_unlocker1',
+        'web_unlocker_customer_id': None,
         'web_unlocker': False
     }
 
@@ -180,34 +189,41 @@ def convert_proxy_config(frontend_config: Optional[Dict[str, Any]]) -> Optional[
     if server:
         server = server.replace(',', ':')
         if not server.startswith('http'):
-            server = f"http://{server}"
-            
-    # 4. Handle Web Unblocker specific logic
+            # Use HTTPS for port 33335 (Bright Data SSL port)
+            if ':33335' in server:
+                server = f"https://{server}"
+            else:
+                server = f"http://{server}"
+    
+    # 3a. Force HTTPS for port 33335 even if it already has http://
+    if server and ':33335' in server and server.startswith('http://'):
+        server = server.replace('http://', 'https://')
+        logger.info(f"🔄 Upgraded port 33335 to HTTPS: {server}")
     if provider in ['web_unlocker', 'web_unblocker']:
         result['web_unlocker'] = True
         web_unblocker_config = frontend_config.get('webUnblocker', {})
         result['web_unlocker_zone'] = web_unblocker_config.get('zone', 'web_unlocker1')
+        result['web_unlocker_customer_id'] = web_unblocker_config.get('customerId')
         
-        if web_unblocker_config.get('enabled'):
-            if web_unblocker_config.get('useProxyMethod'):
-                # Use the parsed credentials
-                if server and username and password:
-                    # Construct internal API key format: host:port:user:pass
-                    host_port = server.replace('http://', '').replace('https://', '')
-                    result['web_unlocker_api_key'] = f"{host_port}:{username}:{password}"
-            else:
-                # Use explicit API key
-                result['web_unlocker_api_key'] = web_unblocker_config.get('apiKey')
+        if web_unblocker_config.get('useProxyMethod'):
+            # Use the parsed credentials
+            if server and username and password:
+                # Construct internal API key format: host:port:user:pass
+                host_port = server.replace('http://', '').replace('https://', '')
+                result['web_unlocker_api_key'] = f"{host_port}:{username}:{password}"
+        else:
+            # Use explicit API key
+            result['web_unlocker_api_key'] = web_unblocker_config.get('apiKey')
                 
     # 5. Default server for Bright Data if missing
     if not server and username and 'brd-customer' in username:
-        server = 'http://brd.superproxy.io:33335'
+        server = 'https://brd.superproxy.io:33335'
         logger.info(f"✅ Defaulting to Bright Data server: {server}")
         
     # 6. Fallback for Web Unblocker if only API key provided via environment
     if result['web_unlocker'] and not server and not username:
         customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
-        server = 'http://brd.superproxy.io:33335'
+        server = 'https://brd.superproxy.io:33335'
         username = f'brd-customer-{customer_id}-zone-{result["web_unlocker_zone"]}'
         password = os.getenv('WEB_UNBLOCKER_API_KEY')
         logger.info(f"✅ Constructing Web Unblocker proxy from environment: {server}")
@@ -316,13 +332,26 @@ def get_scraper(
     if backend_proxy_config:
         web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
         web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
+        web_unblocker_customer_id = backend_proxy_config.get('web_unlocker_customer_id')
+        
+        # Derive customer ID from username if not provided
+        if not web_unblocker_customer_id and backend_proxy_config.get('username'):
+            user = backend_proxy_config.get('username')
+            if 'customer-' in user:
+                parts = user.split('customer-')
+                if len(parts) > 1:
+                    web_unblocker_customer_id = parts[1].split('-')[0]
+                    logger.info(f"Derived customer ID for pooled scraper: {web_unblocker_customer_id}")
     
     # Fallback to environment variables if not provided in request
     if not web_unblocker_api_key:
         web_unblocker_api_key = os.getenv("WEB_UNBLOCKER_API_KEY")
         web_unblocker_zone = os.getenv("WEB_UNBLOCKER_ZONE", "web_unlocker1")
+        if not web_unblocker_customer_id:
+            web_unblocker_customer_id = os.getenv("WEB_UNBLOCKER_CUSTOMER_ID")
+            
         if web_unblocker_api_key:
-            logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
+            logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone}, customer_id: {web_unblocker_customer_id})")
     
     # 3. Include proxy config and timeout in key for proper pooling
     proxy_key = ""
@@ -342,7 +371,8 @@ def get_scraper(
             redis_cache=redis_cache,  # Pass Redis cache for multi-tenant SaaS
             browser_timeout=browser_timeout,  # Pass browser timeout
             web_unblocker_api_key=web_unblocker_api_key,  # Pass web unlocker API key
-            web_unblocker_zone=web_unblocker_zone  # Pass web unlocker zone
+            web_unblocker_zone=web_unblocker_zone,  # Pass web unlocker zone
+            web_unblocker_customer_id=web_unblocker_customer_id
         )
     return scraper_pool[key]
 
@@ -507,17 +537,31 @@ async def suggest_fields_endpoint(
         # 2. Extract Web Unblocker details from the converted config
         web_unblocker_api_key = None
         web_unblocker_zone = "web_unlocker1"
+        web_unblocker_customer_id = None
         
         if backend_proxy_config:
             web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
             web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
+            web_unblocker_customer_id = backend_proxy_config.get('web_unlocker_customer_id')
+            
+            # Derive customer ID from username if not provided
+            if not web_unblocker_customer_id and backend_proxy_config.get('username'):
+                user = backend_proxy_config.get('username')
+                if 'customer-' in user:
+                    parts = user.split('customer-')
+                    if len(parts) > 1:
+                        web_unblocker_customer_id = parts[1].split('-')[0]
+                        logger.info(f"Derived customer ID for discovery: {web_unblocker_customer_id}")
         
         # Fallback to environment variables if not provided in request
         if not web_unblocker_api_key:
             web_unblocker_api_key = os.getenv("WEB_UNBLOCKER_API_KEY")
             web_unblocker_zone = os.getenv("WEB_UNBLOCKER_ZONE", "web_unlocker1")
+            if not web_unblocker_customer_id:
+                web_unblocker_customer_id = os.getenv("WEB_UNBLOCKER_CUSTOMER_ID")
+                
             if web_unblocker_api_key:
-                logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
+                logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone}, customer_id: {web_unblocker_customer_id})")
         
         # HybridFetcher now handles domain-specific forcing (e.g., Home Depot)
         from universal_scraper.core.hybrid_fetcher import HybridFetcher
@@ -530,7 +574,8 @@ async def suggest_fields_endpoint(
             force_mode=force_mode,
             use_camoufox=True,     # Enable Camoufox for superior anti-detection fallback
             web_unblocker_api_key=web_unblocker_api_key,  # Pass Web Unblocker for anti-bot
-            web_unblocker_zone=web_unblocker_zone  # Pass Web Unblocker zone
+            web_unblocker_zone=web_unblocker_zone,  # Pass Web Unblocker zone
+            web_unblocker_customer_id=web_unblocker_customer_id  # Pass customer ID
         )
         
         try:
@@ -548,8 +593,11 @@ async def suggest_fields_endpoint(
                 logger.error(f"Static fetch also failed: {e2}")
                 raise HTTPException(status_code=400, detail=f"Failed to fetch HTML content: {str(e2)}")
         
-        if not html or len(html) < 100:
-            raise HTTPException(status_code=400, detail="Failed to fetch HTML content or content too small")
+        if not html:
+            raise HTTPException(status_code=400, detail=f"Failed to fetch content. fetch_method={fetch_result.get('fetch_method')}, error={fetch_result.get('error')}")
+            
+        if len(html) < 200:
+            raise HTTPException(status_code=400, detail=f"Fetched content is too small ({len(html)} bytes). It might be a block page. Try manual selection.")
         
         # Discover fields
         # Use LLM by default for better accuracy, unless explicitly disabled
@@ -626,17 +674,34 @@ async def preview_endpoint(
         # 2. Extract Web Unblocker details from the converted config
         web_unblocker_api_key = None
         web_unblocker_zone = "web_unlocker1"
+        web_unblocker_customer_id = None
         
         if backend_proxy_config:
             web_unblocker_api_key = backend_proxy_config.get('web_unlocker_api_key')
             web_unblocker_zone = backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1')
+            web_unblocker_customer_id = backend_proxy_config.get('web_unlocker_customer_id')
+            
+            # Derive customer ID from username if not provided
+            if not web_unblocker_customer_id and backend_proxy_config.get('username'):
+                user = backend_proxy_config.get('username')
+                if 'customer-' in user:
+                    parts = user.split('customer-')
+                    if len(parts) > 1:
+                        web_unblocker_customer_id = parts[1].split('-')[0]
+                        logger.info(f"Derived customer ID for preview: {web_unblocker_customer_id}")
         
+        # Fallback to environment variables if not provided in request
         # Fallback to environment variables if not provided in request
         if not web_unblocker_api_key:
             web_unblocker_api_key = os.getenv("WEB_UNBLOCKER_API_KEY")
             web_unblocker_zone = os.getenv("WEB_UNBLOCKER_ZONE", "web_unlocker1")
+            
+            # CRITICAL: Also fallback customer_id
+            if not web_unblocker_customer_id:
+                web_unblocker_customer_id = os.getenv("WEB_UNBLOCKER_CUSTOMER_ID")
+            
             if web_unblocker_api_key:
-                logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone})")
+                logger.info(f"🌐 Using Web Unblocker from environment (zone: {web_unblocker_zone}, customer_id: {web_unblocker_customer_id})")
         
         proxy_config = backend_proxy_config
         
@@ -646,8 +711,6 @@ async def preview_endpoint(
         # IMPORTANT: Use longer timeout and wait for JavaScript to fully render
         from universal_scraper.core.hybrid_fetcher import HybridFetcher
         from universal_scraper.core.json_detector import JSONDetector
-        from bs4 import BeautifulSoup
-        import json as json_module
         
         fetcher = HybridFetcher(
             proxy_config=proxy_config,
@@ -656,7 +719,8 @@ async def preview_endpoint(
             use_camoufox=True,  # Enable Camoufox for superior anti-detection
             force_mode='browser',  # Force browser mode for preview to show full rendered content
             web_unblocker_api_key=web_unblocker_api_key,  # Pass Web Unblocker for anti-bot
-            web_unblocker_zone=web_unblocker_zone  # Pass Web Unblocker zone
+            web_unblocker_zone=web_unblocker_zone,  # Pass Web Unblocker zone
+            web_unblocker_customer_id=web_unblocker_customer_id  # Pass customer ID
         )
         
         # For preview, we need to wait longer for JavaScript to render
@@ -713,10 +777,12 @@ async def preview_endpoint(
         # Ensure HTML is fully rendered - add additional wait for JavaScript-heavy sites
         # Web Unblocker should return fully rendered HTML, but browser mode needs extra time
         if fetch_method == 'browser' or fetch_method == 'web_unblocker':
-            # For preview, ensure we wait a bit longer for React/Next.js hydration
-            # This is especially important for Product Hunt and similar sites
-            import asyncio
-            await asyncio.sleep(3)  # Additional 3s wait for JavaScript to fully render
+            # For preview, ensure we wait a bit for React/Next.js hydration
+            # But only if the HTML looks like a mounting shell (small)
+            if html and len(html) < 20000:
+                import asyncio
+                logger.info(f"[{tenant_id}] HTML looks small ({len(html)} bytes), waiting 5s for hydration...")
+                await asyncio.sleep(5)
         
         if not html or len(html) < 100:
             raise HTTPException(
@@ -738,7 +804,6 @@ async def preview_endpoint(
             if non_printable_count > 50:  # More lenient threshold
                 logger.warning(f"[{tenant_id}] HTML appears corrupted (high non-printable count: {non_printable_count})")
                 # Try to clean it more aggressively
-                import re
                 # Remove null bytes and other control characters except newlines/tabs/carriage returns
                 html = re.sub(r'[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\x9f]', '', html)
                 # If still corrupted after cleaning, log but don't fail - return what we have
@@ -756,6 +821,31 @@ async def preview_endpoint(
             raise HTTPException(status_code=400, detail=f"Page content encoding error: {str(e)}")
         
         soup = BeautifulSoup(html, 'html.parser')
+        
+        # REMOVE CSP META TAGS: These tags block assets from loading in our preview iframe
+        # because they typically restrict sources to 'self' (the original domain)
+        csp_metas = soup.find_all('meta', attrs={'http-equiv': re.compile(r'^Content-Security-Policy$', re.I)})
+        if csp_metas:
+            logger.info(f"[{tenant_id}] Removing {len(csp_metas)} CSP meta tags for better preview rendering")
+            for meta in csp_metas:
+                meta.decompose()
+        
+        # Also remove other restrictive meta tags if present
+        for meta in soup.find_all('meta', attrs={'http-equiv': re.compile(r'^(X-Frame-Options|Frame-Options)$', re.I)}):
+            meta.decompose()
+        
+        # Remove existing base tags to avoid conflicts
+        for base in soup.find_all('base'):
+            base.decompose()
+            
+        # Inject BASE tag to ensure relative links/assets resolve against the original URL
+        # This is critical for srcDoc iframes where window.location is about:srcdoc
+        if soup.head:
+            new_base = soup.new_tag('base', href=request.url)
+            soup.head.insert(0, new_base)
+        
+        # Update the cleaned HTML
+        html = str(soup)
         
         # JSON-FIRST: Use JSONDetector to find all JSON sources (like the scraper does)
         json_detector = JSONDetector()
@@ -947,12 +1037,40 @@ async def preview_endpoint(
             // Make ALL elements clickable (not just specific selectors)
             // This allows users to click any element on the page
             document.addEventListener('click', (e) => {
-                // Don't interfere with links and buttons
-                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                // 1. Handle navigation (intercept links)
+                let target = e.target;
+                while (target && target.tagName !== 'A' && target !== document.body) {
+                    target = target.parentElement;
+                }
+
+                if (target && target.tagName === 'A') {
+                    const href = target.getAttribute('href');
+                    // Ignore empty hrefs, hashes, and email/tel links
+                    if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        try {
+                            // Resolve relative URL using document.baseURI (which respects <base> tag)
+                            const absoluteUrl = new URL(href, document.baseURI).href;
+                            console.log('Paradocs: Intercepting navigation to:', absoluteUrl);
+                            window.parent.postMessage({
+                                type: 'paradocs-navigate',
+                                url: absoluteUrl
+                            }, '*');
+                            return;
+                        } catch (err) {
+                            console.error('Paradocs: Failed to resolve URL:', href, err);
+                        }
+                    }
+                }
+
+                // 2. Don't interfere with buttons
+                if (e.target.tagName === 'BUTTON') {
                     return;
                 }
                 
-                // Prevent default navigation
+                // 3. Prevent default for other clicks to handle selection
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -1035,25 +1153,33 @@ async def preview_endpoint(
             
             // 2. Try to find unique class combination
             if (el.className && typeof el.className === 'string') {
-                const classes = el.className.split(' ')
+                const classes = el.className.split(/\s+/)
                     .filter(c => c && !c.startsWith('paradocs') && c.length > 0);
                 
                 if (classes.length > 0) {
-                    // Try with tag + first class
-                    const selector1 = el.tagName.toLowerCase() + '.' + classes[0];
-                    const matches1 = document.querySelectorAll(selector1).length;
-                    
-                    if (matches1 === 1) {
-                        return selector1;
-                    }
-                    
-                    // Try with tag + multiple classes
-                    if (classes.length > 1) {
-                        const selector2 = el.tagName.toLowerCase() + '.' + classes.slice(0, 2).join('.');
-                        const matches2 = document.querySelectorAll(selector2).length;
-                        if (matches2 <= 5) { // Reasonable number of matches
-                            return selector2;
+                    try {
+                        // Use CSS.escape for handling special characters like colons (common in Tailwind/HomeDepot)
+                        const escapedClass0 = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(classes[0]) : classes[0].replace(/([:\[\]\/])/g, '\\$1');
+                        
+                        // Try with tag + first class
+                        const selector1 = el.tagName.toLowerCase() + '.' + escapedClass0;
+                        const matches1 = document.querySelectorAll(selector1).length;
+                        
+                        if (matches1 === 1) {
+                            return selector1;
                         }
+                        
+                        // Try with tag + multiple classes
+                        if (classes.length > 1) {
+                            const escapedClass1 = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(classes[1]) : classes[1].replace(/([:\[\]\/])/g, '\\$1');
+                            const selector2 = el.tagName.toLowerCase() + '.' + escapedClass0 + '.' + escapedClass1;
+                            const matches2 = document.querySelectorAll(selector2).length;
+                            if (matches2 <= 5) { // Reasonable number of matches
+                                return selector2;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Paradocs: Failed to generate class-based selector', e);
                     }
                 }
             }
@@ -1263,12 +1389,24 @@ async def scrape_endpoint(
             # Code was generated and should be cached
             cache_stored = True
             cache_type = "code"
-        elif result.get("source") == "direct_llm":
-            # Direct LLM was used and should be cached
-            cache_stored = True
             cache_type = "direct_llm"
         
-        return {
+        # Add strategy information to response
+        strategy_info = None
+        if scraper.strategy_detector:
+            cached_strategy = scraper.strategy_detector.get_strategy(request.url)
+            if cached_strategy:
+                strategy_info = {
+                    'method': cached_strategy.get('extraction_method'),
+                    'proxy': cached_strategy.get('proxy_type'),
+                    'confidence': cached_strategy.get('confidence'),
+                    'source': 'cache'
+                }
+        
+        # Need to import JSONResponse
+        from fastapi.responses import JSONResponse
+
+        return JSONResponse(content={
             "success": True,
             "data": result.get("data", []),
             "metadata": {
@@ -1277,9 +1415,9 @@ async def scrape_endpoint(
                 "cache_stored": cache_stored,
                 "cache_type": cache_type,
                 "tenant_id": tenant_id,
+                "strategy": strategy_info
             },
-            "source": result.get("source", "unknown")
-        }
+        })
     
     except HTTPException:
         # Re-raise HTTP exceptions (rate limit, auth, etc.)
@@ -3104,6 +3242,130 @@ async def generate_python_code_endpoint(
     except Exception as e:
         logger.error(f"Code generation failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Code generation failed: {str(e)}")
+
+
+@app.post("/api/v1/adaptive-scrape", response_model=AdaptiveScrapeResponse)
+async def adaptive_scrape_endpoint(
+    request: AdaptiveScrapeRequest,
+    tenant_id: str = Depends(get_tenant_id),
+    x_api_key: Optional[str] = Header(None, alias="X-API-Key")
+):
+    """
+    Perform adaptive scraping with automatic anti-blocking optimization.
+    
+    This endpoint uses an AI agent to:
+    1. Analyze the target domain and historical success rates
+    2. Dynamically select the best browser configuration and timeout
+    3. Test multiple configurations in parallel if needed
+    4. Learn from results to improve future success rates
+    """
+    try:
+        logger.info(f"[{tenant_id}] Adaptive scrape request for: {request.url}")
+        
+        # 1. Convert proxy config
+        backend_proxy_config = convert_proxy_config(request.proxy_config) if request.proxy_config else None
+        
+        # 2. Initialize adaptive agent
+        # Use Redis cache for learning persistence
+        agent = AdaptiveAntiBlockingAgent(
+            redis_cache=get_redis_cache(),
+            max_parallel_tests=3,  # Default to 3 parallel tests
+            enable_llm_optimization=False  # Can be enabled via env var later
+        )
+        
+        # 3. Define fetcher function wrapper
+        async def fetch_with_camoufox(url, camoufox_config):
+            """Wrapper to fetch with Camoufox using adaptive config"""
+            # Extract timeout from config or use default
+            timeout = camoufox_config.get('timeout', 60000)
+            
+            # Create fetcher with this specific config
+            fetcher = CamoufoxFetcher(
+                proxy_config=backend_proxy_config,
+                headless=True,
+                timeout=timeout,
+                anti_detection_profile=camoufox_config.get('anti_detection_profile', 'random'),
+                humanize=camoufox_config.get('humanize', True),
+                stealth_mode=camoufox_config.get('stealth_mode', True),
+                web_unblocker_api_key=backend_proxy_config.get('web_unlocker_api_key') if backend_proxy_config else None,
+                web_unblocker_zone=backend_proxy_config.get('web_unlocker_zone', 'web_unlocker1') if backend_proxy_config else None
+            )
+            
+            try:
+                result = await fetcher.fetch(
+                    url=url,
+                    wait_for_selector=None,
+                    wait_time=2000,
+                    scroll_to_bottom=False
+                )
+                
+                return {
+                    'html': result.get('html', ''),
+                    'status_code': result.get('status_code', 0),
+                    'headers': result.get('headers', {}),
+                    'error': result.get('error', '')
+                }
+            except Exception as e:
+                return {
+                    'html': '',
+                    'status_code': 0,
+                    'headers': {},
+                    'error': str(e)
+                }
+            finally:
+                await fetcher.close()
+        
+        # 4. Determine initial preset
+        initial_preset = ConfigPreset.BALANCED
+        if request.initial_preset == 'stealth':
+            initial_preset = ConfigPreset.STEALTH
+        elif request.initial_preset == 'aggressive':
+            initial_preset = ConfigPreset.AGGRESSIVE
+            
+        # 5. Run adaptive fetch
+        import time
+        start_time = time.time()
+        
+        result = await agent.fetch_with_adaptation(
+            url=str(request.url),
+            fetcher_func=fetch_with_camoufox,
+            preset=initial_preset,
+            max_attempts=request.max_attempts
+        )
+        
+        elapsed_time = time.time() - start_time
+        
+        # 6. Extract data if requested (optional)
+        extracted_data = None
+        if result.get('success') and request.fields:
+            # Use DirectLLMExtractor for extraction
+            # Get API key
+            api_key = x_api_key or os.getenv("OPENAI_API_KEY")
+            if api_key:
+                extractor = get_extractor(api_key)
+                extraction_result = await extractor.extract(
+                    content=result.get('html', ''),
+                    fields=request.fields,
+                    url=str(request.url)
+                )
+                extracted_data = extraction_result.get('data')
+        
+        return AdaptiveScrapeResponse(
+            success=result.get('success', False),
+            data=extracted_data,
+            html=result.get('html', '') if not request.fields else None,  # Return HTML only if no extraction requested
+            status_code=result.get('status_code', 0),
+            strategy_used=result.get('strategy_used', 'unknown'),
+            attempts_made=1,  # TODO: Track actual attempts
+            time_taken=elapsed_time,
+            blocking_analysis=result.get('blocking_analysis'),
+            recommendations=result.get('recommendations')
+        )
+        
+    except Exception as e:
+        logger.error(f"[{tenant_id}] Adaptive scrape failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Adaptive scrape failed: {str(e)}")
+
 
 
 if __name__ == "__main__":

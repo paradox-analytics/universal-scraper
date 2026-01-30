@@ -119,14 +119,20 @@ class QualityCalculator:
         """
         Calculate quality score with required/optional field distinction
         
-        Formula:
+        UNIVERSAL APPROACH: All fields are optional by default (since this is universal for every source).
+        Only explicitly specified required_fields are treated as required.
+        
+        Formula (when all optional):
+        quality = average_field_coverage * 100
+        
+        Formula (with required fields):
         quality = (required_fields_coverage * 0.7) + (optional_fields_coverage * 0.3)
         
         Args:
             items: List of extracted items
             requested_fields: All requested fields
-            required_fields: Fields that are required (defaults to class defaults)
-            optional_fields: Fields that are optional (defaults to class defaults)
+            required_fields: Fields that are required (defaults to empty - all optional)
+            optional_fields: Fields that are optional (defaults to all fields)
             
         Returns:
             Quality score (0-100)
@@ -134,37 +140,25 @@ class QualityCalculator:
         if not items:
             return 0.0
         
-        # Determine which fields are required vs optional
+        # UNIVERSAL DEFAULT: All fields are optional unless explicitly specified
         if required_fields is None:
-            # Auto-detect based on field names
-            required_fields = [
-                f for f in requested_fields 
-                if any(req in f.lower() for req in self.required_fields)
-            ]
-            # If no required fields detected, make first 1-2 fields required
-            if not required_fields and requested_fields:
-                required_fields = requested_fields[:min(2, len(requested_fields))]
+            required_fields = []  # Empty by default - all fields optional
         
         if optional_fields is None:
-            optional_fields = [
-                f for f in requested_fields 
-                if f not in required_fields and any(opt in f.lower() for opt in self.optional_fields)
-            ]
-            # Remaining fields are optional if not explicitly required
-            remaining = [f for f in requested_fields if f not in required_fields and f not in optional_fields]
-            optional_fields.extend(remaining)
+            # All fields are optional by default
+            optional_fields = requested_fields
         
         # Calculate coverage
         coverage = self.calculate_field_coverage(items, requested_fields)
         
-        # Calculate required field coverage
+        # Calculate required field coverage (if any)
         if required_fields:
             required_coverage = sum(
                 coverage.get(f, 0) / len(items) 
                 for f in required_fields
             ) / len(required_fields)
         else:
-            required_coverage = 1.0  # No required fields = perfect
+            required_coverage = 1.0  # No required fields = perfect (doesn't penalize)
         
         # Calculate optional field coverage
         if optional_fields:
@@ -175,8 +169,12 @@ class QualityCalculator:
         else:
             optional_coverage = 1.0  # No optional fields = perfect
         
-        # Weighted quality score
-        quality = (required_coverage * 0.7 + optional_coverage * 0.3) * 100
+        # Weighted quality score (if required fields exist, use weighted formula)
+        if required_fields:
+            quality = (required_coverage * 0.7 + optional_coverage * 0.3) * 100
+        else:
+            # All optional: simple average coverage
+            quality = optional_coverage * 100
         
         logger.debug(f"   Quality calculation: required={required_coverage:.1%}, optional={optional_coverage:.1%}, total={quality:.1f}%")
         
@@ -186,15 +184,20 @@ class QualityCalculator:
         self,
         items: List[Dict[str, Any]],
         requested_fields: List[str],
-        required_only: bool = False
+        required_only: bool = False,
+        required_fields: Optional[List[str]] = None
     ) -> List[str]:
         """
         Get list of missing fields
+        
+        UNIVERSAL APPROACH: All fields are optional by default.
+        Only explicitly specified required_fields are treated as required.
         
         Args:
             items: List of extracted items
             requested_fields: Requested fields
             required_only: If True, only return missing required fields
+            required_fields: Explicitly required fields (defaults to empty)
             
         Returns:
             List of missing field names
@@ -202,19 +205,16 @@ class QualityCalculator:
         coverage = self.calculate_field_coverage(items, requested_fields)
         
         if required_only:
-            # Only check required fields
-            required_fields = [
-                f for f in requested_fields 
-                if any(req in f.lower() for req in self.required_fields)
-            ]
-            if not required_fields and requested_fields:
-                required_fields = requested_fields[:min(2, len(requested_fields))]
-            
+            # Only check explicitly required fields (empty by default)
+            if required_fields is None:
+                required_fields = []
             missing = [f for f in required_fields if coverage.get(f, 0) == 0]
         else:
-            # Check all fields
+            # Check all fields (for informational purposes)
             missing = [f for f in requested_fields if coverage.get(f, 0) == 0]
         
         return missing
+
+
 
 

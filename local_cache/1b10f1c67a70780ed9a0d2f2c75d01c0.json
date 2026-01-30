@@ -1,0 +1,14 @@
+{
+  "items": [],
+  "structure_hash": "d3f64cd7d6a5387a",
+  "fields": [
+    "job title",
+    "company",
+    "location",
+    "salary",
+    "job url"
+  ],
+  "timestamp": 1764816697.8886669,
+  "url": "https://www.indeed.com/jobs?q=software+engineer&l=San+Francisco%2C+CA",
+  "item_count": 0
+}

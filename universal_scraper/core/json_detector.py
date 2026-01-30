@@ -10,6 +10,7 @@ from typing import Dict, List, Any, Optional
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from universal_scraper.core.inline_json_extractor import InlineJSONExtractor
+from .json_quality_validator import JSONQualityValidator
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +52,11 @@ class JSONDetector:
             'pattern': r'window\.(?:initialData|pageData|appData|serverData)\s*=\s*(\{.*?\});',
             'paths': ['data', 'items', 'products', 'results'],
             'priority': 6
+        },
+        'homedepot': {
+            'pattern': r'<script id="thd-pip-desktop-state"[^>]*>(.*?)</script>',
+            'paths': ['props.pageProps.productData.item', 'props.pageProps', 'props'],
+            'priority': 0  # High priority for Home Depot
         }
     }
     
@@ -62,11 +68,13 @@ class JSONDetector:
     ]
     
     def __init__(self):
-        self.json_sources = []
-        self.discovered_patterns = {}  # Cache successful patterns
         self.inline_extractor = InlineJSONExtractor()
+        self.quality_validator = JSONQualityValidator()
+        self.discovered_patterns = {}
+        # Cache successful patterns
+        self.discovered_patterns = {}
     
-    def detect_and_extract(self, html: str, url: str, captured_json: Optional[List] = None) -> Dict[str, Any]:
+    def detect_and_extract(self, html: str, url: str, captured_json: Optional[List] = None, force_json_ld: bool = False) -> Dict[str, Any]:
         """
         Detect and extract JSON from multiple sources
         
@@ -76,6 +84,7 @@ class JSONDetector:
             html: Raw HTML content
             url: Source URL for context
             captured_json: Optional list of JSON blobs (from API responses, etc.)
+            force_json_ld: If True, prioritize JSON-LD extraction (from cached strategy)
             
         Returns:
             Dict with 'json_found', 'sources', 'data' keys
@@ -85,6 +94,19 @@ class JSONDetector:
             'sources': [],
             'data': []
         }
+        
+        logger.info(f" Detecting JSON in HTML (len={len(html)}) and captured_json (len={len(captured_json) if captured_json else 0})")
+        
+        # NEW: If force_json_ld is True, try JSON-LD first and return immediately if found
+        if force_json_ld:
+            logger.info(" Force JSON-LD mode enabled (from cached strategy)")
+            json_ld_data = self._extract_json_ld(html)  # FIXED: Only pass html
+            if json_ld_data:
+                logger.info(f" Found JSON-LD (forced by cached strategy)")
+                results['json_found'] = True
+                results['sources'].append('json-ld')
+                results['data'].append(json_ld_data)
+                return results  # Return immediately, don't check other sources
         
         # Priority 0: Captured JSON blobs (from API responses during pagination)
         if captured_json:
@@ -100,6 +122,11 @@ class JSONDetector:
                     
                     # Only process dict or list
                     if not isinstance(json_blob, (dict, list)):
+                        continue
+                    
+                    # NEW: Validate quality
+                    if not self.quality_validator.is_high_quality_value(json_blob):
+                        logger.debug(f"Skipping low-quality captured JSON blob {idx}")
                         continue
                     
                     # Wrap in framework metadata (treat as generic captured JSON)
@@ -120,7 +147,11 @@ class JSONDetector:
         if json_ld_data:
             results['json_found'] = True
             results['sources'].append('json-ld')
-            results['data'].extend(json_ld_data)
+            results['data'].append({
+                '_framework': 'json-ld',
+                '_data': json_ld_data,
+                '_paths': []
+            })
             logger.info(f" Found {len(json_ld_data)} JSON-LD objects")
         
         # Priority 2: Embedded JSON in script tags
@@ -128,24 +159,46 @@ class JSONDetector:
         if embedded_json:
             results['json_found'] = True
             results['sources'].append('embedded-json')
-            results['data'].extend(embedded_json)
+            results['data'].append({
+                '_framework': 'embedded',
+                '_data': embedded_json,
+                '_paths': []
+            })
             logger.info(f" Found {len(embedded_json)} embedded JSON objects")
         
         # Priority 3: Next.js/React props
         nextjs_data = self._extract_nextjs_data(html)
         if nextjs_data:
             results['json_found'] = True
-            results['sources'].append('nextjs')
+            results['sources'].append(nextjs_data['_framework'])
             results['data'].append(nextjs_data)
-            logger.info(" Found Next.js data")
+            logger.info(f" Found {nextjs_data['_framework']} data")
         
         # Priority 4: Inline JSON (Next.js 13+ RSC, etc.)
         inline_data = self._extract_inline_json(html)
         if inline_data:
             results['json_found'] = True
             results['sources'].append('inline-json')
-            results['data'].extend(inline_data)
-            logger.info(f" Found {len(inline_data)} inline JSON objects (Next.js 13+ / RSC)")
+            
+            # NEW: Unwrap individual containers from InlineJSONExtractor
+            # This allows scoring each inline source (RSC, Apollo, Scan) individually
+            for item in inline_data:
+                if isinstance(item, dict) and ('_source' in item or 'source' in item) and 'data' in item:
+                    source_name = item.get('_source') or item.get('source') or 'inline'
+                    results['data'].append({
+                        '_framework': source_name,
+                        '_data': item['data'],
+                        '_paths': []
+                    })
+                else:
+                    # Fallback for raw items (shouldn't happen with current extractor)
+                    results['data'].append({
+                        '_framework': 'inline',
+                        '_data': item,
+                        '_paths': []
+                    })
+            
+            logger.info(f" Found {len(inline_data)} inline JSON sources (Next.js 13+ / RSC)")
         
         # Priority 5: GraphQL detection (endpoints only, not data)
         graphql_endpoints = self._detect_graphql(html)
@@ -175,7 +228,11 @@ class JSONDetector:
         for script in json_ld_scripts:
             try:
                 data = json.loads(script.string)
-                json_data.append(data)
+                # NEW: Validate quality
+                if self.quality_validator.is_high_quality_value(data):
+                    json_data.append(data)
+                else:
+                    logger.debug("Skipping low-quality JSON-LD")
             except json.JSONDecodeError as e:
                 logger.debug(f"Failed to parse JSON-LD: {str(e)[:50]}")
                 continue
@@ -204,7 +261,11 @@ class JSONDetector:
                     # Try to parse as JSON
                     data = json.loads(json_str)
                     if isinstance(data, dict) and len(data) > 0:
-                        json_data.append(data)
+                        # NEW: Validate quality
+                        if self.quality_validator.is_high_quality_value(data):
+                            json_data.append(data)
+                        else:
+                            logger.debug("Skipping low-quality embedded JSON")
                 except (json.JSONDecodeError, IndexError):
                     continue
         
@@ -228,6 +289,11 @@ class JSONDetector:
                     json_str = match.group(1)
                     data = json.loads(json_str)
                     
+                    # NEW: Validate quality
+                    if not self.quality_validator.is_high_quality_value(data):
+                        logger.debug(f"Skipping low-quality {pattern_name} data")
+                        continue
+                    
                     # Cache successful pattern for this session
                     self.discovered_patterns[pattern_name] = config
                     
@@ -249,7 +315,9 @@ class JSONDetector:
         Handles Next.js 13+ RSC payloads, streaming data, and other embedded patterns
         """
         try:
-            return self.inline_extractor.extract(html)
+            items = self.inline_extractor.extract(html)
+            logger.info(f" InlineJSONExtractor found {len(items)} items")
+            return items
         except Exception as e:
             logger.error(f"Error extracting inline JSON: {e}")
             return []
@@ -338,6 +406,11 @@ class JSONDetector:
         for idx, data in enumerate(json_data):
             source_items = []
             source_name = f"source_{idx}"
+
+            # Unwrap inline/RSC extractor payloads that wrap the real data
+            if isinstance(data, dict) and '_source' in data and 'data' in data:
+                source_name = data.get('_source') or source_name
+                data = data.get('data')
             
             # Check if this is framework data with metadata
             if isinstance(data, dict) and '_framework' in data:
@@ -365,11 +438,21 @@ class JSONDetector:
                     all_items = self._find_item_arrays(actual_data)
                     if all_items:
                         source_items = all_items
+                    else:
+                        # NEW: Fallback to single item extraction if no array found
+                        # This is critical for product pages where the data is a single object
+                        logger.info(" No item arrays found in framework data, trying single item extraction...")
+                        item = self._extract_single_item_semantically(actual_data, fields)
+                        if item:
+                            source_items = [item]
             else:
                 # Regular JSON extraction - also use semantic approach
                 if not fields:
                     # Auto-extraction: return all data
-                    source_items = [data] if data else []
+                    if isinstance(data, list):
+                        source_items = data
+                    else:
+                        source_items = [data] if data else []
                 else:
                     # UNIVERSAL: Use semantic extraction for single item
                     if isinstance(data, dict):
@@ -381,16 +464,26 @@ class JSONDetector:
                             # But first check if it's newsletter/subscription/metadata content
                             data_str = str(data).lower()
                             is_newsletter = any(kw in data_str for kw in ['newsletter', 'subscribe', 'email_signup', 'signup_section'])
-                            is_metadata = '@context' in data or '@type' in data or 'schema.org' in data_str
+                            
+                            # Schema.org metadata check: only skip if it's generic metadata, not a rich content type
+                            is_generic_metadata = ('@context' in data or 'schema.org' in data_str) and '@type' not in data
+                            # If it has a rich @type (Product, Recipe, etc.), it's NOT generic metadata
+                            rich_types = ['Product', 'Recipe', 'Article', 'NewsArticle', 'Event', 'LocalBusiness', 'Review']
+                            is_rich_content = data.get('@type') in rich_types
                             
                             if is_newsletter:
                                 logger.debug(f"   ⏭  Skipping single item (newsletter/subscription content)")
-                            elif is_metadata:
+                            elif is_generic_metadata and not is_rich_content:
                                 logger.debug(f"   ⏭  Skipping single item (schema.org metadata)")
                             else:
                                 item = self._extract_single_item_semantically(data, fields)
                                 if item:
                                     source_items = [item]
+                    elif isinstance(data, list):
+                        # Lists can be direct item arrays (common in inline/GraphQL payloads)
+                        if data and isinstance(data[0], dict):
+                            items = self._find_item_arrays(data)
+                            source_items = items if items else data
             
             # Score this source's items
             if source_items:
@@ -406,35 +499,51 @@ class JSONDetector:
                         if isinstance(item, dict):
                             sample_keys.update(item.keys())
                     
-                    # SIZE: Larger arrays score higher, but cap the bonus to prevent metadata arrays from dominating
-                    # Use logarithmic scaling: 10 items = 10, 100 items = 20, 1000 items = 30
-                    size_bonus = min(len(source_items), 100) + (len(source_items) > 100 and 10) + (len(source_items) > 1000 and 10)
+                    # SIZE: Larger arrays score higher. This is CRITICAL for universal extraction.
+                    # Metadata arrays are usually small (1-5 items), while content arrays are larger (10-100+ items).
+                    size_bonus = len(source_items) * 5.0  # Linear scaling to prioritize content
                     score += size_bonus
                     
                     # FIELD RICHNESS: More unique fields = richer data
-                    score += len(sample_keys) * 2
+                    score += len(sample_keys) * 10
+
+                    # REQUESTED FIELD COVERAGE: Prefer sources that actually contain requested fields
+                    if fields:
+                        sample_keys_lower = {k.lower() for k in sample_keys}
+                        requested_hits = sum(1 for f in fields if f and f.lower() in sample_keys_lower)
+                        # Strong bonus per requested field to bias toward richer, relevant arrays
+                        score += requested_hits * 100
                     
                     # CONTENT QUALITY BONUS: Arrays with product-like fields score much higher
                     product_indicators = ['title', 'name', 'price', 'product', 'slug', 'url', 'link', 'image', 'images', 
-                                         'color', 'variant', 'description', 'cents', 'productType', 'parentProduct']
+                                         'color', 'variant', 'description', 'cents', 'productType', 'parentProduct', 'brand']
                     has_product_fields = any(key.lower() in product_indicators for key in sample_keys)
                     if has_product_fields:
-                        score += 500  # Strong bonus for product-like arrays
+                        score += 1000  # Strong bonus for product-like arrays
+                    
+                    # SCHEMA.ORG BONUS: If it's a content array with Schema.org types, give a bonus
+                    if any('@type' in item for item in source_items[:5]):
+                        score += 500
                     
                     # METADATA PENALTY: Arrays that look like image metadata, tracking, or analytics
                     metadata_indicators = ['src', 'alt', 'approved', 'decorative', 'missingalt', 'tracking', 'analytics',
                                           'session', 'token', 'cookie', 'correlation', 'guid', 'config']
                     has_metadata_fields = any(key.lower() in metadata_indicators for key in sample_keys)
                     if has_metadata_fields and not has_product_fields:
-                        score -= 1000  # Strong penalty for metadata arrays without product fields
+                        score -= 2000  # Strong penalty for metadata arrays without product fields
+                    
+                    # SMALL ARRAY PENALTY: If it's very small and has metadata fields, penalize heavily
+                    if len(source_items) < 5 and has_metadata_fields:
+                        score -= 3000
                     
                     # FIELD NAME BONUS: Known product field names get bonus
-                    if source_name.lower() in ['nextjs', 'gridproducts', 'products', 'items', 'data']:
-                        score += 200
+                    if source_name.lower() in ['nextjs', 'gridproducts', 'products', 'items', 'data', 'apollo-ssr']:
+                        score += 300
                     
                     # FIELD NAME PENALTY: Known metadata field names get penalty
-                    if source_name.lower() in ['missingalts', 'tracking', 'analytics', 'metadata']:
-                        score -= 500
+                    if source_name.lower() in ['missingalts', 'tracking', 'analytics', 'metadata', 'json-ld']:
+                        # json-ld is often single-item metadata, penalize slightly to prefer RSC/Apollo for lists
+                        score -= 200
                 else:
                     # Non-dict items: minimal score
                     score = len(source_items) * 0.1
@@ -593,6 +702,12 @@ class JSONDetector:
         """
         if not sample_item or not isinstance(sample_item, dict):
             return False
+
+        # If this looks like real content (product/article), don't treat as navigation
+        content_keys = {'name', 'title', 'tagline', 'slug', 'price', 'description', 'votescount', 'commentscount'}
+        sample_keys_lower = {k.lower() for k in sample_item.keys()}
+        if sample_keys_lower.intersection(content_keys):
+            return False
         
         # Check for navigation patterns
         item_str = str(sample_item).lower()
@@ -654,7 +769,8 @@ class JSONDetector:
         
         # CRITICAL: Check if this is navigation/filter data (like Monster.com's "Belgium (English)")
         sample = array[0] if array else {}
-        if self._is_navigation_data(sample, field_name):
+        sample_for_nav = sample.get('node') if isinstance(sample, dict) and isinstance(sample.get('node'), dict) else sample
+        if self._is_navigation_data(sample_for_nav, field_name):
             logger.warning(f"    Navigation/filter data detected in '{field_name}' - heavily penalizing")
             return -1000  # Massive penalty - navigation data should NEVER be selected
         
@@ -688,6 +804,7 @@ class JSONDetector:
         
         # CONTENT PENALTY: Penalize arrays that look like navigation/breadcrumbs
         sample = array[0] if array else {}
+        sample_for_nav = sample.get('node') if isinstance(sample, dict) and isinstance(sample.get('node'), dict) else sample
         
         # UNIVERSAL CONTENT BONUS: Arrays with rich, structured data score higher
         # This works for ANY website type (e-commerce, airlines, news, etc.)
@@ -705,7 +822,7 @@ class JSONDetector:
             'data', 'attributes', 'metadata'
         ]
         # Count how many content indicators are present (more = richer data)
-        content_field_count = sum(1 for key in sample.keys() if any(indicator in key.lower() for indicator in content_indicators))
+        content_field_count = sum(1 for key in sample_for_nav.keys() if any(indicator in key.lower() for indicator in content_indicators))
         if content_field_count >= 3:  # At least 3 content fields = likely main content array
             score += 100  # Strong bonus for rich content arrays
             logger.debug(f"    Rich content array detected in '{field_name}' ({content_field_count} content fields)")
@@ -1063,11 +1180,15 @@ class JSONDetector:
     
     def _extract_single_item_semantically(self, item: Dict, fields: List[str]) -> Dict:
         """Extract fields from a single JSON object using semantic strategies"""
+        fields = fields or []
         extracted_item = {}
+        # import json
+        # logger.info(f"DEBUG: Extracting from item keys: {list(item.keys())}")
         
         # First pass: extract all fields
         for field in fields:
             value = self._extract_field_semantically(item, field)
+            # logger.info(f"DEBUG: Field '{field}' -> '{value}'")
             if value is not None:
                 extracted_item[field] = value
         
@@ -1140,7 +1261,10 @@ class JSONDetector:
         # STRATEGY 1: Exact match (case-insensitive)
         for key in data.keys():
             if key.lower() == field_lower:
-                return self._normalize_value(data[key])
+                val = data[key]
+                # If exact match is a dict, let Strategy 5 handle it (nested extraction)
+                if not isinstance(val, (dict, list)):
+                    return self._normalize_value(val)
         
         # STRATEGY 2: Synonym matching (universal field mappings)
         synonyms = self._get_field_synonyms(field_lower)
@@ -1148,7 +1272,10 @@ class JSONDetector:
             # Exact match on synonym
             for key in data.keys():
                 if key.lower() == synonym.lower():
-                    return self._normalize_value(data[key])
+                    val = data[key]
+                    # If synonym match is a dict, let Strategy 5 handle it
+                    if not isinstance(val, (dict, list)):
+                        return self._normalize_value(val)
             
             # Partial match on synonym (e.g. 'latestScore' matches 'score')
             # Only do this if we haven't found an exact match
@@ -1157,7 +1284,11 @@ class JSONDetector:
                     # Avoid boolean flags for numeric synonyms
                     if isinstance(data[key], bool) and synonym in ['score', 'count', 'price', 'votes']:
                         continue
-                    return self._normalize_value(data[key])
+                        
+                    val = data[key]
+                    # If partial synonym match is a dict, let Strategy 5 handle it
+                    if not isinstance(val, (dict, list)):
+                        return self._normalize_value(val)
         
         # STRATEGY 3: Partial matching (product_name matches 'name')
         # Extract the core field name (e.g., "product_name" → "name")
@@ -1180,7 +1311,8 @@ class JSONDetector:
         
         # STRATEGY 4: Nested search (look in common nested locations)
         # Many JSON structures nest data in 'product', 'item', 'strain', etc.
-        nested_keys = ['product', 'item', 'strain', 'listing', 'data', 'attributes', 'fields']
+        # Added 'offers', 'aggregateRating', 'brand' for Schema.org Product structure
+        nested_keys = ['product', 'item', 'strain', 'listing', 'data', 'attributes', 'fields', 'offers', 'offer', 'aggregateRating', 'brand', 'props', 'pageProps', 'productData']
         for nested_key in nested_keys:
             if nested_key in data and isinstance(data[nested_key], dict):
                 # Recursively search in nested object
@@ -1196,11 +1328,23 @@ class JSONDetector:
             if isinstance(value, dict):
                 # Check if this key matches the requested field (exact or semantic match)
                 key_lower = key.lower()
+                
+                # DEBUG TRACE
+                if field_lower == 'price':
+                    print(f"DEBUG: Checking key '{key}' val={value} against price strategies...")
+                
+                # Schema.org @type awareness
+                schema_type = value.get('@type', '').lower()
+                
                 field_matches = (
                     key_lower == field_lower or
                     field_lower in key_lower or
                     key_lower in field_lower or
-                    any(synonym in key_lower for synonym in self._get_field_synonyms(field_lower))
+                    any(synonym in key_lower for synonym in self._get_field_synonyms(field_lower)) or
+                    # Schema.org type matching
+                    (field_lower == 'price' and 'offer' in schema_type) or
+                    (field_lower == 'rating' and 'rating' in schema_type) or
+                    (field_lower == 'brand' and 'brand' in schema_type)
                 )
                 
                 if field_matches:
@@ -1208,13 +1352,30 @@ class JSONDetector:
                     # Priority order: field-specific keys, then common nested keys
                     nested_keys_to_try = []
                     
+                    # Schema.org specific extraction
+                    if 'offer' in schema_type:
+                        nested_keys_to_try = ['price', 'priceCurrency', 'availability', 'name', 'value']
+                    elif 'rating' in schema_type:
+                        nested_keys_to_try = ['ratingValue', 'reviewCount', 'bestRating', 'value']
+                    elif 'brand' in schema_type:
+                        nested_keys_to_try = ['name', 'title', 'value']
+                    
                     # Field-specific nested keys (e.g., colorName for color, variantName for variant)
-                    if 'color' in field_lower or 'colour' in field_lower:
+                    elif 'color' in field_lower or 'colour' in field_lower:
                         nested_keys_to_try = ['colorName', 'name', 'value', 'title', 'label', 'displayName', 'color']
                     elif 'variant' in field_lower:
                         nested_keys_to_try = ['variantName', 'name', 'value', 'title', 'label', 'displayName', 'variant']
                     elif 'price' in field_lower or 'cost' in field_lower:
-                        nested_keys_to_try = ['amount', 'value', 'price', 'cost', 'total']
+                        nested_keys_to_try = [
+                            'amount', 'value', 'price', 'cents', 'formatted', 'current', 'sale', 'cost', 'total',
+                            'unitPrice', 'standardPrice', 'origionalPrice', 'display', 'displayPrice', 'displayValue'
+                        ]
+                    elif 'rating' in field_lower:
+                        nested_keys_to_try = ['value', 'rating', 'score', 'average', 'ratingValue']
+                    elif 'brand' in field_lower:
+                        nested_keys_to_try = ['name', 'title', 'label', 'brandName', 'displayName']
+                    elif 'image' in field_lower:
+                        nested_keys_to_try = ['url', 'src', 'link', 'image', 'imageUrl', 'contentUrl']
                     else:
                         # Generic nested keys for any field
                         nested_keys_to_try = ['name', 'value', 'title', 'label', 'displayName', 'text', 'content']
@@ -1225,6 +1386,9 @@ class JSONDetector:
                             nested_value = value[nested_key]
                             # Prefer string values, but also accept numbers for price fields
                             if isinstance(nested_value, str) and len(nested_value) > 0:
+                                # SKIP CURRENCY SYMBOLS in nested logic
+                                if ('price' in field_lower or 'cost' in field_lower) and nested_value.strip() in ['$', '€', '£', 'USD', 'EUR', 'GBP']:
+                                    continue
                                 return self._normalize_value(nested_value)
                             elif isinstance(nested_value, (int, float)) and ('price' in field_lower or 'cost' in field_lower):
                                 return self._normalize_value(nested_value)
@@ -1232,6 +1396,9 @@ class JSONDetector:
                     # Fallback: Get first string value from nested object
                     for nested_value in value.values():
                         if isinstance(nested_value, str) and len(nested_value) > 0:
+                            # SKIP CURRENCY SYMBOLS in fallback
+                            if ('price' in field_lower or 'cost' in field_lower) and nested_value.strip() in ['$', '€', '£', 'USD', 'EUR', 'GBP']:
+                                continue
                             return self._normalize_value(nested_value)
         
         if any(keyword in field_lower for keyword in ['price', 'cost', 'amount']):
@@ -1240,7 +1407,9 @@ class JSONDetector:
                 if isinstance(value, (int, float)):
                     return self._normalize_value(value)
                 if isinstance(value, str) and ('$' in value or '€' in value or '£' in value):
-                    return self._normalize_value(value)
+                    # Ensure it's not JUST a currency symbol
+                    if value.strip() not in ['$', '€', '£']:
+                        return self._normalize_value(value)
         
         if any(keyword in field_lower for keyword in ['name', 'title', 'heading']):
             # Look for the most prominent string field
@@ -1449,22 +1618,25 @@ class JSONDetector:
         - description → desc, summary, details, about
         """
         synonyms_map = {
-            'price': ['cost', 'pricing', 'amount', 'value', 'rate', 'fee'],
-            'name': ['title', 'label', 'heading', 'caption', 'displayname', 'display_name'],
-            'title': ['name', 'label', 'heading', 'caption', 'displayname', 'display_name', 'productName', 'product_name'],  # NEW: Reverse mapping for title → name
+            'price': ['cost', 'pricing', 'amount', 'value', 'rate', 'fee', 'priceCurrency', 'price_amount'],
+            'name': ['title', 'label', 'heading', 'caption', 'displayname', 'display_name', 'headline'],
+            'title': ['name', 'label', 'heading', 'caption', 'displayname', 'display_name', 'productName', 'product_name', 'headline'],
+            'rank': ['position', 'order', 'index', 'number', 'ranking', 'place'],
+            'position': ['rank', 'order', 'index', 'number', 'ranking', 'place'],
             'product': ['item', 'listing', 'offer', 'sku', 'strain'],
-            'description': ['desc', 'summary', 'details', 'about', 'info', 'text', 'content'],
-            'image': ['img', 'picture', 'photo', 'thumbnail', 'icon', 'avatar'],
-            'url': ['link', 'href', 'uri', 'path', 'permalink', 'productUrl', 'product_url'],
+            'description': ['desc', 'summary', 'details', 'about', 'info', 'text', 'content', 'articleBody'],
+            'image': ['img', 'picture', 'photo', 'thumbnail', 'icon', 'avatar', 'contentUrl'],
+            'url': ['link', 'href', 'uri', 'path', 'permalink', 'productUrl', 'product_url', 'contentUrl'],
             'product url': ['link', 'href', 'uri', 'path', 'permalink', 'productUrl', 'product_url', 'url'],
-            'date': ['time', 'timestamp', 'created', 'updated', 'published'],
+            'date': ['time', 'timestamp', 'created', 'updated', 'published', 'datePublished', 'dateModified'],
             'category': ['type', 'kind', 'class', 'tag', 'genre'],
             'brand': ['manufacturer', 'maker', 'vendor', 'company'],
-            'rating': ['score', 'stars', 'review', 'reviews'],
-            'votes': ['score', 'points', 'likes', 'upvotes', 'count', 'rating'],
-            'comments': ['replies', 'discussion', 'feedback', 'posts'],
+            'rating': ['score', 'stars', 'review', 'reviews', 'ratingValue', 'reviewCount', 'bestRating'],
+            'votes': ['score', 'points', 'likes', 'upvotes', 'count', 'rating', 'votesCount'],
+            'comments': ['replies', 'discussion', 'feedback', 'posts', 'commentsCount', 'commentCount'],
             'quantity': ['amount', 'count', 'number', 'stock'],
             'id': ['identifier', 'code', 'key', 'uuid', 'slug'],
+            'tagline': ['summary', 'subtitle', 'headline', 'description', 'short_description'],
         }
         
         # Check if field or any part of it has synonyms
@@ -1844,4 +2016,3 @@ class JSONDetector:
                             return self._normalize_value(value)
         
         return None
-

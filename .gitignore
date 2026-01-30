@@ -155,3 +155,47 @@ tmp/
 temp/
 *.tmp
 
+# Test outputs and results
+test_output_*.txt
+test_results.json
+*_test_results.json
+threshold_tuning_results.json
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Test scripts and temporary exploration files
+test_*.py
+quick_*.py
+test_*.json
+test_*.sh
+verify_*.py
+update_*.py
+update_*.sh
+reproduce_*.py
+extract_*.py
+tests/
+test_cache/
+apify_storage_local/
+auth/
+METACRITIC_DIAGNOSIS.md
+geoip=false_*.html
+
+# Documentation and guides (not needed for core scraping jobs)
+KASADA_BYPASS_GUIDE.md
+EDGE_CASE_TESTING.md
+FIELD_DISCOVERY_GUIDE.md
+LOCAL_TESTING.md
+DEPLOYMENT_GUIDE.md
+WEB_UNBLOCKER_DEPLOYMENT.md
+TEST_WITH_RESIDENTIAL_IPS.md
+
+# Apify specific temporary/test files
+universal_scraper/apify/test-*.json
+universal_scraper/apify/test-*.sh
+universal_scraper/apify/deploy.log
+universal_scraper/apify/storage/
+universal_scraper/apify/cache/
+universal_scraper/apify/apify_storage_local/

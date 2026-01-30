@@ -1,14 +1,21 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Universal Scraper - AI Copilot for Web Scraping & Document Processing</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
 
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/paradocs-icon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Studio - Universal Web Scraper</title>
+
+  <!-- Add CSP to allow Google/Firebase scripts and iframes -->
+  <!-- Add CSP to allow Google/Firebase scripts and iframes -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.firebaseio.com https://*.googleapis.com https://*.google.com https://*.gstatic.com blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.firebaseio.com https://*.googleapis.com https://*.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; frame-src 'self' blob: https://*.firebaseapp.com https://*.google.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.google.com https://universal-scraper-api-r3crozpq7q-uc.a.run.app https://universal-scraper-api-r3crozpq7q-uc.a.run.app/* wss://*.firebaseio.com;">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

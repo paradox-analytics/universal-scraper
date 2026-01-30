@@ -1,0 +1,76 @@
+{
+  "title": "Hybrid Universal Scraper",
+  "description": "LLM-powered universal web scraper with pattern caching. Works on ANY website without configuration. 99.5% cost savings on cached requests!",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "startUrls": {
+      "title": "URLs to Scrape",
+      "type": "array",
+      "description": "List of URLs to scrape. The system will automatically detect patterns and extract data.",
+      "editor": "requestListSources"
+    },
+    
+    "fields": {
+      "title": "📝 What to Extract (Natural Language OK!)",
+      "type": "string",
+      "description": "Describe what data you want to extract in plain English. Examples:\n• \"Extract product names, prices, and descriptions\"\n• \"Get all job titles, companies, and locations\"\n• \"Scrape article headlines, authors, and dates\"\n\nThe AI will automatically understand what you want and extract it! No technical knowledge required.",
+      "editor": "textarea",
+      "prefill": "Extract product names, prices, and descriptions for all items"
+    },
+    
+    "openaiApiKey": {
+      "title": "🔑 OpenAI API Key",
+      "type": "string",
+      "description": "Your OpenAI API key (required for pattern generation). Cost: ~$0.02 per new domain, then $0.0001 for cached patterns. You can also set OPENAI_API_KEY as an environment variable.",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    
+    "hybridConfig": {
+      "title": "⚙️ Hybrid System Configuration (Advanced)",
+      "type": "object",
+      "description": "Advanced configuration for the hybrid system",
+      "editor": "json",
+      "properties": {
+        "similarityThreshold": {
+          "title": "Pattern Similarity Threshold",
+          "type": "number",
+          "description": "Threshold for pattern reuse (0.0-1.0). Higher = more strict matching. Recommended: 0.75",
+          "default": 0.75,
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "enableLLM": {
+          "title": "Enable LLM Pattern Generation",
+          "type": "boolean",
+          "description": "Use LLM to generate semantic patterns. If false, uses fallback patterns (free but less accurate).",
+          "default": true
+        },
+        "cachePatterns": {
+          "title": "Cache Generated Patterns",
+          "type": "boolean",
+          "description": "Save patterns to cache for future reuse. Highly recommended for cost savings!",
+          "default": true
+        },
+        "maxContainers": {
+          "title": "Max Containers per Page",
+          "type": "integer",
+          "description": "Maximum number of repeating items to extract per page",
+          "default": 20,
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    
+    "proxyConfiguration": {
+      "title": "🔗 Proxy Configuration",
+      "type": "object",
+      "description": "Configure Apify residential proxies (recommended for production)",
+      "editor": "proxy"
+    }
+  },
+  "required": ["startUrls", "fields"]
+}
+

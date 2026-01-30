@@ -1,0 +1,130 @@
+{
+  "test_date": "2025-11-23T17:06:17.255035",
+  "total_sites": 6,
+  "successful": 6,
+  "total_items": 230,
+  "total_time": 775.2213046550751,
+  "avg_completeness": 79.47943086359793,
+  "results": [
+    {
+      "name": "Books to Scrape",
+      "success": true,
+      "items": 20,
+      "time": 99.84674406051636,
+      "completeness": 66.66666666666666,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "A Light in the ...",
+          "price": 51.77,
+          "rating": null
+        },
+        {
+          "title": "Tipping the Velvet",
+          "price": 53.74,
+          "rating": null
+        }
+      ]
+    },
+    {
+      "name": "Quotes to Scrape",
+      "success": true,
+      "items": 10,
+      "time": 8.087731122970581,
+      "completeness": 100.0,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "text": "The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.",
+          "author": "Albert Einstein",
+          "tags": "changedeep-thoughtsthinkingworld"
+        },
+        {
+          "text": "It is our choices, Harry, that show what we truly are, far more than our abilities.",
+          "author": "J.K. Rowling",
+          "tags": "abilitieschoices"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "success": true,
+      "items": 18,
+      "time": 107.62534689903259,
+      "completeness": 88.88888888888889,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "Show HN: Gitlogue \u2013 A terminal tool that replays your Git commits with animation (github.com/unhappychoice)",
+          "points": 52,
+          "author": "unhappychoice"
+        },
+        {
+          "title": "Liva AI (YC S25) Is Hiring",
+          "points": null,
+          "author": null
+        }
+      ]
+    },
+    {
+      "name": "GitHub Trending",
+      "success": true,
+      "items": 24,
+      "time": 69.8447048664093,
+      "completeness": 100.0,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "repository": "repo1",
+          "description": "Description for repository 1",
+          "stars": 5
+        },
+        {
+          "repository": "repo2",
+          "description": "Description for repository 2",
+          "stars": 3.5
+        }
+      ]
+    },
+    {
+      "name": "Stack Overflow",
+      "success": true,
+      "items": 71,
+      "time": 213.60696983337402,
+      "completeness": 63.84976525821596,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "Item 1",
+          "votes": 150,
+          "answers": "10"
+        },
+        {
+          "title": "Item 2",
+          "votes": 200,
+          "answers": "5"
+        }
+      ]
+    },
+    {
+      "name": "Product Hunt",
+      "success": true,
+      "items": 87,
+      "time": 276.2098078727722,
+      "completeness": 57.47126436781609,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "name": "Google Nano Banana Pro",
+          "tagline": "Gemini 3 Pro Image Generator based on Google Nano Banana",
+          "votes": null
+        },
+        {
+          "name": "Dim Notes",
+          "tagline": "Auto-tags your thoughts",
+          "votes": 6
+        }
+      ]
+    }
+  ]
+}

@@ -43,17 +43,17 @@ export function FieldSelector({ fields, onChange, mode = 'natural' }: FieldSelec
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-gray-300">
           Fields to Extract
         </label>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setCurrentMode('natural')}
-            className={`text-xs px-2 py-1 rounded ${
+            className={`text-xs px-2 py-1 rounded font-semibold transition-all ${
               currentMode === 'natural'
-                ? 'bg-primary-100 text-primary-700'
-                : 'bg-gray-100 text-gray-600'
+                ? 'bg-purple-950 text-purple-300 border border-purple-700'
+                : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700'
             }`}
           >
             Natural Language
@@ -61,10 +61,10 @@ export function FieldSelector({ fields, onChange, mode = 'natural' }: FieldSelec
           <button
             type="button"
             onClick={() => setCurrentMode('structured')}
-            className={`text-xs px-2 py-1 rounded ${
+            className={`text-xs px-2 py-1 rounded font-semibold transition-all ${
               currentMode === 'structured'
-                ? 'bg-primary-100 text-primary-700'
-                : 'bg-gray-100 text-gray-600'
+                ? 'bg-purple-950 text-purple-300 border border-purple-700'
+                : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700'
             }`}
           >
             Structured
@@ -80,7 +80,7 @@ export function FieldSelector({ fields, onChange, mode = 'natural' }: FieldSelec
             placeholder="e.g., Extract product names, prices, ratings, and descriptions"
             className="input-field h-24 resize-none"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-400">
             Describe what you want to extract in plain English
           </p>
           {fields.length > 0 && (
@@ -88,7 +88,7 @@ export function FieldSelector({ fields, onChange, mode = 'natural' }: FieldSelec
               {fields.map((field) => (
                 <span
                   key={field}
-                  className="inline-flex items-center px-2 py-1 rounded-md bg-primary-100 text-primary-800 text-sm"
+                  className="inline-flex items-center px-2 py-1 rounded-md bg-purple-900/20 text-purple-300 border border-purple-700 text-sm"
                 >
                   {field}
                 </span>
@@ -129,13 +129,13 @@ export function FieldSelector({ fields, onChange, mode = 'natural' }: FieldSelec
             {structuredFields.map((field) => (
               <span
                 key={field}
-                className="inline-flex items-center px-3 py-1 rounded-md bg-gray-100 text-gray-800 text-sm"
+                className="inline-flex items-center px-3 py-1 rounded-md bg-gray-800 text-gray-200 border border-gray-700 text-sm"
               >
                 {field}
                 <button
                   type="button"
                   onClick={() => handleRemoveField(field)}
-                  className="ml-2 text-gray-500 hover:text-gray-700"
+                  className="ml-2 text-gray-400 hover:text-gray-200"
                 >
                   ×
                 </button>

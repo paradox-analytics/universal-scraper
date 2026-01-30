@@ -1,0 +1,58 @@
+{
+  "actorSpecification": 1,
+  "name": "universal-scraper-hybrid",
+  "title": "Hybrid Universal Scraper - LLM + Caching",
+  "description": "Revolutionary web scraper combining LLM-powered pattern generation with vector-based caching. Works on ANY website. 99.5% cost savings on cached patterns!",
+  "version": "1.0",
+  "meta": {
+    "templateId": "hybrid-universal-scraper"
+  },
+  "input": "./INPUT_SCHEMA_HYBRID.json",
+  "dockerfile": "./Dockerfile",
+  "readme": "./README_HYBRID.md",
+  "categories": ["ECOMMERCE", "SCRAPING", "AI"],
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Extracted Data",
+      "description": "Extracted items with metadata (source URL, cache status, cost)",
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "transformation": {
+            "fields": ["title", "description", "price", "url", "_metadata"]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "title": {
+                "label": "Title",
+                "format": "text"
+              },
+              "description": {
+                "label": "Description",
+                "format": "text"
+              },
+              "price": {
+                "label": "Price",
+                "format": "text"
+              },
+              "url": {
+                "label": "URL",
+                "format": "link"
+              },
+              "_metadata": {
+                "label": "Metadata",
+                "format": "object"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+

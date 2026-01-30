@@ -1,0 +1,78 @@
+{
+  "json_found": true,
+  "sources": [
+    "captured_json_0",
+    "captured_json_1",
+    "embedded-json",
+    "api-endpoints"
+  ],
+  "data": [
+    {
+      "_framework": "captured",
+      "_data": [],
+      "_paths": []
+    },
+    {
+      "_framework": "captured",
+      "_data": {
+        "data": {
+          "createCaptchaToken": {
+            "ok": true
+          }
+        },
+        "errors": [],
+        "operation": "CreateCaptchaToken"
+      },
+      "_paths": []
+    },
+    {
+      "USE_DEBUG": false,
+      "ACCOUNT_MANAGER_ORIGIN": "https://www.reddit.com",
+      "APPLE_SSO_CLIENT_ID": "com.reddit.RedditAppleSSO",
+      "MANIFEST_FILE": "client-manifest.json",
+      "ORIGIN": "https://www.reddit.com",
+      "MWEB_ORIGIN": "https://www.reddit.com",
+      "GOOGLE_SSO_CLIENT_ID": "705819728788-b2c1kcs7tst3b7ghv7at0hkqmtc68ckl.apps.googleusercontent.com",
+      "MEDIA_BASE_URL": "https://www.redditstatic.com/",
+      "PRECONNECT_ORIGINS": [
+        "https://www.redditstatic.com/"
+      ],
+      "STATIC_BASE_URL": "https://www.redditstatic.com/shreddit/",
+      "IN_CLUSTER_STATIC_BASE_URL": "https://www.redditstatic.com/shreddit/",
+      "RUNTIME_CONCAT_BASE_URL": "https://www.redditstatic.com/js/concat",
+      "TRACKING_KEY": "ShredditFrontend-v1",
+      "TRACKING_ENDPOINT": "https://events.redditmedia.com/v2j",
+      "TRACKING_SECRET": "eW9vM3lhZW00VW9naDVleGFlZm9lcGhlZTZQaG9o",
+      "W3_REPORTING_WEB_VITAL_REPORTS_URL": "https://w3-reporting.reddit.com/reports",
+      "IS_GKE": false,
+      "DEVVIT_GATEWAY_ORIGIN": "https://devvit-gateway.reddit.com"
+    },
+    {
+      "dsn": "https://9f057df6115a4bb488c08ea12a835e6e@error-tracking.reddit.com/o418887/5810803",
+      "enabled": true,
+      "environment": "production"
+    },
+    {
+      "shreddit_recaptcha_comment_create": "enabled",
+      "shreddit_ad_event_migration_m3": "enabled",
+      "shreddit_ad_observer_v2": "enabled",
+      "ads_in_related_posts_m1": "enabled",
+      "shreddit_age_settings": "enabled",
+      "web_bermuda_remove_pm_ui": "enabled",
+      "shreddit_paid_ua_landing_good_visit": "enabled",
+      "shreddit_recaptcha_single_protocol": "enabled",
+      "shreddit_service_worker_registration": "enabled"
+    },
+    {
+      "api_endpoints": [
+        "https://www.reddit.com/r/webscraping/t support constructed stylesheets. See https:/lit.dev/docs/api/LitElement/#LitElement.styles        window.litNonce = ",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_5.png",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_0.png",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png"
+      ]
+    }
+  ]
+}

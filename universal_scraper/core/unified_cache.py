@@ -7,7 +7,10 @@ import os
 import json
 import hashlib
 import logging
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..redis_cache import RedisCache
 from pathlib import Path
 from abc import ABC, abstractmethod
 
@@ -38,13 +41,91 @@ class CacheBackend(ABC):
         pass
 
 
-class LocalFileCache(CacheBackend):
+class RedisCacheBackend(CacheBackend):
     """
-    Local file-based cache for development
-    Mimics Apify KV Store behavior
+    Redis cache backend for Cloud Run/multi-tenant SaaS
+    Uses Redis for distributed caching
     """
     
-    def __init__(self, cache_dir: str = "./local_cache"):
+    def __init__(self, redis_cache: Optional[Any] = None):
+        """
+        Initialize Redis cache backend
+        
+        Args:
+            redis_cache: RedisCache instance (optional)
+        """
+        self.redis_cache = redis_cache
+        self.redis_client = redis_cache.redis_client if redis_cache else None
+        logger.info(f" Using Redis cache backend: {redis_cache.redis_url if redis_cache else 'disabled'}")
+    
+    async def get(self, key: str) -> Optional[Dict]:
+        """Get value from Redis"""
+        if not self.redis_cache:
+            return None
+        
+        try:
+            return await self.redis_cache.get(key)
+        except Exception as e:
+            logger.warning(f"  Redis cache get failed: {e}")
+            return None
+    
+    async def set(self, key: str, value: Dict) -> None:
+        """Set value in Redis"""
+        if not self.redis_cache:
+            return
+        
+        try:
+            # Use default TTL of 1 hour (3600s) for Direct LLM cache
+            await self.redis_cache.set(key, value, ttl=3600)
+            logger.debug(f" Cache SET (Redis): {key[:50]}...")
+        except Exception as e:
+            logger.error(f" Failed to write Redis cache: {e}")
+    
+    async def delete(self, key: str) -> None:
+        """Delete value from Redis"""
+        if not self.redis_cache:
+            return
+        
+        try:
+            await self.redis_cache.delete(key)
+            logger.debug(f"  Cache DELETE (Redis): {key}")
+        except Exception as e:
+            logger.error(f" Failed to delete from Redis cache: {e}")
+    
+    async def list_keys(self, prefix: str = "") -> List[str]:
+        """List all keys with prefix"""
+        if not self.redis_cache or not self.redis_client:
+            return []
+        
+        try:
+            pattern = f"{prefix}*" if prefix else "*"
+            keys = []
+            async for key in self.redis_client.scan_iter(match=pattern):
+                keys.append(key)
+            return keys
+        except Exception as e:
+            logger.warning(f"  Redis list_keys failed: {e}")
+            return []
+
+
+class LocalFileCache(CacheBackend):
+    """
+    Local file-based cache for development and Cloud Run
+    Mimics Apify KV Store behavior
+    
+    For Cloud Run: Uses /tmp directory which persists within instance
+    """
+    
+    def __init__(self, cache_dir: str = None):
+        # For Cloud Run, use /tmp which persists within instance
+        # For local dev, use ./local_cache
+        if cache_dir is None:
+            # Check if running in Cloud Run (or similar serverless env)
+            if os.path.exists('/tmp') and os.access('/tmp', os.W_OK):
+                cache_dir = "/tmp/paradocs_cache"
+            else:
+                cache_dir = "./local_cache"
+        
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f" Using LOCAL file cache: {self.cache_dir}")
@@ -79,18 +160,21 @@ class LocalFileCache(CacheBackend):
             with open(path, 'w') as f:
                 json.dump(value, f, indent=2)
             
-            # Also save key mapping for debugging
+            # Also save key mapping for debugging and listing
             mapping_path = self.cache_dir / "key_mapping.json"
             mappings = {}
             if mapping_path.exists():
-                with open(mapping_path, 'r') as f:
-                    mappings = json.load(f)
+                try:
+                    with open(mapping_path, 'r') as f:
+                        mappings = json.load(f)
+                except Exception:
+                    mappings = {}
             
             mappings[key] = path.name
             with open(mapping_path, 'w') as f:
                 json.dump(mappings, f, indent=2)
             
-            logger.debug(f" Cache SET (local): {key}")
+            logger.info(f" Cache SET (local): {key[:50]}... -> {path.name}")
         except Exception as e:
             logger.error(f" Failed to write cache: {e}")
     
@@ -105,14 +189,23 @@ class LocalFileCache(CacheBackend):
         """List all keys (requires key_mapping.json)"""
         mapping_path = self.cache_dir / "key_mapping.json"
         if not mapping_path.exists():
+            logger.info(f"No key_mapping.json found in {self.cache_dir}")
             return []
         
-        with open(mapping_path, 'r') as f:
-            mappings = json.load(f)
-        
-        if prefix:
-            return [k for k in mappings.keys() if k.startswith(prefix)]
-        return list(mappings.keys())
+        try:
+            with open(mapping_path, 'r') as f:
+                mappings = json.load(f)
+            
+            if prefix:
+                keys = [k for k in mappings.keys() if k.startswith(prefix)]
+            else:
+                keys = list(mappings.keys())
+            
+            logger.info(f"LocalFileCache.list_keys: found {len(keys)} keys (prefix: '{prefix}')")
+            return keys
+        except Exception as e:
+            logger.error(f"Failed to list keys: {e}")
+            return []
 
 
 class ApifyKVCache(CacheBackend):
@@ -225,22 +318,27 @@ class ApifyKVCache(CacheBackend):
 
 class UnifiedPatternCache:
     """
-    Unified pattern cache that works locally and on Apify
+    Unified pattern cache that works locally, on Apify, and with Redis
     Automatically detects environment and uses appropriate backend
     """
     
-    def __init__(self, force_local: bool = False):
+    def __init__(self, force_local: bool = False, redis_cache: Optional[Any] = None):
         """
         Initialize cache with automatic backend selection
         
         Args:
             force_local: Force local cache even if running on Apify (for testing)
+            redis_cache: Optional RedisCache instance for Cloud Run/multi-tenant SaaS
         """
         # Detect environment
         self.is_apify = self._detect_apify_environment()
         
-        # Choose backend
-        if force_local or not self.is_apify:
+        # Choose backend (priority: Redis > Apify > Local)
+        if redis_cache and redis_cache.redis_client:
+            # Use Redis for Cloud Run/multi-tenant SaaS
+            self.backend = RedisCacheBackend(redis_cache)
+            self.env = "REDIS"
+        elif force_local or not self.is_apify:
             self.backend = LocalFileCache()
             self.env = "LOCAL"
         else:

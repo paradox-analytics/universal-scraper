@@ -1,0 +1,85 @@
+[
+  {
+    "url": "https://www.amazon.com/s?k=laptop",
+    "fields": [
+      "title",
+      "price",
+      "rating"
+    ],
+    "category": "ecommerce",
+    "name": "Amazon",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  },
+  {
+    "url": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+    "fields": [
+      "title",
+      "price"
+    ],
+    "category": "ecommerce",
+    "name": "eBay",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  },
+  {
+    "url": "https://news.ycombinator.com",
+    "fields": [
+      "title",
+      "points",
+      "url"
+    ],
+    "category": "forum",
+    "name": "Hacker News",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  },
+  {
+    "url": "https://stackoverflow.com/questions",
+    "fields": [
+      "title",
+      "votes",
+      "answers"
+    ],
+    "category": "forum",
+    "name": "Stack Overflow",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  },
+  {
+    "url": "https://github.com/trending",
+    "fields": [
+      "name",
+      "description",
+      "stars"
+    ],
+    "category": "listing",
+    "name": "GitHub Trending",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  },
+  {
+    "url": "https://www.imdb.com/chart/top",
+    "fields": [
+      "title",
+      "rating",
+      "year"
+    ],
+    "category": "listing",
+    "name": "IMDB Top 250",
+    "error": "unhashable type: 'slice'",
+    "metadata": {
+      "success": false
+    }
+  }
+]

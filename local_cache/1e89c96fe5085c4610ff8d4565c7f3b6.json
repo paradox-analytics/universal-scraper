@@ -1,0 +1,78 @@
+{
+  "items": [
+    {
+      "est. market value": "60000",
+      "bedrooms": "3",
+      "bathrooms": "1",
+      "square footage": "1020",
+      "property url": "/details/5728-margewood-dr-dallas-tx-1900895"
+    },
+    {
+      "est. market value": "60000",
+      "bedrooms": "3",
+      "bathrooms": "1",
+      "square footage": "1020",
+      "property url": "https://www.example.com/details/5728-margewood-dr-dallas-tx-1900895"
+    },
+    {
+      "est. market value": "25000",
+      "bedrooms": "3",
+      "bathrooms": "2.5",
+      "square footage": "1376",
+      "property url": "https://www.example.com/details/7812-bruton-rd-dallas-tx-1917489"
+    },
+    {
+      "est. market value": "175000",
+      "bedrooms": "2",
+      "bathrooms": "2.5",
+      "square footage": "1627",
+      "property url": "https://www.example.com/details/1147-n-madison-ave-dallas-tx-1919291"
+    },
+    {
+      "est. market value": "85000",
+      "bedrooms": "3",
+      "bathrooms": "2",
+      "square footage": "1122",
+      "property url": "https://www.example.com/details/3250-highland-woods-cir-dallas-tx-1920998"
+    },
+    {
+      "est. market value": "100000",
+      "bedrooms": "2",
+      "bathrooms": "2",
+      "square footage": "1046",
+      "property url": "https://www.example.com/details/5926-sandhurst-ln-dallas-tx-1921007"
+    },
+    {
+      "est. market value": "277685",
+      "bedrooms": "4",
+      "bathrooms": "2",
+      "square footage": "1576",
+      "property url": "https://www.example.com/details/2830-blackwolf-dr-dallas-tx-1904932"
+    },
+    {
+      "est. market value": "504481",
+      "bedrooms": "5",
+      "bathrooms": "2.5",
+      "square footage": "2968",
+      "property url": "https://www.example.com/details/1718-morris-st-dallas-tx-1912949"
+    },
+    {
+      "est. market value": "null",
+      "bedrooms": "4",
+      "bathrooms": "2",
+      "square footage": "1576",
+      "property url": "null"
+    }
+  ],
+  "structure_hash": "c02146dee00a7af8",
+  "fields": [
+    "est. market value",
+    "bedrooms",
+    "bathrooms",
+    "square footage",
+    "property url"
+  ],
+  "timestamp": 1764816601.028626,
+  "url": "https://www.auction.com/residential/TX/Dallas_ct/active_lt/auction_date_order,resi_sort_v2_st/y_nbs/100_nsr",
+  "item_count": 9
+}

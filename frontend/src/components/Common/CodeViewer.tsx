@@ -26,12 +26,12 @@ export function CodeViewer({ data, language = 'json', title = 'Raw Data' }: Code
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden">
-      <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
-        <span className="text-white text-sm font-medium">{title}</span>
+    <div className="border border-gray-700 rounded-lg overflow-hidden bg-gray-900">
+      <div className="bg-gray-800 px-4 py-2 flex justify-between items-center border-b border-gray-700">
+        <span className="text-gray-100 text-sm font-medium">{title}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 text-white text-sm hover:text-gray-300 transition-colors"
+          className="flex items-center gap-2 text-gray-300 text-sm hover:text-gray-100 transition-colors"
         >
           {copied ? (
             <>

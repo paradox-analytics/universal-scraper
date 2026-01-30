@@ -189,23 +189,23 @@ Analyze this request and infer:
 1. What TYPE of data are they trying to extract?
 2. What FIELDS/attributes do they want?
 
-IMPORTANT:
-- Be flexible and intelligent - don't just match keywords
-- Understand semantic meaning and context
-- Infer unstated but obvious requirements
-- Handle domain-specific terminology
-- Be specific about field names (use snake_case)
+IMPORTANT RULES:
+- If the user asks for a specific object (e.g. "product", "event", "job"), you MUST infer the standard fields for that object unless they explicitly say "get everything".
+- DO NOT return empty fields if the user mentions a specific data type.
+- Example: "Extract products" -> fields=["name", "price", "image", "url", "description"]
+- Example: "Get all data" -> fields=[] (Auto-extract all)
+- Be specific about field names (use snake_case).
 
 Common data types (but not limited to):
-- products (e-commerce items)
-- events (concerts, shows, conferences, meetups)
-- articles (blog posts, news, content)
-- listings (real estate, jobs, classifieds)
-- reviews (product reviews, ratings)
-- businesses (companies, restaurants, services)
-- people (profiles, contacts)
-- media (videos, images, podcasts)
+- products (fields: name, price, description, rating, availability, image, url)
+- events (fields: title, date, location, venue, price)
+- articles (fields: title, author, date, content, url)
+- listings (fields: title, price, location, description)
+- reviews (fields: author, rating, date, text, title)
+- businesses (fields: name, address, phone, website, rating)
+- people (fields: name, title, email, phone, linkedin)
 - general_data (when unclear)
+
 
 Respond in JSON:
 {{
@@ -214,16 +214,6 @@ Respond in JSON:
     "confidence": 0.0-1.0,
     "reasoning": "Brief explanation of your inference"
 }}
-
-Examples:
-Request: "Get concert info with dates and venues"
-Response: {{"data_type": "events", "fields": ["artist_name", "venue", "date", "ticket_price", "event_url"], "confidence": 0.95, "reasoning": "User wants event listings - concerts specifically"}}
-
-Request: "Scrape product details"
-Response: {{"data_type": "products", "fields": ["name", "price", "description", "rating", "availability"], "confidence": 0.9, "reasoning": "E-commerce product extraction"}}
-
-Request: "Extract brewery information"
-Response: {{"data_type": "businesses", "fields": ["name", "location", "beer_types", "hours", "rating"], "confidence": 0.85, "reasoning": "Business listings with specialty focus"}}
 """
         
         try:
@@ -232,7 +222,7 @@ Response: {{"data_type": "businesses", "fields": ["name", "location", "beer_type
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a web scraping context analyzer. Always respond with valid JSON. Be precise and thoughtful."
+                        "content": "You are a web scraping context analyzer. Be intelligent. If the user implies a schema (e.g. 'products'), infer the fields!"
                     },
                     {
                         "role": "user",
@@ -261,6 +251,24 @@ Response: {{"data_type": "businesses", "fields": ["name", "location", "beer_type
             
             if 'fields' not in result:
                 result['fields'] = []
+            
+            # FALLBACK: If LLM returned empty fields but we have a known data type, inject defaults
+            # This handles cases where LLM is too conservative
+            if not result['fields'] and result['data_type'] != 'general_data':
+                defaults = {
+                    'products': ['name', 'price', 'description', 'image', 'url', 'rating', 'availability', 'brand'],
+                    'events': ['title', 'date', 'location', 'venue', 'description', 'price', 'url'],
+                    'articles': ['title', 'author', 'date', 'content', 'summary', 'url', 'image'],
+                    'jobs': ['title', 'company', 'location', 'salary', 'description', 'url', 'posted_date'],
+                    'reviews': ['title', 'author', 'rating', 'date', 'text', 'product_name'],
+                    'businesses': ['name', 'address', 'phone', 'website', 'rating', 'hours_of_operation']
+                }
+                if result['data_type'] in defaults:
+                    result['fields'] = defaults[result['data_type']]
+                    if 'reasoning' not in result:
+                        result['reasoning'] = "Inferred from user request"
+                    result['reasoning'] += " (Auto-injected default fields for type)"
+                    logger.info(f" Auto-injected default fields for {result['data_type']}")
             
             if 'confidence' not in result:
                 result['confidence'] = 0.5

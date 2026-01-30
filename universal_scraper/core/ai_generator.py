@@ -5,8 +5,11 @@ Generates BeautifulSoup extraction code using multiple AI providers
 
 import os
 import logging
+import json
+import hashlib
 from typing import Dict, Any, List, Optional
 from urllib.parse import urlparse
+from datetime import datetime
 import litellm
 from litellm import completion
 
@@ -1218,6 +1221,191 @@ Only output the Python code, no explanation."""
             
         except Exception as e:
             logger.error(f" Semantic pattern generation failed: {e}")
+            raise
+    
+    def generate_template_spec(
+        self,
+        cleaned_html: str,
+        fields: List[str],
+        url: Optional[str] = None,
+        extraction_context: Optional[str] = None,
+        structure_analysis: Optional[Dict[str, Any]] = None,
+        model_router: Optional[Any] = None,
+        temperature: float = 0.0,  # Deterministic output
+        training_examples: Optional[Dict[str, List[str]]] = None  # NEW: Training examples from selector library
+    ) -> Dict[str, Any]:
+        """
+        Generate template spec JSON (deterministic)
+        
+        Uses template tier model with temperature=0 for deterministic output.
+        Outputs TemplateSpec JSON format that can be executed deterministically.
+        
+        Args:
+            cleaned_html: Cleaned HTML to analyze
+            fields: Fields to extract
+            url: Source URL for context
+            extraction_context: User's extraction goal
+            structure_analysis: HTML structure analysis to guide generation
+            model_router: ModelRouter instance (uses template tier model)
+            temperature: Temperature for LLM (default: 0.0 for determinism)
+            training_examples: Dict mapping field_name to list of selectors that worked before
+            
+        Returns:
+            Dict with 'template_spec' (TemplateSpec object), 'explanation', 'model_used'
+        """
+        from .model_router import ModelRouter, ModelTier
+        from .template_spec import TemplateSpec, FieldSelector, SelectorType, NormalizerType
+        
+        # Use template tier model if router provided
+        model_name = self.model_name
+        if model_router:
+            model_name = model_router.get_model(ModelTier.TEMPLATE)
+            logger.info(f"   Using template tier model: {model_name}")
+        
+        logger.info(f" Generating template spec for {len(fields)} fields (deterministic, temp={temperature})...")
+        
+        # Prepare HTML sample (first 5000 chars for context)
+        html_sample = cleaned_html[:5000] if len(cleaned_html) > 5000 else cleaned_html
+        
+        # Build prompt with training examples if available
+        training_examples_text = ""
+        if training_examples:
+            training_examples_text = "\n\nTraining Examples (selectors that worked before on this site):\n"
+            for field_name, selectors in training_examples.items():
+                training_examples_text += f"  {field_name}: {', '.join(selectors[:3])}\n"
+            training_examples_text += "\nUse these as hints for generating selectors (prefer similar patterns).\n"
+        
+        # Build prompt
+        prompt = f"""You are an expert web scraping template generator. Generate a deterministic template specification in JSON format.
+
+URL: {url or 'Unknown'}
+Extraction Context: {extraction_context or 'Extract data from page'}
+Fields to Extract: {', '.join(fields)}
+{training_examples_text}
+HTML Sample (first 5000 chars):
+{html_sample}
+
+Structure Analysis:
+{json.dumps(structure_analysis, indent=2) if structure_analysis else 'None'}
+
+Generate a template specification with:
+1. page_fingerprint_features: Structural features you observed (repeating_element, tag_paths, class_patterns)
+2. selectors: For each field, provide:
+   - primary: CSS selector (most reliable)
+   - fallbacks: Alternative selectors if primary fails
+   - selector_type: "css" (default)
+   - normalizer: If needed ("parse_currency" for prices, "parse_number" for numbers, "extract_text" for HTML)
+   - required: true/false (true for essential fields like name/title)
+3. confidence: Your confidence (0.0-1.0)
+4. why_these_selectors: Brief explanation
+
+IMPORTANT:
+- Use CSS selectors (e.g., ".product-title", "h2.name", "[data-price]")
+- Provide fallback selectors for robustness
+- Set temperature=0 for deterministic output
+- Output valid JSON only
+
+Example format:
+{{
+  "page_fingerprint_features": {{
+    "repeating_element": ".product-item",
+    "tag_paths": "div>div>article>h2",
+    "class_patterns": "product-item=20"
+  }},
+  "selectors": [
+    {{
+      "field_name": "name",
+      "primary": "h2.product-title",
+      "fallbacks": ["h2", ".title"],
+      "selector_type": "css",
+      "normalizer": "extract_text",
+      "required": true
+    }},
+    {{
+      "field_name": "price",
+      "primary": ".price",
+      "fallbacks": [".cost", "[data-price]"],
+      "selector_type": "css",
+      "normalizer": "parse_currency",
+      "required": false
+    }}
+  ],
+  "confidence": 0.95,
+  "why_these_selectors": "Found repeating product-item containers with consistent structure"
+}}
+
+Generate the template spec JSON:"""
+        
+        try:
+            import litellm
+            
+            response = litellm.completion(
+                model=model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert web scraping template generator. Always respond with valid JSON only. Be precise with CSS selectors."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=temperature,  # Deterministic
+                response_format={"type": "json_object"},
+                max_tokens=2000
+            )
+            
+            result_text = response.choices[0].message.content.strip()
+            
+            # Parse JSON
+            import json
+            result = json.loads(result_text)
+            
+            # Convert to TemplateSpec object
+            template_id = f"{urlparse(url).netloc.replace('www.', '').replace('.', '_')}_{hashlib.md5('_'.join(sorted(fields)).encode()).hexdigest()[:8]}" if url else f"template_{hashlib.md5('_'.join(sorted(fields)).encode()).hexdigest()[:8]}"
+            
+            # Build selectors
+            selectors = []
+            for sel_data in result.get('selectors', []):
+                selector = FieldSelector(
+                    field_name=sel_data['field_name'],
+                    primary=sel_data['primary'],
+                    fallbacks=sel_data.get('fallbacks', []),
+                    selector_type=SelectorType(sel_data.get('selector_type', 'css')),
+                    normalizer=NormalizerType(sel_data['normalizer']) if sel_data.get('normalizer') else None,
+                    required=sel_data.get('required', False)
+                )
+                selectors.append(selector)
+            
+            template_spec = TemplateSpec(
+                template_id=template_id,
+                page_fingerprint_features=result.get('page_fingerprint_features', {}),
+                selectors=selectors,
+                confidence=result.get('confidence', 0.0),
+                why_these_selectors=result.get('why_these_selectors', ''),
+                version=1,
+                created_at=datetime.now().isoformat()
+            )
+            
+            # Validate
+            is_valid, errors = template_spec.validate()
+            if not is_valid:
+                logger.warning(f"   Template spec validation failed: {', '.join(errors)}")
+            
+            logger.info(f"    Generated template spec: {len(selectors)} selectors (confidence: {template_spec.confidence:.2f})")
+            
+            return {
+                'template_spec': template_spec,
+                'explanation': result.get('why_these_selectors', 'Template spec generated'),
+                'model_used': model_name,
+                'confidence': template_spec.confidence
+            }
+            
+        except Exception as e:
+            logger.error(f"   Template spec generation failed: {e}")
+            import traceback
+            logger.debug(traceback.format_exc())
             raise
     
     def _build_semantic_pattern_prompt(

@@ -18,10 +18,21 @@ import re
 import asyncio
 import hashlib
 import time
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .redis_cache import RedisCache
 import litellm
-from langchain_community.document_transformers import Html2TextTransformer
-from langchain_core.documents import Document
+
+# Optional langchain imports
+try:
+    from langchain_community.document_transformers import Html2TextTransformer
+    from langchain_core.documents import Document
+    LANGCHAIN_AVAILABLE = True
+except ImportError:
+    LANGCHAIN_AVAILABLE = False
+    Html2TextTransformer = None
+    Document = None
 
 # Import hybrid extractor for enhanced extraction
 try:
@@ -29,6 +40,8 @@ try:
     HYBRID_AVAILABLE = True
 except ImportError:
     HYBRID_AVAILABLE = False
+
+from .json_quality_validator import JSONQualityValidator
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +68,8 @@ class DirectLLMExtractor:
         use_html2text: bool = True,  # NEW: Convert HTML to text (ScrapeGraphAI approach)
         use_hybrid_extraction: bool = True,  # NEW: Use hybrid extraction (captures data attrs, forms)
         enable_cache: bool = True,  # NEW: Enable result caching
-        cache_ttl: int = 3600  # NEW: Cache TTL in seconds (1 hour default)
+        cache_ttl: int = 3600,  # NEW: Cache TTL in seconds (1 hour default)
+        redis_cache: Optional[Any] = None  # NEW: Optional Redis cache for multi-tenant SaaS
     ):
         self.api_key = api_key
         self.model_name = model_name
@@ -65,14 +79,16 @@ class DirectLLMExtractor:
         self.use_hybrid_extraction = use_hybrid_extraction and HYBRID_AVAILABLE
         self.enable_cache = enable_cache
         self.cache_ttl = cache_ttl
+        self.redis_cache = redis_cache  # Store Redis cache reference
         
-        # Initialize cache (uses UnifiedPatternCache infrastructure for Apify compatibility)
+        # Initialize cache (prefer Redis if available, otherwise UnifiedPatternCache)
         if self.enable_cache:
             try:
                 from .unified_cache import UnifiedPatternCache
-                # UnifiedPatternCache automatically detects Apify and uses KV Store
-                self.result_cache = UnifiedPatternCache(force_local=False)
-                logger.info(" Direct LLM result cache enabled (works locally and on Apify)")
+                # UnifiedPatternCache automatically detects Redis/Apify/Local
+                # Pass redis_cache if provided (for Cloud Run/multi-tenant SaaS)
+                self.result_cache = UnifiedPatternCache(force_local=False, redis_cache=redis_cache)
+                logger.info(f" Direct LLM result cache enabled ({self.result_cache.env} backend)")
             except Exception as e:
                 logger.warning(f"  Failed to initialize cache: {e}, caching disabled")
                 self.result_cache = None
@@ -87,19 +103,25 @@ class DirectLLMExtractor:
         else:
             self.hybrid_extractor = None
         
-        # Use Langchain's Html2TextTransformer as fallback
-        self.html_transformer = Html2TextTransformer()
+        # Use Langchain's Html2TextTransformer as fallback (if available)
+        if LANGCHAIN_AVAILABLE:
+            self.html_transformer = Html2TextTransformer()
+        else:
+            self.html_transformer = None
         
         # Quality thresholds by mode
         self.quality_thresholds = {
-            'conservative': 0.50,  # Only items with ≥50% fields
-            'balanced': 0.33,      # Default - 1 out of 3 fields (title OR points OR comments)
+            'conservative': 0.30,  # Items with ≥30% fields (more lenient for specific fields)
+            'balanced': 0.20,      # Default - at least 1-2 fields filled (works with any number of fields)
             'aggressive': 0.10     # Maximum extraction - at least 1 field
         }
         
         if quality_mode not in self.quality_thresholds:
             logger.warning(f"Invalid quality_mode '{quality_mode}', using 'balanced'")
             self.quality_mode = "balanced"
+        
+        # Initialize quality validator for garbage filtering
+        self.quality_validator = JSONQualityValidator()
         
         logger.info(f" DirectLLMExtractor initialized (model={model_name}, quality={quality_mode})")
     
@@ -108,6 +130,7 @@ class DirectLLMExtractor:
         html: str,
         fields: List[str],
         context: Optional[str] = None,
+        target: Optional[str] = None,  # NEW: Target hint (e.g., 'products')
         quality_mode: Optional[str] = None,
         url: Optional[str] = None  # NEW: URL for cache key generation
     ) -> List[Dict[str, Any]]:
@@ -138,8 +161,15 @@ class DirectLLMExtractor:
         
         logger.info(f" Direct LLM extraction: {len(fields)} fields from {len(html):,} bytes (quality={quality_mode})")
         
-        # NEW: Check cache first
+        # Check if content is empty or blocked (prevent hallucination)
+        if self._is_content_empty_or_blocked(html):
+            logger.warning("   Content appears empty or blocked - returning empty results to prevent hallucination")
+            return []
+        
+        # NEW: Check cache first (use URL for domain-based key, more reliable than structure hash)
         if self.enable_cache and self.result_cache:
+            # Generate cache key BEFORE processing (use URL for domain-based key)
+            # This is more reliable than structure hash which can vary
             cache_key = self._generate_cache_key(html, fields, url)
             logger.info(f" Checking Direct LLM cache: {cache_key}")
             
@@ -148,7 +178,21 @@ class DirectLLMExtractor:
             if cached_result:
                 logger.info(f" Direct LLM cache hit: {cache_key[:50]}...")
                 
-                # Validate cached result
+                # For domain-based cache, skip validation (domain + fields is reliable enough)
+                # Only validate if using structure-based cache
+                if cache_key.startswith("direct_llm_") and "_" in cache_key:
+                    key_parts = cache_key.replace('direct_llm_', '').split('_')
+                    # If it's domain-based (has domain part with letters), skip strict validation
+                    if len(key_parts) >= 2:
+                        first_part = key_parts[0]
+                        # Check if first part looks like a domain (has letters) vs hash (hex only)
+                        is_domain_based = any(c.isalpha() and c not in 'abcdef' for c in first_part.lower())
+                        
+                        if is_domain_based:
+                            logger.info(" Domain-based cache - using without validation (domain + fields match)")
+                            return cached_result.get('items', [])
+                
+                # For structure-based cache, validate
                 if self._validate_cached_result(cached_result, html, fields):
                     logger.info(" Cached result validated - using cache (no LLM call)")
                     return cached_result.get('items', [])
@@ -162,14 +206,15 @@ class DirectLLMExtractor:
         
         #  OPTIMIZATION 1: Skip chunking for small pages (ScrapeGraphAI approach)
         # If content fits in a single LLM context, process it directly for better quality
-        SMALL_PAGE_THRESHOLD = self.max_tokens_per_chunk * 4  # ~16K chars = 4K tokens
+        # INCREASED threshold to reduce chunking (faster for most pages)
+        SMALL_PAGE_THRESHOLD = self.max_tokens_per_chunk * 8  # ~32K chars = 8K tokens (increased from 4x)
         
         if len(html) <= SMALL_PAGE_THRESHOLD:
             logger.info(f"    Small page ({len(html):,} bytes) - processing without chunking")
             
             #  ITERATIVE REFINEMENT: The key insight is that autoregressive/iterative 
             # generation works for agentic tasks. Let the model see and refine its output.
-            items = await self._extract_with_refinement(html, fields, context, quality_mode, url=url)
+            items = await self._extract_with_refinement(html, fields, context, target, quality_mode, url=url)
             
             # Infer and convert data types
             items = self._infer_and_convert_types(items, fields)
@@ -182,22 +227,23 @@ class DirectLLMExtractor:
             return items
         
         # For larger pages, use chunking with overlap
-        # Chunk HTML with OVERLAP (Parsera-style: 33% overlap helps capture truncated items)
-        OVERLAP_FACTOR = 3  # 33% overlap like Parsera
+        # OPTIMIZED: Reduced overlap for faster processing (20% instead of 33%)
+        OVERLAP_FACTOR = 5  # 20% overlap (reduced from 33% for speed)
         chunks = self._chunk_html_with_overlap(html, self.max_tokens_per_chunk, overlap_factor=OVERLAP_FACTOR)
         logger.info(f"    Large page - split into {len(chunks)} chunks (with {100//OVERLAP_FACTOR}% overlap)")
         
         all_items = []
         previous_items = []  # Track previous chunk's items for context (Parsera-style)
         
+        # OPTIMIZED: Process more chunks in parallel (increased threshold from 4 to 8)
         # For small number of chunks, use sequential extraction with context passing
         # This helps fill in truncated values and ensures continuity
-        if len(chunks) <= 4:
+        if len(chunks) <= 8:
             for i, chunk in enumerate(chunks):
                 logger.info(f"   Processing chunk {i+1}/{len(chunks)} (with context from {len(previous_items)} previous items)...")
                 try:
-                    items = await self._extract_from_chunk(
-                        chunk, fields, context, quality_mode, 
+                    items = await self._extract_chunk(
+                        chunk, fields, context, target, quality_mode, 
                         previous_items=previous_items[-5:] if previous_items else None,  # Pass last 5 items
                         url=url  # Pass URL for field context
                     )
@@ -212,8 +258,8 @@ class DirectLLMExtractor:
             for i in range(min(2, len(chunks))):
                 logger.info(f"   Processing chunk {i+1}/{len(chunks)} (establishing patterns)...")
                 try:
-                    items = await self._extract_from_chunk(
-                        chunks[i], fields, context, quality_mode,
+                    items = await self._extract_chunk(
+                        chunks[i], fields, context, target, quality_mode,
                         previous_items=previous_items[-5:] if previous_items else None,
                         url=url  # Pass URL for field context
                     )
@@ -224,10 +270,10 @@ class DirectLLMExtractor:
                     logger.error(f"       Chunk {i+1}/{len(chunks)} failed: {e}")
             
             # Process remaining chunks in parallel batches
-            # OPTIMIZATION: Larger batch size for better parallelism (ScrapeGraphAI uses 10-20)
+            # OPTIMIZED: Larger batch size for better parallelism (increased to 20 for faster processing)
             # With cleaned HTML, we have fewer chunks, so larger batches are safe
             remaining_chunks = chunks[2:]
-            BATCH_SIZE = 10  # Increased from 4 to 10 for better parallelism
+            BATCH_SIZE = 20  # Increased from 10 to 20 for faster parallel processing
             
             for batch_start in range(0, len(remaining_chunks), BATCH_SIZE):
                 batch_end = min(batch_start + BATCH_SIZE, len(remaining_chunks))
@@ -239,8 +285,8 @@ class DirectLLMExtractor:
                 
                 # Create parallel extraction tasks (pass previous_items for context)
                 tasks = [
-                    self._extract_from_chunk(
-                        chunk, fields, context, quality_mode,
+                    self._extract_chunk(
+                        chunk, fields, context, target, quality_mode,
                         previous_items=previous_items[-3:] if previous_items else None,  # Smaller context for parallel
                         url=url  # Pass URL for field context
                     )
@@ -285,7 +331,7 @@ class DirectLLMExtractor:
                     
                     # Refine by showing model the merged items
                     refined_items = await self._refine_extraction(
-                        html, fields, all_items, missing_fields, context, quality_mode
+                        html, fields, all_items, missing_fields, context, target, quality_mode
                     )
                     
                     if refined_items:
@@ -300,7 +346,16 @@ class DirectLLMExtractor:
         # Infer and convert data types for better quality
         all_items = self._infer_and_convert_types(all_items, fields)
         
-        logger.info(f" Total extracted: {len(all_items)} items")
+        logger.info(f" Total extracted before filtering: {len(all_items)} items")
+        
+        # Apply quality filtering (but be lenient for items with at least 1 field)
+        if all_items:
+            filtered_items = self._filter_quality_items(all_items, fields, quality_mode)
+            if len(filtered_items) < len(all_items):
+                logger.info(f"   Filtered {len(all_items) - len(filtered_items)} items ({len(filtered_items)} kept, mode={quality_mode})")
+            all_items = filtered_items
+        
+        logger.info(f" Total extracted after filtering: {len(all_items)} items")
         
         # Cache the result
         if self.enable_cache and self.result_cache:
@@ -313,6 +368,7 @@ class DirectLLMExtractor:
         html: str,
         fields: List[str],
         context: Optional[str],
+        target: Optional[str],  # NEW: Target hint
         quality_mode: str,
         enhanced_prompt: bool = False,
         url: Optional[str] = None  # NEW: URL for field context
@@ -343,7 +399,7 @@ class DirectLLMExtractor:
         
         # Fallback to html2text
         if extracted_content is None:
-            if self.use_html2text:
+            if self.use_html2text and self.html_transformer is not None and Document is not None:
                 doc = Document(page_content=html)
                 transformed_docs = self.html_transformer.transform_documents([doc])
                 content_for_llm = transformed_docs[0].page_content if transformed_docs else html
@@ -352,7 +408,7 @@ class DirectLLMExtractor:
         
         # Build prompt (optionally enhanced for retry)
         prompt = self._build_extraction_prompt(
-            content_for_llm, fields, context, None, metadata_context,
+            content_for_llm, fields, context, target, None, metadata_context,
             enhanced_prompt=enhanced_prompt,
             url=url  # Pass URL for field context
         )
@@ -397,6 +453,7 @@ class DirectLLMExtractor:
         html: str,
         fields: List[str],
         context: Optional[str],
+        target: Optional[str],  # NEW: Target hint
         quality_mode: str,
         max_iterations: int = 3,
         quality_threshold: float = 0.7,
@@ -415,11 +472,11 @@ class DirectLLMExtractor:
         This mimics next-token prediction where each output informs the next step.
         """
         # Initial extraction
-        items = await self._extract_single_pass(html, fields, context, quality_mode, url=url)
+        items = await self._extract_single_pass(html, fields, context, target, quality_mode, url=url)
         
         if not items:
             logger.info(f"   Initial extraction returned 0 items, trying enhanced prompt...")
-            items = await self._extract_single_pass(html, fields, context, quality_mode, enhanced_prompt=True, url=url)
+            items = await self._extract_single_pass(html, fields, context, target, quality_mode, enhanced_prompt=True, url=url)
             if not items:
                 return []
         
@@ -442,7 +499,7 @@ class DirectLLMExtractor:
             
             # Refine by showing model its own output
             refined_items = await self._refine_extraction(
-                html, fields, items, missing_fields, context, quality_mode
+                html, fields, items, missing_fields, context, target, quality_mode
             )
             
             if refined_items:
@@ -481,6 +538,7 @@ class DirectLLMExtractor:
         previous_items: List[Dict[str, Any]],
         missing_fields: List[str],
         context: Optional[str],
+        target: Optional[str],  # NEW: Target hint
         quality_mode: str
     ) -> List[Dict[str, Any]]:
         """
@@ -498,7 +556,7 @@ class DirectLLMExtractor:
                 extracted_content = None
         
         if extracted_content is None:
-            if self.use_html2text:
+            if self.use_html2text and self.html_transformer is not None and Document is not None:
                 doc = Document(page_content=html)
                 transformed_docs = self.html_transformer.transform_documents([doc])
                 content_for_llm = transformed_docs[0].page_content if transformed_docs else html
@@ -508,7 +566,7 @@ class DirectLLMExtractor:
         
         # Build refinement prompt - show model its own output
         prompt = self._build_refinement_prompt(
-            content_for_llm, fields, previous_items, missing_fields, context, metadata_context
+            content_for_llm, fields, previous_items, missing_fields, context, target, metadata_context
         )
         
         try:
@@ -560,6 +618,7 @@ class DirectLLMExtractor:
         previous_items: List[Dict[str, Any]],
         missing_fields: List[str],
         context: Optional[str],
+        target: Optional[str],  # NEW: Target hint
         metadata_context: str = ""
     ) -> str:
         """Build prompt that shows model its previous output for refinement"""
@@ -611,7 +670,8 @@ class DirectLLMExtractor:
             "",
             f"Extract items with these fields: {', '.join(fields)}",
             "",
-            "Return JSON with 'items' array. Fill ALL fields for each item.",
+            "Return JSON with 'items' array. Fields are OPTIONAL - extract what exists, use null for missing fields.",
+            "Capture ALL items, even if some don't have all fields.",
         ])
         
         return "\n".join(prompt_parts)
@@ -703,6 +763,7 @@ Return complete JSON with 'items' array containing the same number of items."""
         html_chunk: str,
         fields: List[str],
         context: Optional[str],
+        target: Optional[str],  # NEW: Target hint
         quality_mode: str,
         previous_items: Optional[List[Dict[str, Any]]] = None,  # Parsera-style context passing
         url: Optional[str] = None  # NEW: URL for field context
@@ -751,7 +812,7 @@ Return complete JSON with 'items' array containing the same number of items."""
         
         # Fallback to standard html2text if hybrid not available or failed
         if extracted_content is None:
-            if self.use_html2text:
+            if self.use_html2text and self.html_transformer is not None and Document is not None:
                 doc = Document(page_content=html_chunk)
                 transformed_docs = self.html_transformer.transform_documents([doc])
                 content_for_llm = transformed_docs[0].page_content if transformed_docs else html_chunk
@@ -782,7 +843,7 @@ Return complete JSON with 'items' array containing the same number of items."""
                     }
                 ],
                 temperature=0.1,  # Low temperature for consistent extraction
-                max_tokens=4096,  # Increase from default (~2048) to allow longer responses
+                max_tokens=16384,  # Increased to allow extracting many items (50+ items with 7 fields each)
                 response_format={"type": "json_object"}
             )
             
@@ -950,9 +1011,32 @@ Return complete JSON with 'items' array containing the same number of items."""
                             if any(keyword in value_str for keyword in nav_keywords):
                                 has_nav_text = True
                                 break
+                        
+                        # NEW: Check for garbage/obfuscated content
+                        if self.quality_validator.contains_garbage(str(value)):
+                            logger.debug(f"   Rejected item with garbage value in field '{field}'")
+                            has_nav_text = True # Treat as invalid
+                            break
             
             # Calculate fill rate
             fill_rate = filled_count / len(fields) if fields else 0
+            
+            # UNIVERSAL FIX: When there are many fields, be more lenient
+            # If an item has at least 1 meaningful field, it's likely valid
+            # The threshold should scale with number of fields
+            # For many fields (7+), accept items with at least 1-2 fields
+            # For few fields (1-3), require higher percentage
+            # UNIVERSAL FIX: Be lenient with many fields
+            # When there are 5+ fields, accept items with at least 1 field filled
+            # This prevents filtering out valid items when fields are specific
+            if len(fields) >= 5:
+                # Many fields: accept if at least 1 field (very lenient)
+                # This ensures we don't filter out items when fields are specific
+                min_fields_required = 1  # Always accept items with at least 1 field
+                meets_threshold = filled_count >= min_fields_required
+            else:
+                # Few fields: use percentage-based threshold
+                meets_threshold = fill_rate >= min_fill_rate
             
             # Score/Rating validation (for review/rating sites like Metacritic, IMDB, etc.)
             # If a score/rating field exists, validate it's a reasonable value
@@ -977,8 +1061,8 @@ Return complete JSON with 'items' array containing the same number of items."""
                             # This is okay - some items legitimately don't have scores yet
                             pass
             
-            # Quality threshold: based on quality_mode
-            if fill_rate >= min_fill_rate and not has_nav_text and not has_invalid_score:
+            # Quality threshold: accept if meets threshold AND has at least 1 field AND no nav/invalid score
+            if meets_threshold and filled_count >= 1 and not has_nav_text and not has_invalid_score:
                 filtered.append(item)
         
         return filtered
@@ -1058,6 +1142,7 @@ Return complete JSON with 'items' array containing the same number of items."""
         html: str,
         fields: List[str],
         context: Optional[str],
+        target: Optional[str] = None,  # NEW: Target hint
         expected_count: Optional[int] = None,
         metadata_context: str = "",
         previous_items: Optional[List[Dict[str, Any]]] = None,  # Parsera-style context passing
@@ -1101,10 +1186,44 @@ Return complete JSON with 'items' array containing the same number of items."""
         # "next token is always the most important for context on what to actually extract, and it varies per website"
         field_context = self._get_field_context(url, html[:500] if html else "", fields)
         
+        # Detect if this is a ranked/numbered list page (e.g., "worst movies", "top 10", etc.)
+        is_ranked_list = False
+        ranked_list_hint = ""
+        if url:
+            url_lower = url.lower()
+            if any(keyword in url_lower for keyword in ['worst', 'best', 'top', 'ranked', 'list', '/#']):
+                is_ranked_list = True
+                ranked_list_hint = "\n\nCRITICAL: This page contains a RANKED or NUMBERED LIST. Extract ALL numbered items (#15, #14, #13, etc. or #1, #2, #3, etc.). Do NOT extract the page header or title - only extract the individual list items."
+        
+        # Also check HTML for numbered list patterns
+        if not is_ranked_list and html:
+            html_sample = html[:2000].lower()
+            if any(pattern in html_sample for pattern in ['#15', '#14', '#13', '#12', '#11', '#10', '#9', '#8', '#7', '#6', '#5', '#4', '#3', '#2', '#1']):
+                is_ranked_list = True
+                ranked_list_hint = "\n\nCRITICAL: This page contains a NUMBERED LIST (items marked #15, #14, #13, etc.). Extract ALL numbered list items. Do NOT extract the page header - only extract the individual numbered items."
+        
         if context:
             user_question = f"{context}\nExtract these fields: {field_list}"
+        elif target:
+            user_question = f"Extract ALL {target} from this content with these fields: {field_list}"
         else:
-            user_question = f"Extract all items from this content with these fields: {field_list}"
+            user_question = f"Extract ALL items from this content with these fields: {field_list}"
+        
+        # CRITICAL: Emphasize extracting ALL items, even if fields are missing
+        # Count how many items are visible (for Product Hunt, Reddit, etc. this helps the LLM)
+        user_question += "\n\nCRITICAL EXTRACTION RULES:"
+        if target:
+            user_question += f"\n1. ONLY extract {target}. Ignore other types of information (nav, ads, sidebars, related links)."
+        else:
+            user_question += "\n1. Extract EVERY repeating item visible in the content"
+        user_question += "\n2. Include an item if it has AT LEAST ONE field with a value"
+        user_question += "\n3. Set missing fields to null (do NOT skip items)"
+        user_question += "\n4. Look for repeating patterns (cards, articles, list items) - extract ALL of them"
+        user_question += "\n5. Do NOT stop early - continue extracting until you've captured every item"
+        
+        # Add ranked list hint if detected
+        if is_ranked_list:
+            user_question += ranked_list_hint
         
         # Add field context to user question
         if field_context:
@@ -1118,7 +1237,20 @@ Return complete JSON with 'items' array containing the same number of items."""
             f"You are a website scraper and you have just scraped the following {content_type_desc}.",
             "You are now asked to answer a user question about the content you have scraped.",
             "",
-            "If you don't find a field value, put null.",
+            "CRITICAL: Only extract data that ACTUALLY EXISTS in the content below.",
+            "DO NOT generate, invent, or create fake data. If content is empty or blocked, return empty items array [].",
+            "",
+            "FIELD EXTRACTION RULES:",
+            "- Fields are OPTIONAL - extract what exists, set to null if not found",
+            "- Capture ALL items, even if some don't have all fields",
+            "- If you don't find a field value, put null (do not make up a value)",
+            "- The goal is to capture everything and produce patterns for what exists",
+            "- CRITICAL: Include an item if it has AT LEAST ONE field with a value, even if other fields are null",
+            "- Do NOT skip items just because they're missing some fields - extract what you can find",
+            "- Extract ALL repeating items visible in the content, even if some fields are missing",
+            "- IMPORTANT: Count how many repeating items/patterns you see and extract ALL of them",
+            "- Do NOT stop after extracting a few items - continue until you've captured every visible item",
+            "",
             "Make sure the output format is JSON and does not contain errors."
         ]
         
@@ -1131,7 +1263,9 @@ Return complete JSON with 'items' array containing the same number of items."""
                 "- For each field, search multiple locations (headings, text, metadata)",
                 "- If a value seems partial, look for the complete value nearby",
                 "- Extract ALL items visible in the content, even if some fields are missing",
-                "- Prefer specific values over generic ones"
+                "- Prefer specific values over generic ones",
+                "- If you see numbered items (#1, #2, #3, etc. or #15, #14, #13, etc.), extract EACH numbered item as a separate entry",
+                "- Do NOT extract page headers, titles, or navigation - only extract the actual list items"
             ])
         
         #  PARSERA-STYLE: Add previous items context if available
@@ -1193,13 +1327,27 @@ Return complete JSON with 'items' array containing the same number of items."""
         """
         base_prompt = """You are a professional web scraper. Extract structured data from website content accurately and completely.
 
+CRITICAL RULES:
+1. ONLY extract data that ACTUALLY EXISTS in the provided content
+2. DO NOT generate, invent, or make up any data
+3. DO NOT create fake examples or placeholder data
+4. If content is missing or empty, return an empty items array []
+5. If a field value is not found in the content, use null (not a made-up value)
+
 IMPORTANT: Extract ALL items from the content. Do not stop early or skip items.
+
+For numbered/ranked lists (e.g., "#15: Movie Title", "#14: Another Movie"):
+- Extract EACH numbered item as a separate entry
+- Do NOT extract the page header or title as an item
+- Look for patterns like "#15", "#14", "#13", etc. or "#1", "#2", "#3", etc.
+- Each numbered section should become one item in the results
 
 For numeric fields (like prices, ratings, points, comments):
 - Return ONLY the number without units or symbols
 - Example: "96 points" → 96, "$29.99" → 29.99, "4.5 stars" → 4.5
+- If the number is not in the content, use null (do not invent a number)
 
-If a field value is not found, use null.
+If the content appears empty, blocked, or shows an error message, return an empty items array [].
 """
         
         if enhanced:
@@ -1207,7 +1355,9 @@ If a field value is not found, use null.
             return base_prompt + """
 ENHANCED EXTRACTION MODE:
 - Analyze the content structure before extracting
-- Look for repeating patterns (product cards, list items, table rows)
+- Look for repeating patterns (product cards, list items, table rows, numbered sections)
+- For numbered lists, extract EACH numbered item (#15, #14, #13, etc.) as a separate entry
+- Do NOT extract page headers, titles, or navigation menus as items
 - Check multiple sources for each field: visible text, data attributes, meta tags
 - If a value appears truncated, look for the complete version
 - Extract partial data rather than skipping items entirely
@@ -1215,6 +1365,69 @@ ENHANCED EXTRACTION MODE:
 """
         
         return base_prompt
+    
+    def _is_content_empty_or_blocked(self, html: str) -> bool:
+        """
+        Check if HTML content is empty, blocked, or shows an error message.
+        This prevents the LLM from hallucinating data when content is missing.
+        """
+        if not html or len(html.strip()) < 100:
+            return True
+        
+        html_lower = html.lower()
+        
+        # Check for common blocking/error messages
+        blocked_indicators = [
+            'access denied',
+            'blocked',
+            'forbidden',
+            '403 forbidden',
+            '404 not found',
+            'page not found',
+            'rate limit',
+            'too many requests',
+            'please enable javascript',
+            'javascript required',
+            'cloudflare',
+            'checking your browser',
+            'ddos protection',
+            'captcha',
+            # More specific robot/bot indicators (not just "robot" which appears in meta tags)
+            'robot detected',
+            'bot detected',
+            'you are a robot',
+            'we detected a bot',
+            'unable to connect',
+            'connection refused',
+            'timeout',
+            'error loading',
+            'no content available',
+            'empty response',
+            'this page is not available',
+            'content not available',
+            'sign in to continue',
+            'log in to continue',
+            'login required',
+            'authentication required'
+        ]
+        
+        # Check if content is mostly empty or contains blocking messages
+        # Use word boundaries to avoid false positives (e.g., "robots" meta tag is OK)
+        # Note: We don't check for just "robot" as it appears in normal HTML meta tags
+        # We only check for specific blocking phrases like "robot detected", "bot detected", etc.
+        for indicator in blocked_indicators:
+            # Check for exact phrase matches
+            if indicator in html_lower:
+                logger.warning(f"   Detected blocking indicator: {indicator}")
+                return True
+        
+        # Check if content is too short (likely empty or blocked)
+        # Reddit and similar sites should have substantial content
+        text_content = html_lower.replace('<', ' <').split()
+        if len(text_content) < 50:  # Very few words = likely empty
+            return True
+        
+        return False
     
     def _get_field_context(self, url: Optional[str], html_sample: str, fields: List[str]) -> str:
         """
@@ -1359,43 +1572,56 @@ ENHANCED EXTRACTION MODE:
         """
         Generate cache key for Direct LLM results
         
-        Uses structure hash + fields to cache by page structure, not content.
-        This allows reuse across different pages with same structure.
+        Uses domain + fields for reliable caching (domain-based is more stable than structure hash).
+        This allows reuse across different pages on same domain with same fields.
         
         Args:
-            html: HTML content
+            html: HTML content (used for structure hash if domain unavailable)
             fields: List of fields to extract
-            url: Optional URL (for logging/debugging)
+            url: Optional URL (preferred for domain extraction)
             
         Returns:
             Cache key string
         """
-        # Generate structure hash (ignores content, focuses on structure)
+        # Hash of fields (sorted for consistency)
+        fields_str = ','.join(sorted(fields))
+        fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
+        
+        # Extract domain from URL for domain-based caching (MOST RELIABLE)
+        domain = None
+        if url:
+            try:
+                from urllib.parse import urlparse
+                parsed_url = urlparse(url)
+                domain = parsed_url.netloc.replace('www.', '')  # Normalize domain
+            except Exception:
+                pass
+        
+        # PRIORITY 1: Use domain-based key (allows reuse across pages on same domain)
+        # This is more reliable than structure hash which can vary
+        if domain:
+            # Normalize domain for cache key (replace dots with underscores for Redis compatibility)
+            domain_normalized = domain.replace('.', '_')
+            cache_key = f"direct_llm_{domain_normalized}_{fields_hash}"
+            logger.debug(f" Generated domain-based cache key: {cache_key}")
+            return cache_key
+        
+        # PRIORITY 2: Use structure hash if domain unavailable
         try:
             from .structural_hash import StructuralHashGenerator
             hash_gen = StructuralHashGenerator()
             hash_result = hash_gen.generate_hash(html)
             structure_hash = hash_result['hash'][:16]  # Use first 16 chars
+            cache_key = f"direct_llm_{structure_hash}_{fields_hash}"
+            logger.debug(f" Generated structure-based cache key: {cache_key}")
+            return cache_key
         except Exception as e:
             logger.warning(f"  Failed to generate structure hash: {e}, using content hash")
             # Fallback: hash of HTML length + fields
-            structure_hash = hashlib.md5(f"{len(html)}:{','.join(sorted(fields))}".encode()).hexdigest()[:16]
-        
-        # Hash of fields (sorted for consistency)
-        fields_str = ','.join(sorted(fields))
-        fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
-        
-        # Optional URL hash (for URL-specific caching)
-        # NOTE: Apify KV Store keys must only contain: a-zA-Z0-9!-_.'()
-        # So we use underscores instead of colons
-        url_hash = ""
-        if url:
-            url_hash = hashlib.md5(url.encode()).hexdigest()[:8]
-            cache_key = f"direct_llm_{url_hash}_{structure_hash}_{fields_hash}"
-        else:
+            structure_hash = hashlib.md5(f"{len(html)}:{fields_str}".encode()).hexdigest()[:16]
             cache_key = f"direct_llm_{structure_hash}_{fields_hash}"
-        
-        return cache_key
+            logger.debug(f" Generated fallback cache key: {cache_key}")
+            return cache_key
     
     def _validate_cached_result(self, cached_result: Dict, html: str, fields: List[str]) -> bool:
         """
@@ -1485,13 +1711,24 @@ ENHANCED EXTRACTION MODE:
             except Exception:
                 pass
             
+            # Extract domain from URL for domain-based caching
+            domain = None
+            if url:
+                try:
+                    from urllib.parse import urlparse
+                    parsed_url = urlparse(url)
+                    domain = parsed_url.netloc
+                except Exception:
+                    pass
+            
             # Prepare cache entry
             cache_entry = {
                 'items': items,
                 'structure_hash': structure_hash,
+                'domain': domain,  # Add domain for cache lookup
+                'url': url,
                 'fields': fields,
                 'timestamp': time.time(),
-                'url': url,
                 'item_count': len(items)
             }
             

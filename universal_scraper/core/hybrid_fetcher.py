@@ -8,9 +8,12 @@ import time
 from typing import Optional, Dict, Any
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+import re
 
 from .html_fetcher import HTMLFetcher
+from .html_fetcher import HTMLFetcher
 from .api_cache import APICache
+from .json_detector import JSONDetector
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +91,8 @@ class HybridFetcher:
         force_mode: Optional[str] = None,  # 'static', 'browser', or None for auto
         use_camoufox: bool = True,  # NEW: Use Camoufox instead of Playwright (better anti-detection)
         web_unblocker_api_key: Optional[str] = None,  # NEW: Bright Data Web Unblocker API key
-        web_unblocker_zone: str = "web_unlocker1"  # NEW: Web Unblocker zone name
+        web_unblocker_zone: str = "web_unlocker1",  # NEW: Web Unblocker zone name
+        web_unblocker_customer_id: Optional[str] = None  # NEW: Web Unblocker customer ID
     ):
         """
         Initialize Hybrid Fetcher
@@ -114,6 +118,7 @@ class HybridFetcher:
         self.use_camoufox = use_camoufox  # NEW: Store Camoufox preference
         self.web_unblocker_api_key = web_unblocker_api_key  # NEW: Web Unblocker API key
         self.web_unblocker_zone = web_unblocker_zone  # NEW: Web Unblocker zone
+        self.web_unblocker_customer_id = web_unblocker_customer_id  # NEW: Web Unblocker customer ID
         
         # Initialize Web Unblocker fetcher if API key provided
         self.web_unblocker_fetcher = None
@@ -171,23 +176,25 @@ class HybridFetcher:
     async def fetch(
         self,
         url: str,
-        fields: Optional[list] = None,
-        wait_for_selector: Optional[str] = None,
+        mode: str = "hybrid",
         scroll_to_bottom: bool = False,
-        click_load_more: Optional[str] = None
+        click_load_more: Optional[str] = None,
+        wait_for_selector: Optional[str] = None,
+        browser_config: Optional[Dict[str, Any]] = None  # NEW: Allow overriding browser config
     ) -> Dict[str, Any]:
         """
-        Fetch URL with intelligent method selection
+        Fetch content from URL using hybrid strategy
         
         Args:
             url: Target URL
-            fields: Fields to extract (for API cache matching)
-            wait_for_selector: Selector to wait for (browser mode)
-            scroll_to_bottom: Scroll to trigger lazy loading
-            click_load_more: Selector for "Load More" button
+            mode: Fetch mode ('hybrid', 'static', 'browser')
+            scroll_to_bottom: Scroll to bottom for infinite scroll
+            click_load_more: Selector for load more button
+            wait_for_selector: Wait for specific element
+            browser_config: Optional browser configuration override (from strategy)
             
         Returns:
-            Dict with 'html', 'url', 'fetch_method', 'apis' keys
+            Dict with 'html', 'status', 'url', 'source', 'captured_json'
         """
         parsed = urlparse(url)
         domain = parsed.netloc
@@ -199,19 +206,85 @@ class HybridFetcher:
         # Force browser mode for specific domains known to block static requests
         # Home Depot returns 404/403 for static requests even with Web Unblocker
         effective_force_mode = self.force_mode
-        if "homedepot.com" in url and effective_force_mode != 'browser':
-            logger.info("🎯 Home Depot detected: Forcing browser mode for 100% success rate")
-            effective_force_mode = 'browser'
+        if "homedepot.com" in url:
+             logger.info("🎯 Home Depot detected: Will attempt Universal Fast Path (JSON-First) before Browser")
+             # We no longer force 'browser' mode immediately. We try the Fast Path first.
+             # If Fast Path fails, the standard fallback logic will handle it.
             
         logger.info(f"🔍 Detection mode: {effective_force_mode or 'auto'}")
         
         # Check success cache
-        if not effective_force_mode and domain in self._success_cache:
+        # CRITICAL: For Home Depot and other sensitive sites, we ALWAYS use browser mode 
+        # for reliability even if a static fetch was previously "successful"
+        is_sensitive_site = "homedepot.com" in url or "producthunt.com" in url
+        
+        if not effective_force_mode and domain in self._success_cache and not is_sensitive_site:
             cached = self._success_cache[domain]
             # Cache valid for 1 hour
             if time.time() - cached['timestamp'] < 3600:
                 effective_force_mode = cached['method']
                 self._log_unblocker(f"Using cached success method: {effective_force_mode}")
+
+        # STEP 0: UNIVERSAL FAST PATH (JSON-First)
+        # Attempt to extract data from initial static response (or Web Unblocker)
+        # This bypasses the slow browser render if high-quality JSON is available.
+        
+        # Only try if we're not strictly forced to browser (and haven't already tried static)
+        fast_path_result = None
+        if effective_force_mode != 'browser':
+            self._log_unblocker("🚀 Starting Universal Fast Path (JSON-First)...")
+            
+            # 1. Fetch initial HTML (Static or Web Unblocker)
+            initial_res = None
+            if self.web_unblocker_fetcher:
+                try:
+                    self._log_unblocker("   Using Web Unblocker for Fast Path...")
+                    initial_res = await self.web_unblocker_fetcher.fetch_async(url)
+                    initial_res['fetch_method'] = 'web_unblocker_fast_path'
+                except Exception as e:
+                    self._log_unblocker(f"   ⚠️ Web Unblocker Fast Path failed: {e}")
+            
+            if not initial_res:
+                # Fallback to standard static fetch
+                # CRITICAL: Skip naive static fetch for domains known to hang/tarpit
+                if "homedepot.com" in url:
+                    self._log_unblocker("   ⚠️ Skipping naive static fetch for Home Depot (avoids timeout hang)")
+                else:
+                    self._log_unblocker("   Using Static Fetcher for Fast Path...")
+                    initial_res = self._fetch_with_static(url)
+                    initial_res['fetch_method'] = 'static_fast_path'
+                
+            # 2. Analyze for High-Quality JSON
+            html_content = initial_res.get('html', '') if initial_res else ''
+            if html_content and len(html_content) > 1000:
+                detector = JSONDetector()
+                # We specifically look for "High Quality" data (products, items, hydration state)
+                detection_result = detector.detect_and_extract(html_content, url)
+                
+                if detection_result['json_found']:
+                    # Check if the found data is actually useful (contains items/products)
+                    # The detector now includes detailed scoring/analysis logs
+                    self._log_unblocker(f"   ✅ JSON Detected! Sources: {detection_result['sources']}")
+                    
+                    # Store these results to return immediately
+                    fast_path_result = initial_res
+                    fast_path_result['captured_json'] = detection_result['data'] # Use the extracted data blobs
+                    fast_path_result['json_recommended'] = True
+                    fast_path_result['extraction_mode'] = 'json' # Hint to scraper
+                    
+                    # Update success cache to prefer this method
+                    self._success_cache[domain] = {'method': 'static', 'timestamp': time.time()}
+                    self._log_unblocker("   🚀 Fast Path Successful! Skipping browser.")
+                    
+                    # Log unblocker entries
+                    fast_path_result['unblocker_log'] = self.unblocker_log
+                    return fast_path_result
+                else:
+                    self._log_unblocker("   ⚠️ No significant JSON found in Fast Path.")
+            else:
+                 self._log_unblocker("   ⚠️ Fast Path response empty or blocked.")
+                 
+            self._log_unblocker("   ⬇️ Proceeding to Standard Strategies...")
 
         # STEP 1: Smart Strategy Orchestration
         # We try different strategies in order of increasing cost/complexity
@@ -256,24 +329,31 @@ class HybridFetcher:
                         wait_for_selector=wait_for_selector,
                         scroll_to_bottom=scroll_to_bottom,
                         click_load_more=click_load_more,
-                        allow_fallback=False
+                        allow_fallback=False,
+                        browser_config=browser_config, # Pass browser_config from fetch to _fetch_with_browser
+                        use_web_unblocker=strategy.get('use_unblocker', False)
                     )
                 
                 # Incorporate internal logs if available
                 if 'internal_log' in res:
                     for entry in res['internal_log']:
-                        self._log_unblocker(f"[{strategy['name']}] {entry['message']}")
+                        # Handle both dictionary and string log entries
+                        msg = entry['message'] if isinstance(entry, dict) else str(entry)
+                        self._log_unblocker(f"[{strategy['name']}] {msg}")
                 
                 # Validate result
                 html = res.get('html', '')
-                if html and len(html) > 5000:
+                if html and len(html) > 10000: # Increased from 5000 to 10000 for shells
                     html_lower = html.lower()
                     # Check for common block patterns
                     is_blocked = (
                         'verify you are human' in html_lower or 
                         'just a moment' in html_lower or
                         'access denied' in html_lower or
-                        'enable javascript' in html_lower and len(html) < 10000
+                        ('blocked' in html_lower and len(html) < 20000) or
+                        'perimeterx' in html_lower or
+                        'px-captcha' in html_lower or
+                        'enable javascript' in html_lower and len(html) < 20000
                     )
                     
                     if not is_blocked:
@@ -456,12 +536,15 @@ class HybridFetcher:
         wait_for_selector: Optional[str] = None,
         scroll_to_bottom: bool = False,
         click_load_more: Optional[str] = None,
-        allow_fallback: bool = True  # NEW: Control whether to fall back to static HTML
+        allow_fallback: bool = True,  # NEW: Control whether to fall back to static HTML
+        browser_config: Optional[Dict[str, Any]] = None,  # NEW: Browser config from cached strategy
+        use_web_unblocker: bool = False  # NEW: Force Web Unblocker
     ) -> Dict[str, Any]:
         """Fetch with browser - with optional fallback to static HTML if browser fails
         
         Args:
             allow_fallback: If False, don't fall back to static HTML (for force_mode='browser')
+            browser_config: Optional browser configuration from cached strategy
         """
         # Lazy load browser fetcher
         if self.browser_fetcher is None:
@@ -494,7 +577,8 @@ class HybridFetcher:
                         proxy_manager=self.proxy_manager,  # NEW: Pass ProxyManager for rotation
                         timeout=self.browser_timeout,
                         web_unblocker_api_key=self.web_unblocker_api_key,
-                        web_unblocker_zone=self.web_unblocker_zone
+                        web_unblocker_zone=self.web_unblocker_zone,
+                        web_unblocker_customer_id=self.web_unblocker_customer_id
                     )
                 else:
                     # Playwright browser fetcher (original) - doesn't support proxy_manager yet
@@ -504,7 +588,8 @@ class HybridFetcher:
                         timeout=self.browser_timeout,
                         capture_api_requests=True,
                         web_unblocker_api_key=self.web_unblocker_api_key,
-                        web_unblocker_zone=self.web_unblocker_zone
+                        web_unblocker_zone=self.web_unblocker_zone,
+                        web_unblocker_customer_id=self.web_unblocker_customer_id
                     )
                 
                 self._log_unblocker(f"Launching browser ({'Camoufox' if self.use_camoufox else 'Playwright'})...")
@@ -535,7 +620,9 @@ class HybridFetcher:
                 url,
                 wait_for_selector=wait_for_selector,
                 scroll_to_bottom=scroll_to_bottom,
-                click_load_more=click_load_more
+                click_load_more=click_load_more,
+                browser_config=browser_config,
+                use_web_unblocker=use_web_unblocker
             )
             result['fetch_method'] = 'browser'
         except Exception as e:
