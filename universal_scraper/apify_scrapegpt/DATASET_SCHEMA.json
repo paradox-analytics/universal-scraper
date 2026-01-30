@@ -1,0 +1,116 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Product or item title"
+      },
+      "name": {
+        "type": "string",
+        "description": "Product or item name"
+      },
+      "price": {
+        "type": "string",
+        "description": "Price"
+      },
+      "rating": {
+        "type": "string",
+        "description": "Rating or score"
+      },
+      "review_count": {
+        "type": "string",
+        "description": "Number of reviews"
+      },
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "description": "Product or item URL"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description"
+      },
+      "color": {
+        "type": "string",
+        "description": "Color or variant"
+      },
+      "_url": {
+        "type": "string",
+        "format": "uri",
+        "description": "Source URL"
+      },
+      "_metadata": {
+        "type": "object",
+        "description": "Metadata (extraction info)"
+      }
+    }
+  },
+  "views": {
+    "overview": {
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "title",
+          "name",
+          "price",
+          "rating",
+          "review_count",
+          "url",
+          "description",
+          "color",
+          "_url",
+          "_metadata"
+        ]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "title": {
+            "label": "Title",
+            "format": "text"
+          },
+          "name": {
+            "label": "Name",
+            "format": "text"
+          },
+          "price": {
+            "label": "Price",
+            "format": "text"
+          },
+          "rating": {
+            "label": "Rating",
+            "format": "text"
+          },
+          "review_count": {
+            "label": "Review Count",
+            "format": "text"
+          },
+          "url": {
+            "label": "URL",
+            "format": "link"
+          },
+          "description": {
+            "label": "Description",
+            "format": "text"
+          },
+          "color": {
+            "label": "Color",
+            "format": "text"
+          },
+          "_url": {
+            "label": "Source URL",
+            "format": "link"
+          },
+          "_metadata": {
+            "label": "Metadata",
+            "format": "object"
+          }
+        }
+      }
+    }
+  }
+}
+

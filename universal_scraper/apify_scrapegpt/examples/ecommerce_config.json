@@ -1,0 +1,57 @@
+{
+  "mode": "full_pipeline",
+  "startUrls": [
+    {"url": "https://shop.example.com/electronics"}
+  ],
+  "crawlConfig": {
+    "maxDepth": 2,
+    "maxPages": 500,
+    "followPatterns": ["/product/", "/category/electronics"],
+    "ignorePatterns": ["/cart", "/checkout", "/account", "/wishlist"],
+    "handlePagination": true,
+    "discoverApis": true,
+    "respectRobotsTxt": true
+  },
+  "scrapeConfig": {
+    "fields": [
+      "name",
+      "brand",
+      "price",
+      "originalPrice",
+      "discount",
+      "rating",
+      "reviewCount",
+      "stock",
+      "sku",
+      "description",
+      "specifications",
+      "imageUrl"
+    ],
+    "fetchMode": "hybrid",
+    "schema": {
+      "name": "electronics_products",
+      "version": "1.0",
+      "fields": [
+        {"name": "name", "type": "string", "required": true},
+        {"name": "price", "type": "number", "required": true},
+        {"name": "brand", "type": "string", "required": false},
+        {"name": "rating", "type": "number", "required": false},
+        {"name": "stock", "type": "string", "required": false}
+      ]
+    },
+    "strictSchema": false
+  },
+  "proxyConfiguration": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"],
+    "apifyProxyCountry": "US"
+  }
+}
+
+
+
+
+
+
+
+
