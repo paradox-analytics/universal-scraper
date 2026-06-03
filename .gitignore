@@ -58,3 +58,6 @@ debug_output/
 # Firestore backup/temp
 firestore.rules.backup
 firestore.rules.temp
+
+# Large test result files (avoid bloating repo)
+chewy_web_unblocker_proxy_results.json
