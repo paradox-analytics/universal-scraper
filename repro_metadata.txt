@@ -1,0 +1,26 @@
+DATA ATTRIBUTES:
+hj_allow: true
+grid_span: 1
+style: list
+state: active
+
+META TAGS:
+description: Vibe Coding Tools bundle AI-first editors, app builders, proxies, and Python/web stacks to speed building, scraping, and deploying—great for devs, makers, and teams.
+og:title: The best vibe coding tools in 2025 | Product Hunt
+og:description: Vibe Coding Tools bundle AI-first editors, app builders, proxies, and Python/web stacks to speed building, scraping, and deploying—great for devs, makers, and teams.
+twitter:title: The best vibe coding tools in 2025 | Product Hunt
+twitter:description: Vibe Coding Tools bundle AI-first editors, app builders, proxies, and Python/web stacks to speed building, scraping, and deploying—great for devs, makers, and teams.
+title: The best vibe coding tools in 2025 | Product Hunt
+
+LABELED NUMBERS (votes, answers, views, etc.):
+star: 21, 66, 45, 1, 44, 13, 64, 35, 40.7, 4.5
+: 21, 66, 45, 1, 44, 13, 64, 35, 40.7, 4.5
+review: 17, 66, 45, 6, 667, 27, 42, 39, 58, 9
+comment: 27, 64, 15, 8
+view: 228, 1.4K, 1.7K, 241
+
+SCRIPT DATA (JavaScript variables):
+analytics: window.analytics||[]
+analytics: window.analytics||[]
+analytics: window.analytics||[]
+onreadystatechange: e,c())}}}})()

@@ -1,0 +1,1371 @@
+2025-11-24 00:11:10,955 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-24 00:11:10,965 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:11:10,965 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:11:10,965 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:11:10,965 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:11:10,965 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:11:10,965 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:11:10,968 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:11:10,968 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:11:10,968 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:11:10,968 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:11:10,968 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:11:10,968 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:11:10,968 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:11:10,968 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:11:10,968 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:11:10,969 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://books.toscrape.com/
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO - 📋 Fields: title, price, rating
+2025-11-24 00:11:10,969 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:11:10,969 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://books.toscrape.com/
+2025-11-24 00:11:10,969 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:11:10,969 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:11:10,969 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: books.toscrape.com
+2025-11-24 00:11:11,372 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-24 00:11:11,372 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://books.toscrape.com/
+2025-11-24 00:11:11,428 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (51294 bytes)
+2025-11-24 00:11:11,454 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Found 2161 chars of structured content, static HTML sufficient
+2025-11-24 00:11:11,454 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-24 00:11:11,454 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:11:11,477 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:11:11,478 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://books.toscrape.com/
+/Users/jevon_williams/Library/Python/3.9/lib/python/site-packages/soupsieve/css_parser.py:876: FutureWarning: The pseudo class ':contains' is deprecated, ':-soup-contains' should be used moving forward.
+  warnings.warn(  # noqa: B028
+2025-11-24 00:11:11,508 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:11:11,508 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:11:11,512 - universal_scraper.core.pagination_detector - INFO - ✅ Final max_page from all strategies: 50
+2025-11-24 00:11:11,512 - universal_scraper.core.pagination_detector - INFO - ✅ Detected link-based pagination
+2025-11-24 00:11:11,512 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: link_based (confidence: medium)
+2025-11-24 00:11:11,512 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found "Next" link in pagination
+2025-11-24 00:11:11,512 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:11:11,530 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:11:11,530 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:11:11,530 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:11:11,530 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (51,294 bytes)
+2025-11-24 00:11:11,606 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 19,462 bytes (62.1% reduction)
+2025-11-24 00:11:11,606 - universal_scraper.core.scraper - INFO -    HTML reduced: 62.1%
+2025-11-24 00:11:11,606 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 19,462 bytes (quality=balanced)
+2025-11-24 00:11:11,606 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 8 chunks
+2025-11-24 00:11:11,606 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/8...
+[92m00:11:11 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:11,626 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:16,465 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:11:16,465 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/8...
+[92m00:11:16 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:16,483 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:33,431 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 24 items
+2025-11-24 00:11:33,431 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/8...
+[92m00:11:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:33,453 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:50,349 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 22 items
+2025-11-24 00:11:50,349 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/8...
+[92m00:11:50 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:11:50,369 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:06,013 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 21 items
+2025-11-24 00:12:06,013 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 5/8...
+[92m00:12:06 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:06,032 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:18,811 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 18 items
+2025-11-24 00:12:18,812 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 6/8...
+[92m00:12:18 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:18,832 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:33,682 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 18 items
+2025-11-24 00:12:33,682 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 7/8...
+[92m00:12:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:33,701 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:46,896 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 21 items
+2025-11-24 00:12:46,896 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 8/8...
+[92m00:12:46 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:46,909 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:54,182 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:12:54,183 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 20 items
+2025-11-24 00:12:54,183 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 20 items
+2025-11-24 00:12:54,183 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 20 items
+2025-11-24 00:12:54,183 - universal_scraper.core.scraper - INFO -    Quality: 66.7% field completeness
+2025-11-24 00:12:54,183 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (66.7% >= 40.0%)
+2025-11-24 00:12:54,183 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:12:54,183 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 20 items in 103.21s
+2025-11-24 00:12:54,186 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:12:54,186 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-24 00:12:54,186 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-24 00:12:56,206 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-24 00:12:56,218 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:12:56,219 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:12:56,219 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:12:56,219 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:12:56,219 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:12:56,219 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:12:56,222 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:12:56,223 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:12:56,223 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:12:56,223 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:12:56,223 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:12:56,223 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:12:56,223 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:12:56,223 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:12:56,223 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:12:56,224 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://quotes.toscrape.com/
+2025-11-24 00:12:56,224 - universal_scraper.core.scraper - INFO - 📋 Fields: text, author, tags
+2025-11-24 00:12:56,225 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:12:56,225 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://quotes.toscrape.com/
+2025-11-24 00:12:56,225 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:12:56,225 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:12:56,225 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: quotes.toscrape.com
+2025-11-24 00:12:56,490 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-24 00:12:56,491 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://quotes.toscrape.com/
+2025-11-24 00:12:56,545 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (11021 bytes)
+2025-11-24 00:12:56,555 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML appears sufficient (no JS indicators, good content)
+2025-11-24 00:12:56,555 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-24 00:12:56,555 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:12:56,562 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:12:56,562 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://quotes.toscrape.com/
+2025-11-24 00:12:56,570 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:12:56,571 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:12:56,572 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-24 00:12:56,572 - universal_scraper.core.pagination_detector - INFO - ✅ Detected path-based pagination
+2025-11-24 00:12:56,572 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: path_based (confidence: high)
+2025-11-24 00:12:56,572 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found path-based pagination pattern
+2025-11-24 00:12:56,572 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:12:56,579 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:12:56,579 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:12:56,579 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:12:56,579 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (11,021 bytes)
+2025-11-24 00:12:56,588 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 7,708 bytes (30.1% reduction)
+2025-11-24 00:12:56,588 - universal_scraper.core.scraper - INFO -    HTML reduced: 30.1%
+2025-11-24 00:12:56,588 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 7,708 bytes (quality=balanced)
+2025-11-24 00:12:56,588 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 1 chunks
+2025-11-24 00:12:56,588 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/1...
+[92m00:12:56 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:12:56,595 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:04,622 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:13:04,623 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 10 items
+2025-11-24 00:13:04,623 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 10 items
+2025-11-24 00:13:04,623 - universal_scraper.core.scraper - INFO -    Quality: 100.0% field completeness
+2025-11-24 00:13:04,623 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (100.0% >= 40.0%)
+2025-11-24 00:13:04,623 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:13:04,623 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 10 items in 8.40s
+2025-11-24 00:13:04,624 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:13:04,624 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-24 00:13:04,624 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-24 00:13:06,636 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-24 00:13:06,651 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:13:06,651 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:13:06,651 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:13:06,651 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:13:06,651 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:13:06,651 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:13:06,654 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:13:06,654 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:13:06,654 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:13:06,654 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:13:06,654 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:13:06,654 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:13:06,654 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:13:06,654 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:13:06,654 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:13:06,654 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://news.ycombinator.com/
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO - 📋 Fields: title, points, author
+2025-11-24 00:13:06,655 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:13:06,655 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://news.ycombinator.com/
+2025-11-24 00:13:06,655 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:13:06,655 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:13:06,655 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: news.ycombinator.com
+2025-11-24 00:13:06,882 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-24 00:13:06,882 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://news.ycombinator.com/
+2025-11-24 00:13:06,930 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (34077 bytes)
+2025-11-24 00:13:06,959 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Found 7014 chars of structured content, static HTML sufficient
+2025-11-24 00:13:06,960 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-24 00:13:06,960 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:13:06,982 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:13:06,982 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://news.ycombinator.com/
+2025-11-24 00:13:06,999 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:13:06,999 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:13:07,004 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-24 00:13:07,004 - universal_scraper.core.pagination_detector - INFO - ✅ Detected URL parameter pagination: p
+2025-11-24 00:13:07,004 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: url_param (confidence: high)
+2025-11-24 00:13:07,004 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found p parameter in URL or pagination links
+2025-11-24 00:13:07,004 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:13:07,024 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-24 00:13:07,024 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:13:07,024 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:13:07,024 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (34,077 bytes)
+2025-11-24 00:13:07,050 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 33,810 bytes (0.8% reduction)
+2025-11-24 00:13:07,050 - universal_scraper.core.scraper - INFO -    HTML reduced: 0.8%
+2025-11-24 00:13:07,050 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 33,810 bytes (quality=balanced)
+2025-11-24 00:13:07,050 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 12 chunks
+2025-11-24 00:13:07,050 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/12...
+[92m00:13:07 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:07,143 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:09,034 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:13:09,034 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/12...
+[92m00:13:09 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:09,050 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:26,026 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 9 low-quality items (14 kept, mode=balanced)
+2025-11-24 00:13:26,028 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 14 items
+2025-11-24 00:13:26,029 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/12...
+[92m00:13:26 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:26,057 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:40,409 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 2 low-quality items (13 kept, mode=balanced)
+2025-11-24 00:13:40,409 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 13 items
+2025-11-24 00:13:40,409 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/12...
+[92m00:13:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:40,428 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:43,635 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 2 low-quality items (1 kept, mode=balanced)
+2025-11-24 00:13:43,635 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:13:43,635 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 5/12...
+[92m00:13:43 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:43,656 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:46,933 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 1 low-quality items (2 kept, mode=balanced)
+2025-11-24 00:13:46,933 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:13:46,933 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 6/12...
+[92m00:13:46 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:46,950 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:50,503 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 1 low-quality items (2 kept, mode=balanced)
+2025-11-24 00:13:50,503 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:13:50,503 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 7/12...
+[92m00:13:50 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:50,526 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:53,777 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 1 low-quality items (2 kept, mode=balanced)
+2025-11-24 00:13:53,778 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:13:53,778 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 8/12...
+[92m00:13:53 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:53,803 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:57,522 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 1 low-quality items (2 kept, mode=balanced)
+2025-11-24 00:13:57,522 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:13:57,522 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 9/12...
+[92m00:13:57 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:13:57,538 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:00,853 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 2 low-quality items (1 kept, mode=balanced)
+2025-11-24 00:14:00,853 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:14:00,854 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 10/12...
+[92m00:14:00 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:00,882 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:17,595 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 10 low-quality items (1 kept, mode=balanced)
+2025-11-24 00:14:17,596 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:14:17,596 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 11/12...
+[92m00:14:17 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:17,616 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:36,822 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 3 low-quality items (26 kept, mode=balanced)
+2025-11-24 00:14:36,822 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 26 items
+2025-11-24 00:14:36,822 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 12/12...
+[92m00:14:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:36,828 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:37,263 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:14:37,263 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 19 items
+2025-11-24 00:14:37,263 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 19 items
+2025-11-24 00:14:37,264 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 19 items
+2025-11-24 00:14:37,264 - universal_scraper.core.scraper - INFO -    Quality: 86.0% field completeness
+2025-11-24 00:14:37,264 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (86.0% >= 40.0%)
+2025-11-24 00:14:37,264 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:14:37,264 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 19 items in 90.61s
+2025-11-24 00:14:37,267 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:14:37,267 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-24 00:14:37,267 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-24 00:14:39,282 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-24 00:14:39,296 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:14:39,296 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:14:39,296 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:14:39,296 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:14:39,296 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:14:39,296 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:14:39,298 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:14:39,298 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:14:39,298 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:14:39,298 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:14:39,298 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:14:39,299 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:14:39,299 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:14:39,299 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:14:39,299 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:14:39,299 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://github.com/trending
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 📋 Fields: repository, description, stars
+2025-11-24 00:14:39,299 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:14:39,299 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://github.com/trending
+2025-11-24 00:14:39,299 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:14:39,350 - universal_scraper.core.api_cache - INFO - ✅ Found 5 cached APIs for github.com
+2025-11-24 00:14:39,350 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 5 cached APIs for github.com
+2025-11-24 00:14:39,350 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:14:39,350 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: github.com
+2025-11-24 00:14:39,677 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-24 00:14:39,677 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://github.com/trending
+2025-11-24 00:14:40,865 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (624440 bytes)
+2025-11-24 00:14:40,982 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Loading indicators found
+2025-11-24 00:14:40,982 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 JavaScript required, using browser...
+2025-11-24 00:14:41,402 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 Camoufox fetcher loaded
+2025-11-24 00:14:41,402 - universal_scraper.core.camoufox_fetcher - INFO - 🦊 Camoufox Fetcher initialized
+2025-11-24 00:14:41,402 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 60000ms
+2025-11-24 00:14:41,402 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2025-11-24 00:14:41,402 - universal_scraper.core.camoufox_fetcher - INFO - 🌐 Fetching with Camoufox: https://github.com/trending
+2025-11-24 00:14:41,402 - universal_scraper.core.anti_detection - INFO - 🛡️  Anti-Detection Manager initialized (Maximum Robustness)
+2025-11-24 00:14:41,402 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2025-11-24 00:14:52,944 - universal_scraper.core.camoufox_fetcher - INFO - ✅ Camoufox fetch complete: 640316 bytes
+2025-11-24 00:14:52,944 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Captured 0 API requests
+2025-11-24 00:14:52,944 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Extracted 0 JSON blobs
+2025-11-24 00:14:52,944 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:14:53,084 - universal_scraper.core.json_detector - INFO - ✅ Found 5 GraphQL endpoint(s)
+2025-11-24 00:14:53,111 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://github.com/trending
+2025-11-24 00:14:53,360 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:14:53,360 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:14:53,385 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-24 00:14:53,385 - universal_scraper.core.pagination_detector - INFO - ✅ Detected link-based pagination
+2025-11-24 00:14:53,385 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: link_based (confidence: medium)
+2025-11-24 00:14:53,385 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found "Next" link in pagination
+2025-11-24 00:14:53,385 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:14:53,522 - universal_scraper.core.json_detector - INFO - ✅ Found 5 GraphQL endpoint(s)
+2025-11-24 00:14:53,546 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:14:53,546 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:14:53,546 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (640,316 bytes)
+2025-11-24 00:14:53,732 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 455,748 bytes (28.8% reduction)
+2025-11-24 00:14:53,732 - universal_scraper.core.scraper - INFO -    HTML reduced: 28.8%
+2025-11-24 00:14:53,732 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 455,748 bytes (quality=balanced)
+2025-11-24 00:14:53,733 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 25 chunks
+2025-11-24 00:14:53,733 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/25...
+[92m00:14:53 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:53,741 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:56,315 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:14:56,315 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/25...
+[92m00:14:56 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:56,327 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:56,727 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:14:56,727 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/25...
+[92m00:14:56 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:56,735 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:57,223 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:14:57,224 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/25...
+[92m00:14:57 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:57,228 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:57,589 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:14:57,589 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 5/25...
+[92m00:14:57 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:57,600 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:58,090 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:14:58,091 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 6/25...
+[92m00:14:58 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:14:58,098 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:08,740 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:08,740 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 7/25...
+[92m00:15:08 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:08,747 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:10,827 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:10,827 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 8/25...
+[92m00:15:10 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:10,835 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:12,920 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:12,920 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 9/25...
+[92m00:15:12 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:12,929 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:17,755 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:17,756 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 10/25...
+[92m00:15:17 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:17,761 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:20,185 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:20,185 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 11/25...
+[92m00:15:20 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:20,191 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:21,294 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:15:21,295 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 12/25...
+[92m00:15:21 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:21,303 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:23,957 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:23,957 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 13/25...
+[92m00:15:23 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:23,965 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:26,061 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:26,061 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 14/25...
+[92m00:15:26 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:26,070 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:28,014 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:28,014 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 15/25...
+[92m00:15:28 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:28,022 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:30,259 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:30,259 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 16/25...
+[92m00:15:30 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:30,269 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:32,270 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:15:32,270 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 17/25...
+[92m00:15:32 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:32,372 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:34,286 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:15:34,286 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 18/25...
+[92m00:15:34 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:34,295 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:38,123 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:38,123 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 19/25...
+[92m00:15:38 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:38,130 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:40,999 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:40,999 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 20/25...
+[92m00:15:41 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:41,006 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:43,114 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:43,114 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 21/25...
+[92m00:15:43 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:43,119 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:45,965 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:45,965 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 22/25...
+[92m00:15:45 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:45,970 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:48,753 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:15:48,753 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 23/25...
+[92m00:15:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:48,759 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:49,842 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:15:49,842 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 24/25...
+[92m00:15:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:49,849 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:50,256 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:15:50,256 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 25/25...
+[92m00:15:50 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:50,258 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:15:52,890 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:15:52,890 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 24 items
+2025-11-24 00:15:52,892 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 24 items
+2025-11-24 00:15:52,892 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 24 items
+2025-11-24 00:15:52,892 - universal_scraper.core.scraper - INFO -    Quality: 100.0% field completeness
+2025-11-24 00:15:52,892 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (100.0% >= 40.0%)
+2025-11-24 00:15:52,892 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:15:52,892 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 24 items in 73.59s
+2025-11-24 00:15:52,895 - universal_scraper.core.camoufox_fetcher - INFO - 👋 Camoufox fetcher closed
+2025-11-24 00:15:52,895 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:15:52,896 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 0, 'browser_fallback': 1, 'apis_discovered': 0}
+2025-11-24 00:15:52,896 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-24 00:15:54,910 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-24 00:15:54,924 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:15:54,924 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:15:54,924 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:15:54,924 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:15:54,924 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:15:54,924 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:15:54,927 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:15:54,927 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:15:54,927 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:15:54,927 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:15:54,927 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:15:54,927 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:15:54,927 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:15:54,927 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:15:54,927 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://stackoverflow.com/questions
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 📋 Fields: title, votes, answers
+2025-11-24 00:15:54,927 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:15:54,927 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://stackoverflow.com/questions
+2025-11-24 00:15:54,927 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:15:54,980 - universal_scraper.core.api_cache - INFO - ✅ Found 5 cached APIs for stackoverflow.com
+2025-11-24 00:15:54,980 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 5 cached APIs for stackoverflow.com
+2025-11-24 00:15:54,980 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:15:54,981 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: stackoverflow.com
+2025-11-24 00:15:55,345 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-24 00:15:55,345 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://stackoverflow.com/questions
+2025-11-24 00:15:55,492 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (240498 bytes)
+2025-11-24 00:15:55,536 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Loading indicators found
+2025-11-24 00:15:55,536 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 JavaScript required, using browser...
+2025-11-24 00:15:55,536 - universal_scraper.core.camoufox_fetcher - INFO - 🦊 Camoufox Fetcher initialized
+2025-11-24 00:15:55,536 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 60000ms
+2025-11-24 00:15:55,536 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2025-11-24 00:15:55,536 - universal_scraper.core.camoufox_fetcher - INFO - 🌐 Fetching with Camoufox: https://stackoverflow.com/questions
+2025-11-24 00:15:55,536 - universal_scraper.core.anti_detection - INFO - 🛡️  Anti-Detection Manager initialized (Maximum Robustness)
+2025-11-24 00:15:55,536 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2025-11-24 00:16:18,532 - universal_scraper.core.camoufox_fetcher - INFO - ✅ Camoufox fetch complete: 385623 bytes
+2025-11-24 00:16:18,532 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Captured 6 API requests
+2025-11-24 00:16:18,532 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Extracted 4 JSON blobs
+2025-11-24 00:16:18,532 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:16:18,603 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-24 00:16:18,621 - universal_scraper.core.json_detector - INFO - ✅ Found 2 GraphQL endpoint(s)
+2025-11-24 00:16:18,636 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://stackoverflow.com/questions
+2025-11-24 00:16:18,694 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:16:18,694 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:16:18,713 - universal_scraper.core.pagination_detector - INFO - ✅ Final max_page from all strategies: 1612635
+2025-11-24 00:16:18,713 - universal_scraper.core.pagination_detector - INFO - ✅ Detected URL parameter pagination: page
+2025-11-24 00:16:18,713 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: url_param (confidence: high)
+2025-11-24 00:16:18,713 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found page parameter in URL or pagination links
+2025-11-24 00:16:18,713 - universal_scraper.core.scraper - INFO - 📄 Generating URLs for 1612635 pages...
+2025-11-24 00:16:18,947 - universal_scraper.core.scraper - INFO - ✅ Generated 1612635 URLs for parallel scraping
+2025-11-24 00:16:18,947 - universal_scraper.core.scraper - INFO - ⚠️ Auto-pagination disabled: returning single page only (detected 1612635 total pages)
+2025-11-24 00:16:18,947 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:16:19,147 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-24 00:16:19,166 - universal_scraper.core.json_detector - INFO - ✅ Found 2 GraphQL endpoint(s)
+2025-11-24 00:16:19,181 - universal_scraper.core.scraper - INFO - 📦 Found 2 JSON source(s)
+2025-11-24 00:16:19,181 - universal_scraper.core.json_detector - INFO - ⚠️  Found 1 arrays, but BEST has negative score: 'root' (score=-58.0)
+2025-11-24 00:16:19,181 - universal_scraper.core.json_detector - INFO -    🚫 Rejecting all arrays - likely breadcrumbs/navigation
+2025-11-24 00:16:19,181 - universal_scraper.core.json_detector - INFO - ❌ No items extracted from JSON
+2025-11-24 00:16:19,181 - universal_scraper.core.scraper - INFO - ⚠️ JSON sources insufficient, falling back to HTML...
+2025-11-24 00:16:19,181 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:16:19,181 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:16:19,181 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (385,623 bytes)
+2025-11-24 00:16:19,282 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 110,013 bytes (71.5% reduction)
+2025-11-24 00:16:19,282 - universal_scraper.core.scraper - INFO -    HTML reduced: 71.5%
+2025-11-24 00:16:19,282 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 110,013 bytes (quality=balanced)
+2025-11-24 00:16:19,282 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 40 chunks
+2025-11-24 00:16:19,282 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/40...
+[92m00:16:19 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:19,288 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:22,904 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:16:22,904 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/40...
+[92m00:16:22 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:22,912 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:23,326 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:23,327 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/40...
+[92m00:16:23 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:23,339 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:23,917 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:23,917 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/40...
+[92m00:16:23 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:23,930 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:24,426 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:24,427 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 5/40...
+[92m00:16:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:24,443 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:24,953 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:24,953 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 6/40...
+[92m00:16:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:24,965 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:25,443 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:25,443 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 7/40...
+[92m00:16:25 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:25,456 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:26,889 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:26,889 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 8/40...
+[92m00:16:26 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:26,900 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:32,775 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:16:32,775 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 9/40...
+[92m00:16:32 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:32,792 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:36,909 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:16:36,910 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 10/40...
+[92m00:16:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:36,917 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:39,038 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:16:39,038 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 11/40...
+[92m00:16:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:39,048 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:48,794 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:16:48,794 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 12/40...
+[92m00:16:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:48,804 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:51,165 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:16:51,165 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 13/40...
+[92m00:16:51 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:51,177 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:59,125 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:16:59,125 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 14/40...
+[92m00:16:59 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:59,136 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:59,638 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:16:59,638 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 15/40...
+[92m00:16:59 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:16:59,656 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:02,861 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 6 items
+2025-11-24 00:17:02,861 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 16/40...
+[92m00:17:02 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:02,874 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:09,964 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 14 items
+2025-11-24 00:17:09,964 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 17/40...
+[92m00:17:09 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:09,973 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:12,638 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:17:12,638 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 18/40...
+[92m00:17:12 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:12,648 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:14,199 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:17:14,199 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 19/40...
+[92m00:17:14 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:14,213 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:16,347 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:17:16,347 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 20/40...
+[92m00:17:16 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:16,363 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:19,329 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:17:19,329 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 21/40...
+[92m00:17:19 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:19,336 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:26,346 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 12 items
+2025-11-24 00:17:26,346 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 22/40...
+[92m00:17:26 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:26,366 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:33,652 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:17:33,653 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 23/40...
+[92m00:17:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:33,666 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:39,797 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:17:39,797 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 24/40...
+[92m00:17:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:39,808 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:45,725 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 12 items
+2025-11-24 00:17:45,725 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 25/40...
+[92m00:17:45 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:45,738 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:52,676 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:17:52,676 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 26/40...
+[92m00:17:52 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:52,686 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:57,080 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:17:57,080 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 27/40...
+[92m00:17:57 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:17:57,092 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:02,939 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:18:02,939 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 28/40...
+[92m00:18:02 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:02,951 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:10,375 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:18:10,375 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 29/40...
+[92m00:18:10 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:10,396 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:16,085 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:18:16,086 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 30/40...
+[92m00:18:16 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:16,099 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:43,913 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 48 items
+2025-11-24 00:18:43,914 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 31/40...
+[92m00:18:43 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:43,931 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:53,912 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 9 items
+2025-11-24 00:18:53,913 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 32/40...
+[92m00:18:53 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:18:53,926 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:12,753 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 24 items
+2025-11-24 00:19:12,753 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 33/40...
+[92m00:19:12 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:12,763 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:24,759 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:19:24,759 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 34/40...
+[92m00:19:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:24,771 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:29,686 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:19:29,686 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 35/40...
+[92m00:19:29 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:29,696 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:33,192 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:19:33,192 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 36/40...
+[92m00:19:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:33,204 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:38,197 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 6 items
+2025-11-24 00:19:38,197 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 37/40...
+[92m00:19:38 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:38,206 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:43,190 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 6 items
+2025-11-24 00:19:43,190 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 38/40...
+[92m00:19:43 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:43,198 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:48,196 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 6 items
+2025-11-24 00:19:48,197 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 39/40...
+[92m00:19:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:19:48,208 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:00,857 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 16 items
+2025-11-24 00:20:00,857 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 40/40...
+[92m00:20:00 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:00,861 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:01,316 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:20:01,317 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 73 items
+2025-11-24 00:20:01,318 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 73 items
+2025-11-24 00:20:01,318 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 73 items
+2025-11-24 00:20:01,318 - universal_scraper.core.scraper - INFO -    Quality: 54.3% field completeness
+2025-11-24 00:20:01,318 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (54.3% >= 40.0%)
+2025-11-24 00:20:01,318 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:20:01,318 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 73 items in 246.39s
+2025-11-24 00:20:01,384 - universal_scraper.core.camoufox_fetcher - INFO - 👋 Camoufox fetcher closed
+2025-11-24 00:20:01,384 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:20:01,384 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 0, 'browser_fallback': 1, 'apis_discovered': 0}
+2025-11-24 00:20:01,384 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-24 00:20:03,398 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-24 00:20:03,410 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-24 00:20:03,410 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-24 00:20:03,411 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-24 00:20:03,411 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-24 00:20:03,411 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-24 00:20:03,411 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-24 00:20:03,414 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-24 00:20:03,414 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-24 00:20:03,414 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-24 00:20:03,414 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-24 00:20:03,414 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-24 00:20:03,414 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-24 00:20:03,415 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-24 00:20:03,415 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-24 00:20:03,415 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-24 00:20:03,415 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-24 00:20:03,415 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://www.producthunt.com/
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 📋 Fields: name, tagline, votes
+2025-11-24 00:20:03,415 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-24 00:20:03,415 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://www.producthunt.com/
+2025-11-24 00:20:03,415 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-24 00:20:03,465 - universal_scraper.core.api_cache - INFO - ✅ Found 9 cached APIs for www.producthunt.com
+2025-11-24 00:20:03,465 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 9 cached APIs for www.producthunt.com
+2025-11-24 00:20:03,465 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-24 00:20:03,465 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: www.producthunt.com
+2025-11-24 00:20:03,581 - universal_scraper.core.html_fetcher - WARNING - ⚠️ Warm-up returned: 403
+2025-11-24 00:20:03,581 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://www.producthunt.com/
+2025-11-24 00:20:03,671 - universal_scraper.core.html_fetcher - WARNING - ⚠️ Response: 403
+2025-11-24 00:20:03,672 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Body has minimal content (< 500 chars), likely JS-rendered
+2025-11-24 00:20:03,672 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 JavaScript required, using browser...
+2025-11-24 00:20:03,672 - universal_scraper.core.camoufox_fetcher - INFO - 🦊 Camoufox Fetcher initialized
+2025-11-24 00:20:03,672 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 60000ms
+2025-11-24 00:20:03,672 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2025-11-24 00:20:03,672 - universal_scraper.core.camoufox_fetcher - INFO - 🌐 Fetching with Camoufox: https://www.producthunt.com/
+2025-11-24 00:20:03,672 - universal_scraper.core.anti_detection - INFO - 🛡️  Anti-Detection Manager initialized (Maximum Robustness)
+2025-11-24 00:20:03,672 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2025-11-24 00:20:28,311 - universal_scraper.core.camoufox_fetcher - INFO - ✅ Camoufox fetch complete: 618986 bytes
+2025-11-24 00:20:28,311 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Captured 7 API requests
+2025-11-24 00:20:28,311 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Extracted 6 JSON blobs
+2025-11-24 00:20:28,311 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-24 00:20:28,348 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-24 00:20:28,403 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://www.producthunt.com/
+2025-11-24 00:20:28,464 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-24 00:20:28,465 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-24 00:20:28,478 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-24 00:20:28,478 - universal_scraper.core.pagination_detector - INFO - ✅ Detected link-based pagination
+2025-11-24 00:20:28,478 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: link_based (confidence: medium)
+2025-11-24 00:20:28,478 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found "Next" link in pagination
+2025-11-24 00:20:28,478 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-24 00:20:28,515 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-24 00:20:28,573 - universal_scraper.core.scraper - INFO - 📦 Found 1 JSON source(s)
+2025-11-24 00:20:28,573 - universal_scraper.core.json_detector - INFO - ❌ No items extracted from JSON
+2025-11-24 00:20:28,573 - universal_scraper.core.scraper - INFO - ⚠️ JSON sources insufficient, falling back to HTML...
+2025-11-24 00:20:28,573 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-24 00:20:28,573 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-24 00:20:28,573 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (618,986 bytes)
+2025-11-24 00:20:28,737 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 195,546 bytes (68.4% reduction)
+2025-11-24 00:20:28,737 - universal_scraper.core.scraper - INFO -    HTML reduced: 68.4%
+2025-11-24 00:20:28,737 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 195,546 bytes (quality=balanced)
+2025-11-24 00:20:28,738 - universal_scraper.core.direct_llm_extractor - INFO -    Split into 43 chunks
+2025-11-24 00:20:28,738 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/43...
+[92m00:20:28 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:28,745 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:29,146 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:20:29,146 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/43...
+[92m00:20:29 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:29,154 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:30,480 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:30,480 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/43...
+[92m00:20:30 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:30,486 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:33,686 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:20:33,686 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/43...
+[92m00:20:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:33,691 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:35,619 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:35,620 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 5/43...
+[92m00:20:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:35,627 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:39,300 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:20:39,300 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 6/43...
+[92m00:20:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:39,310 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:40,819 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:40,819 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 7/43...
+[92m00:20:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:40,828 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:47,385 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:20:47,385 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 8/43...
+[92m00:20:47 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:47,392 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:48,832 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:48,833 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 9/43...
+[92m00:20:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:48,846 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:50,225 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:50,225 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 10/43...
+[92m00:20:50 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:50,236 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:51,552 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:51,552 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 11/43...
+[92m00:20:51 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:51,560 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:52,905 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:20:52,905 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 12/43...
+[92m00:20:52 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:52,916 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:56,686 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:20:56,686 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 13/43...
+[92m00:20:56 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:20:56,692 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:00,773 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:21:00,773 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 14/43...
+[92m00:21:00 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:00,781 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:01,966 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:01,966 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 15/43...
+[92m00:21:01 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:01,977 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:04,908 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:21:04,908 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 16/43...
+[92m00:21:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:04,914 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:06,240 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:06,241 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 17/43...
+[92m00:21:06 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:06,253 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:11,121 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 6 items
+2025-11-24 00:21:11,121 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 18/43...
+[92m00:21:11 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:11,129 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:17,098 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:21:17,098 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 19/43...
+[92m00:21:17 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:17,110 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:26,608 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:21:26,609 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 20/43...
+[92m00:21:26 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:26,620 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:31,842 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:21:31,842 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 21/43...
+[92m00:21:31 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:31,854 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:36,448 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 5 items
+2025-11-24 00:21:36,448 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 22/43...
+[92m00:21:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:36,457 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:37,686 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:37,686 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 23/43...
+[92m00:21:37 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:37,697 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:39,275 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:39,275 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 24/43...
+[92m00:21:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:39,284 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:40,575 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:40,575 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 25/43...
+[92m00:21:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:40,587 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:42,798 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:42,798 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 26/43...
+[92m00:21:42 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:42,809 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:45,551 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 2 items
+2025-11-24 00:21:45,551 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 27/43...
+[92m00:21:45 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:45,556 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:48,533 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 4 items
+2025-11-24 00:21:48,533 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 28/43...
+[92m00:21:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:48,541 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:49,908 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:49,908 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 29/43...
+[92m00:21:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:49,916 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:51,117 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:21:51,117 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 30/43...
+[92m00:21:51 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:51,128 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:56,236 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:21:56,236 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 31/43...
+[92m00:21:56 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:21:56,250 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:02,386 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:22:02,386 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 32/43...
+[92m00:22:02 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:02,399 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:07,610 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:22:07,611 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 33/43...
+[92m00:22:07 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:07,622 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:13,360 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 7 items
+2025-11-24 00:22:13,360 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 34/43...
+[92m00:22:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:13,377 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:14,417 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 1 items
+2025-11-24 00:22:14,417 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 35/43...
+[92m00:22:14 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:14,426 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:20,407 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 11 items
+2025-11-24 00:22:20,407 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 36/43...
+[92m00:22:20 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:20,419 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:20,897 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:22:20,897 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 37/43...
+[92m00:22:20 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:20,913 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:27,443 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:22:27,443 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 38/43...
+[92m00:22:27 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:27,464 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:33,274 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 10 items
+2025-11-24 00:22:33,274 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 39/43...
+[92m00:22:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:33,290 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:33,776 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 0 items
+2025-11-24 00:22:33,776 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 40/43...
+[92m00:22:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:22:33,788 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:35,392 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 123 items
+2025-11-24 00:23:35,392 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 41/43...
+[92m00:23:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:35,409 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:40,157 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 8 items
+2025-11-24 00:23:40,157 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 42/43...
+[92m00:23:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:40,174 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:49,783 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 16 items
+2025-11-24 00:23:49,783 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 43/43...
+[92m00:23:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:49,784 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-24 00:23:52,175 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Extracted 3 items
+2025-11-24 00:23:52,176 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 80 items
+2025-11-24 00:23:52,176 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 80 items
+2025-11-24 00:23:52,177 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 80 items
+2025-11-24 00:23:52,177 - universal_scraper.core.scraper - INFO -    Quality: 60.4% field completeness
+2025-11-24 00:23:52,177 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (60.4% >= 40.0%)
+2025-11-24 00:23:52,177 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-24 00:23:52,177 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 80 items in 228.76s
+2025-11-24 00:23:52,179 - universal_scraper.core.camoufox_fetcher - INFO - 👋 Camoufox fetcher closed
+2025-11-24 00:23:52,179 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-24 00:23:52,179 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 0, 'browser_fallback': 1, 'apis_discovered': 0}
+2025-11-24 00:23:52,179 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+
+======================================================================
+🚀 Simple Competitive Test - Universal Scraper
+======================================================================
+Testing 6 sites (single page only)
+======================================================================
+
+
+[1/6] 
+======================================================================
+Testing: Books to Scrape
+URL: https://books.toscrape.com/
+======================================================================
+✅ Success!
+   Items: 20
+   Time: 103.2s
+   Source: direct_llm
+   Completeness: 67%
+
+[2/6] 
+======================================================================
+Testing: Quotes to Scrape
+URL: https://quotes.toscrape.com/
+======================================================================
+✅ Success!
+   Items: 10
+   Time: 8.4s
+   Source: direct_llm
+   Completeness: 100%
+
+[3/6] 
+======================================================================
+Testing: Hacker News
+URL: https://news.ycombinator.com/
+======================================================================
+✅ Success!
+   Items: 19
+   Time: 90.6s
+   Source: direct_llm
+   Completeness: 86%
+
+[4/6] 
+======================================================================
+Testing: GitHub Trending
+URL: https://github.com/trending
+======================================================================
+✅ Success!
+   Items: 24
+   Time: 73.6s
+   Source: direct_llm
+   Completeness: 100%
+
+[5/6] 
+======================================================================
+Testing: Stack Overflow
+URL: https://stackoverflow.com/questions
+======================================================================
+✅ Success!
+   Items: 73
+   Time: 246.5s
+   Source: direct_llm
+   Completeness: 63%
+
+[6/6] 
+======================================================================
+Testing: Product Hunt
+URL: https://www.producthunt.com/
+======================================================================
+✅ Success!
+   Items: 80
+   Time: 228.8s
+   Source: direct_llm
+   Completeness: 60%
+
+
+======================================================================
+📊 SUMMARY
+======================================================================
+
+Results by Site:
+
+  ✅ Books to Scrape
+      Items: 20, Time: 103.2s, Quality: 67%
+  ✅ Quotes to Scrape
+      Items: 10, Time: 8.4s, Quality: 100%
+  ✅ Hacker News
+      Items: 19, Time: 90.6s, Quality: 86%
+  ✅ GitHub Trending
+      Items: 24, Time: 73.6s, Quality: 100%
+  ✅ Stack Overflow
+      Items: 73, Time: 246.5s, Quality: 63%
+  ✅ Product Hunt
+      Items: 80, Time: 228.8s, Quality: 60%
+
+Overall Statistics:
+  Success Rate: 6/6 (100%)
+  Total Items: 226
+  Total Time: 751.0s (avg 125.2s per site)
+  Avg Completeness: 79%
+
+💾 Results saved to simple_test_results.json
+
+======================================================================
+
