@@ -1,4 +1,0 @@
-Saving pattern...
-Response: 404
-{'detail': 'Not Found'}
-Failed to save pattern
