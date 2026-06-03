@@ -1,0 +1,848 @@
+[
+  {
+    "test_config": {
+      "name": "ProductHunt",
+      "url": "https://www.producthunt.com/categories/vibe-coding",
+      "description": "ProductHunt coding products category"
+    },
+    "result": {
+      "data": [
+        {
+          "name": "Cursor",
+          "tagline": "The AI Code Editor",
+          "votes": 666,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/cursor"
+        },
+        {
+          "name": "v0 by Vercel",
+          "tagline": "Full stack vibe coding platform. Created by Vercel.",
+          "votes": 48,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/v0"
+        },
+        {
+          "name": "Lovable",
+          "tagline": "The world's first AI Fullstack Engineer",
+          "votes": 160,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/lovable"
+        },
+        {
+          "name": "Windsurf",
+          "tagline": "The first agentic IDE. Tomorrow's editor, today.",
+          "votes": 38,
+          "comments": 58,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/windsurf"
+        },
+        {
+          "name": "Replit",
+          "tagline": "Idea to app, fast.",
+          "votes": 33,
+          "comments": 42,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/replit"
+        },
+        {
+          "name": "Softr",
+          "tagline": "Build custom business apps powered by AI and no-code.",
+          "votes": 27,
+          "comments": 66,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/softr"
+        },
+        {
+          "name": "Softr",
+          "tagline": "Build custom business apps powered by AI and no-code.",
+          "votes": 66,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/softr"
+        },
+        {
+          "name": "bolt.new",
+          "tagline": "Prompt, run, edit, and deploy full-stack web apps",
+          "votes": 39,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/bolt-new"
+        },
+        {
+          "name": "Base44",
+          "tagline": "Build fully-functional apps in minutes No coding necessary",
+          "votes": 27,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/base44"
+        },
+        {
+          "name": "Base44",
+          "tagline": "Build fully-functional apps in minutes No coding necessary",
+          "votes": 27,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/base44"
+        },
+        {
+          "name": "Reflex",
+          "tagline": "A unified platform to build and deploy all in Python.",
+          "votes": 7,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/reflex-5"
+        },
+        {
+          "name": "Solid",
+          "tagline": "AI that builds real web apps",
+          "votes": 9,
+          "comments": 0,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/solid-3"
+        },
+        {
+          "name": "Solid",
+          "tagline": "AI that builds real web apps",
+          "votes": 4,
+          "comments": 9,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/solid-3"
+        },
+        {
+          "name": "Dreamflow",
+          "tagline": "The Fastest Way to Build Mobile Apps, powered by Flutter",
+          "votes": 4,
+          "comments": 45,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/dreamflow"
+        },
+        {
+          "name": "Floot",
+          "tagline": "Build serious apps with AI without getting stuck",
+          "votes": 4,
+          "comments": 17,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/floot"
+        },
+        {
+          "name": "UI Bakery",
+          "tagline": "Custom internal tools on top of databases and APIs.",
+          "votes": 5,
+          "comments": 6,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/ui-bakery"
+        },
+        {
+          "name": "CREAO",
+          "tagline": "Infinitely personalized software for every team member",
+          "votes": 4,
+          "comments": 13,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/creao-ai"
+        },
+        {
+          "name": "CREAO",
+          "tagline": "Infinitely personalized software for every team member",
+          "votes": 4,
+          "comments": 13,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/creao-ai"
+        },
+        {
+          "name": "Tempo",
+          "tagline": "Visual Editor for React, Powered by AI",
+          "votes": 4,
+          "comments": 13,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/tempo-labs"
+        },
+        {
+          "name": "n8n",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/n8n-io"
+        },
+        {
+          "name": "Attio",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/attio"
+        },
+        {
+          "name": "PostHog",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/posthog"
+        },
+        {
+          "name": "Vapi",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/vapi"
+        },
+        {
+          "name": "Granola",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/granola"
+        },
+        {
+          "name": "Raycast",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/raycast"
+        },
+        {
+          "name": "Supabase",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/supabase"
+        },
+        {
+          "name": "Screen Studio",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/screen-studio"
+        },
+        {
+          "name": "bolt.new",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/bolt-new"
+        },
+        {
+          "name": "Wispr Flow",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/wisprflow"
+        },
+        {
+          "name": "Framer",
+          "tagline": null,
+          "votes": null,
+          "comments": null,
+          "maker": null,
+          "image": null,
+          "url": "https://www.producthunt.com/products/framer"
+        }
+      ],
+      "metadata": {
+        "url": "https://www.producthunt.com/categories/vibe-coding",
+        "fields": [
+          "name",
+          "tagline",
+          "votes",
+          "comments",
+          "maker",
+          "image",
+          "url"
+        ],
+        "items_extracted": 30,
+        "execution_time": 36.12059712409973,
+        "extraction_source": "direct_llm",
+        "code_cached": null,
+        "schema_quality": null,
+        "pagination_detected": "url_param",
+        "total_pages_scraped": 1,
+        "auto_pagination": false,
+        "direct_llm_cached": true,
+        "pattern_cache_hit": false,
+        "timestamp": 1766779727.245405
+      },
+      "source": "direct_llm"
+    },
+    "analysis": {
+      "success": true,
+      "items_extracted": 30,
+      "expected_fields": [
+        "name",
+        "tagline",
+        "votes",
+        "comments",
+        "maker",
+        "image",
+        "url"
+      ],
+      "field_coverage": {
+        "name": {
+          "coverage": 1.0,
+          "items_with_field": 30,
+          "total_items": 30
+        },
+        "tagline": {
+          "coverage": 0.6333333333333333,
+          "items_with_field": 19,
+          "total_items": 30
+        },
+        "votes": {
+          "coverage": 0.6333333333333333,
+          "items_with_field": 19,
+          "total_items": 30
+        },
+        "comments": {
+          "coverage": 0.3333333333333333,
+          "items_with_field": 10,
+          "total_items": 30
+        },
+        "maker": {
+          "coverage": 0.0,
+          "items_with_field": 0,
+          "total_items": 30
+        },
+        "image": {
+          "coverage": 0.0,
+          "items_with_field": 0,
+          "total_items": 30
+        },
+        "url": {
+          "coverage": 1.0,
+          "items_with_field": 30,
+          "total_items": 30
+        }
+      },
+      "quality_score": 0.5142857142857143,
+      "quality_from_scraper": null,
+      "meets_90_percent_threshold": false,
+      "issues": [
+        "QUALITY BELOW 90% THRESHOLD: 51.4% (gap: 38.6%)",
+        "Low coverage for 'comments': 33.3%",
+        "Low coverage for 'maker': 0.0%",
+        "Low coverage for 'image': 0.0%",
+        "Missing fields: maker, image"
+      ],
+      "cache_info": {
+        "code_cached": null,
+        "pattern_cached": null,
+        "direct_llm_cached": true,
+        "extraction_source": "direct_llm",
+        "early_exit": false
+      },
+      "missing_fields": [
+        "maker",
+        "image"
+      ],
+      "low_coverage_fields": [
+        "comments"
+      ]
+    },
+    "performance": {
+      "elapsed_time": 36.120707988739014,
+      "items_per_second": 0.8305485044576866
+    },
+    "timestamp": "2025-12-26T14:08:47.245512"
+  },
+  {
+    "test_config": {
+      "name": "Metacritic",
+      "url": "https://www.metacritic.com/pictures/worst-movies-of-2025/",
+      "description": "Metacritic worst movies of 2025"
+    },
+    "result": {
+      "data": [
+        {
+          "title": "Old Guy",
+          "year": "2025",
+          "score": 33,
+          "platform": null,
+          "image": "Photo by The Avenue",
+          "url": "/movie/old-guy/",
+          "description": "Before this year, Simon West (Con Air, The Expendables 2) had never directed a good movie. He made two attempts to correct that record in 2025, and neither received positive reviews. It's even worse than that: Both films qualified for this list. The least bad of his two poorly reviewed action comedies this year, Old Guy stars Christoph Waltz as an aging contract killer enlisted to train a new prodigy (Cooper Hoffman), only for the pair to instead uncover a plot by their employers and attempt to thwart them. But critics think a clunky screenplay drains the film of any fun that could have been had with its premise."
+        },
+        {
+          "title": "Regretting You",
+          "year": "2025",
+          "score": 33,
+          "platform": null,
+          "image": "Photo by Paramount Pictures",
+          "url": "/movie/regretting-you/",
+          "description": "Though director Josh Boone has previous success adapting a romance novel to the big screen, his latest melodrama is more fault than stars—though it was a modest box office success for Paramount. Adapted from Colleen Hoover's 2019 novel, Regretting You centers on the rocky relationship between newly widowed mom Morgan (Allison Williams) and her teenage daughter Clara (Mckenna Grace), and their various entanglements. Critics found the film overly soapy and predictable, and hampered by uneven acting."
+        },
+        {
+          "title": "Modi - Three Days on the Wing of Madness",
+          "year": "2025",
+          "score": 32,
+          "platform": null,
+          "image": "Photo by Vertical Ent.",
+          "url": "/movie/modi-three-days-on-the-wing-of-madness/",
+          "description": "The second film directed by semi-canceled actor Johnny Depp (following 1997's also quite terrible The Brave) is a dramedy adapted from a Dennis McIntyre play following three days in the life of Italian artist Modigliani (Riccardo Scamarcio) as he goes on the run from the police in war-torn 1916 Paris. Given only a token theatrical release in the U.S. following some festival showings, Modi fared poorly with reviewers, who found the film unconvincing."
+        },
+        {
+          "title": "Smurfs",
+          "year": "2025",
+          "score": 31,
+          "platform": null,
+          "image": "Photo by Paramount Pictures",
+          "url": "/movie/smurfs/",
+          "description": "Is it possible to truly smurf up a Smurfs movie? Well, Paramount appears to have done just that with this reboot of the animated children's franchise, despite enlisting Rihanna to voice Smurfette and making sure that everyone on the planet knew that Rihanna was voicing Smurfette. Opting for full animation rather than the live-action/CGI hybrid of Sony's 2011 hit (which, it should be said, was also terrible), this new Smurfs film managed to gross even less than another fully animated 2017 adaptation (also from Sony). Critics deemed the reboot to be about as imaginative and exciting as its title, and the original plan for Smurfs to launch a new series of films now seems on hold, misguided, or both."
+        },
+        {
+          "title": "Juliet & Romeo",
+          "year": "2025",
+          "score": 31,
+          "platform": null,
+          "image": "Photo by Briarcliff Ent.",
+          "url": "/movie/juliet-romeo/",
+          "description": "Finally, cinema's first musical based on William Shakespeare's timeless classic Romeo and Juliet. Wait ... you're saying it has been done before? And more than once? So what does this collaboration between writer/director Timothy Scott Bogart and composer Evan Kidd Bogart bring to the table? Well, a collection of tepid would-be pop hits and salty modernized dialogue like 'Romeo, where the hell art thou?'. Critics found it pointless."
+        },
+        {
+          "title": "The Electric State",
+          "year": "2025",
+          "score": 30,
+          "platform": null,
+          "image": "Photo by Netflix",
+          "url": "/movie/the-electric-state/",
+          "description": "Netflix's second-biggest overspend of 2025 (behind only the Warner Bros. acquisition) was the reported $320 million poured into this latest would-be sci-fi epic from the Russo brothers. Set in an alternate, high-tech (but dystopian) version of 1990s America, this loose adaptation of the graphic novel by Simon Stålenhag stars Millie Bobby Brown as an orphaned teenager who sets out on a road trip with a robot (voiced by Alan Tudyk) to search for a brother she thought dead. A good chunk of that money may have gone to enlisting a big-name cast that also includes Chris Pratt, Anthony Mackie, Ke Huy Quan, Jason Alexander, Stanley Tucci, Woody Harrelson, Brian Cox, Jenny Slate, and Giancarlo Esposito, among others. And more of it was used for reshoots that extended production across three years. But critics would have still found it a soulless slog at half the price."
+        },
+        {
+          "title": "Hurry Up Tomorrow",
+          "year": "2025",
+          "score": 29,
+          "platform": null,
+          "image": "Photo by Lionsgate/Andrew Cooper",
+          "url": "/movie/hurry-up-tomorrow/",
+          "description": "The first of five (!) Lionsgate releases on this list and one of the highest-profile bombs of 2025, Hurry Up Tomorrow is the latest vanity project for Abel Tesfaye (aka recording artist The Weeknd), following his equally unacclaimed 2023 HBO series The Idol. What's curious about this particular disaster—which Tesfaye co-wrote and in which he plays a lightly fictionalized version of himself who is stalked by a fan played by Jenna Ortega—is that it is directed by Trey Edward Shults, whose three prior films earned critical acclaim. But critics mostly couldn't stand this one, calling it 'off-putting,' 'pretentious,' and 'empty.' Tesfaye's companion album of the same name fared much better with reviewers."
+        },
+        {
+          "title": "The Strangers: Chapter 2",
+          "year": "2025",
+          "score": 28,
+          "platform": null,
+          "image": "Photo by Lionsgate",
+          "url": "/movie/the-strangers-chapter-2/",
+          "description": "Scoring 15 points lower than last year's Chapter 1, this sequel continues director Renny Harlin's horror-film series about a group of masked killers who prey on ordinary people at random. Critics deemed Chapter 2 a boring waste of time that adds little to the formula and seems to serve only as an introduction to another chapter. Unfortunately, that third film does exist and will head to theaters in February."
+        },
+        {
+          "title": "Shadow Force",
+          "year": "2025",
+          "score": 27,
+          "platform": null,
+          "image": null,
+          "url": "/movie/shadow-force/",
+          "description": "The worst-reviewed film to date from director Joe Carnahan is an action-thriller starring Kerry Washington and Omar Sy, who play an estranged couple now pursued together by members of their former CIA special ops team. One of several misguided Mr. and Mrs. Smith riffs on this list, and greeted by poor reviews upon its May release, the film eked out just $5 million in box office receipts against a $40 million production budget."
+        },
+        {
+          "title": "Five Nights at Freddy's 2 (2025)",
+          "year": "2025",
+          "score": 26,
+          "platform": null,
+          "image": null,
+          "url": "/movie/five-nights-at-freddys-2/",
+          "description": "The previous horror film adaptation of the Five Nights at Freddy's game series was a surprise box office hit despite poor reviews and a day-one streaming debut. So not only was a sequel greenlit but it was given an exclusive theatrical release in late 2025. Unfortunately, the result is not worth seeing in any format. Adapted from the 2014 game of the same name and set a year after the prior film, FNAF2 returns stars Josh Hutcherson, Elizabeth Lail, and Piper Rubio for a story that aims to reveal the origins of the titular pizza parlor and its creepy animatronic characters. Critics find it poorly acted and overstuffed."
+        },
+        {
+          "title": "Bride Hard",
+          "year": "2025",
+          "score": 23,
+          "platform": null,
+          "image": null,
+          "url": "/movie/bride-hard/",
+          "description": "The second action-comedy on this list from director Simon West stars Rebel Wilson as a spy and a bridesmaid who must save a wedding party from an attack by armed mercenaries. But not even a reunion between Wilson and her Pitch Perfect co-star Anna Camp can save a film that may offer a few brief thrills but otherwise mostly fails to deliver either action or comedy or anything you couldn't already predict from its title."
+        },
+        {
+          "title": "Alarum",
+          "year": "2025",
+          "score": 23,
+          "platform": null,
+          "image": null,
+          "url": "/movie/alarum/",
+          "description": "Well, it's certainly not director Michael Polish's first appearance in one of our worst of the year lists. But it is his lowest-scoring film to date. Despite boasting some star presence—that would be Sylvester Stallone, alongside Mike Colter, Willa Fitzgerald, and Scott Eastwood—this lackluster Mr. and Mrs. Smith-style action-thriller about married spies and a missing hard drive is entirely spark-free, according to critics."
+        },
+        {
+          "title": "Gunslingers",
+          "year": "2025",
+          "score": 20,
+          "platform": null,
+          "image": null,
+          "url": "/movie/gunslingers/",
+          "description": "This may come as a surprise, but Gunslingers is not one of the good Nicolas Cage movies. Written and directed by Brian Skiba—whose frequent no-budget films rarely merit more than a few reviews from the most dedicated critics—the formulaic Western is set at the turn of the 20th century in a town called Redemption, home to wanted criminals who hope to fake their deaths and begin new lives under new names. Stephen Dorff and Heather Graham star alongside Cage. There's plenty of blood, but nothing distinctive enough to merit a watch of what Variety dismisses as 'some sort of western cosplay weekend.'"
+        },
+        {
+          "title": "Playdate",
+          "year": "2025",
+          "score": 20,
+          "platform": "Prime Video",
+          "image": null,
+          "url": "/movie/playdate/",
+          "description": "Kevin James and Alan Ritchson play an odd couple of stay-at-home dads whose planned afternoon of fun with the kids goes awry when professional assassins show up and begin pursuing them. Your own planned afternoon of fun, meanwhile, goes awry the minute you start watching Playdate. Attacked by critics for its overall stupidity, this straight-to-Prime Video action-comedy from Family Guy writer Neil Goldman and The Girl Next Door director Luke Greenfield maintains James's 'perfect' record: He has still yet to star in a live-action film with a green Metascore."
+        },
+        {
+          "title": "War of the Worlds",
+          "year": "2025",
+          "score": 6,
+          "platform": "Amazon Prime Video",
+          "image": null,
+          "url": "/movie/war-of-the-worlds-2025/",
+          "description": "Metacritic's Official Worst Movie of 2025. At this point, maybe we should just let the Martians win. The latest take on the H.G. Wells sci-fi classic depicts an alien invasion as it was always meant to be shown: as an 89-minute Zoom meeting. (Actually, it's even worse than that: It's Microsoft Teams.) First-time feature director Rich Lee enlists Ice Cube as a Homeland Security operative manning a high-tech surveillance system who watches a massive attack by mechanized alien invaders—something, mind you, that could be observed by the naked eye without the aid of any technology—unfold in tiny windows on his computer screen."
+        }
+      ],
+      "metadata": {
+        "url": "https://www.metacritic.com/pictures/worst-movies-of-2025/",
+        "fields": [
+          "title",
+          "year",
+          "score",
+          "platform",
+          "image",
+          "url",
+          "description"
+        ],
+        "items_extracted": 15,
+        "execution_time": 42.757367849349976,
+        "extraction_source": "direct_llm",
+        "code_cached": null,
+        "schema_quality": null,
+        "pagination_detected": "link_based",
+        "total_pages_scraped": 1,
+        "auto_pagination": false,
+        "early_exit": true,
+        "direct_llm_quality": 80.95238095238095,
+        "field_coverage": {
+          "title": 15,
+          "year": 15,
+          "score": 15,
+          "platform": 2,
+          "image": 8,
+          "url": 15,
+          "description": 15
+        },
+        "missing_fields": [],
+        "missing_required_fields": [],
+        "pattern_cache_hit": false,
+        "pattern_learned": false,
+        "direct_llm_cached": true,
+        "timestamp": 1766779790.483393
+      },
+      "source": "direct_llm"
+    },
+    "analysis": {
+      "success": true,
+      "items_extracted": 15,
+      "expected_fields": [
+        "title",
+        "year",
+        "score",
+        "platform",
+        "image",
+        "url",
+        "description"
+      ],
+      "field_coverage": {
+        "title": {
+          "coverage": 1.0,
+          "items_with_field": 15,
+          "total_items": 15
+        },
+        "year": {
+          "coverage": 1.0,
+          "items_with_field": 15,
+          "total_items": 15
+        },
+        "score": {
+          "coverage": 1.0,
+          "items_with_field": 15,
+          "total_items": 15
+        },
+        "platform": {
+          "coverage": 0.13333333333333333,
+          "items_with_field": 2,
+          "total_items": 15
+        },
+        "image": {
+          "coverage": 0.5333333333333333,
+          "items_with_field": 8,
+          "total_items": 15
+        },
+        "url": {
+          "coverage": 1.0,
+          "items_with_field": 15,
+          "total_items": 15
+        },
+        "description": {
+          "coverage": 1.0,
+          "items_with_field": 15,
+          "total_items": 15
+        }
+      },
+      "quality_score": 0.8095238095238095,
+      "quality_from_scraper": 80.95238095238095,
+      "meets_90_percent_threshold": false,
+      "issues": [
+        "QUALITY BELOW 90% THRESHOLD: 81.0% (gap: 9.0%)",
+        "Low coverage for 'platform': 13.3%"
+      ],
+      "cache_info": {
+        "code_cached": null,
+        "pattern_cached": null,
+        "direct_llm_cached": true,
+        "extraction_source": "direct_llm",
+        "early_exit": true
+      },
+      "missing_fields": [],
+      "low_coverage_fields": [
+        "platform"
+      ]
+    },
+    "performance": {
+      "elapsed_time": 42.75747299194336,
+      "items_per_second": 0.3508158679729833
+    },
+    "timestamp": "2025-12-26T14:09:50.483447"
+  },
+  {
+    "test_config": {
+      "name": "Leafly",
+      "url": "https://www.leafly.com/dispensary-info/the-grove---pahrump/menu",
+      "description": "Leafly dispensary menu"
+    },
+    "result": {
+      "data": [
+        {
+          "name": "Cartridge.5g | Gelato (I) by ROVE",
+          "type": "Cartridge",
+          "price": 32.0,
+          "thc": 89.2,
+          "cbd": 0.17,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2F9f3da203-9af6-4512-ad29-76bc164e330b.jpg?dpr=2&h=115&fit=fillmax&s=d9d1b3db4c6b3f4559f4f29848369656",
+          "description": "A sweet and fruity strain with a relaxing effect.",
+          "effects": "Relaxed, Happy, Euphoric"
+        },
+        {
+          "name": "Cartridge.5g | Sour Jack (S) by ROVE",
+          "type": "Cartridge",
+          "price": 32.0,
+          "thc": 85.77,
+          "cbd": 0.18,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2F591a0a59-0d30-40a3-a61a-d4a14e5bbac6.jpg?dpr=2&h=115&fit=fillmax&s=aac2416211191bd826faf5e37c426bdc",
+          "description": "A zesty and uplifting strain that enhances creativity.",
+          "effects": "Euphoric, Uplifted, Creative"
+        },
+        {
+          "name": "Cartridge.5g | Dream (H) by ROVE",
+          "type": "Cartridge",
+          "price": 32.0,
+          "thc": 86.14,
+          "cbd": 0.18,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fleafly-public%2Fproducts%2Fphotos%2Ftz1nLlVMQLy4QAQjeRFS_201520f9-5c9f-47a4-9d3e-a3c7fd21acfa?dpr=2&h=115&fit=fillmax&s=811fbfbd07be77714dd40e1fc36fc1d1",
+          "description": "A calming strain perfect for nighttime use.",
+          "effects": "Relaxed, Sleepy, Happy"
+        },
+        {
+          "name": "Cartridge.5g | Waui (S) by ROVE",
+          "type": "Cartridge",
+          "price": 32.0,
+          "thc": 88.06,
+          "cbd": 0.21,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2Fd2d45016-9390-41fa-9d40-83f17d103acd.jpg?dpr=2&h=115&fit=fillmax&s=378511056ed041e2c966448f391a3174",
+          "description": "A tropical strain that provides a happy and euphoric high.",
+          "effects": "Euphoric, Happy, Uplifted"
+        },
+        {
+          "name": "Cartridge.5g | Tangie (S) by ROVE",
+          "type": "Cartridge",
+          "price": 32.0,
+          "thc": 85.37,
+          "cbd": 0.18,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2Fb4L6Rk5uTFPNQNK93uGf_9236128a-e0b1-413a-942e-542aaaa3ddff?dpr=2&h=115&fit=fillmax&s=3c51f7334e27b0c8111fa22be53304cc",
+          "description": "A citrusy strain that offers a refreshing experience.",
+          "effects": "Happy, Uplifted, Energetic"
+        },
+        {
+          "name": "Cartridge.85g | Live Resin - Kush Breath by ROVE",
+          "type": "Cartridge",
+          "price": 50.0,
+          "thc": 74.25,
+          "cbd": null,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2Fexample-image-kush-breath.jpg",
+          "description": "A potent strain known for its relaxing effects.",
+          "effects": "Relaxed, Sleepy"
+        },
+        {
+          "name": "Cartridge.85g | Live Resin - Galaxy Gas by ROVE",
+          "type": "Cartridge",
+          "price": 50.0,
+          "thc": 76.94,
+          "cbd": 0,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2Fexample-image-galaxy-gas.jpg",
+          "description": "A flavorful strain with a balanced high.",
+          "effects": "Happy, Relaxed"
+        },
+        {
+          "name": "Cartridge1g | RTU Liquid Diamond - Northern Lights (I) by ROVE",
+          "type": "Cartridge",
+          "price": 55.0,
+          "thc": 88.89,
+          "cbd": 0.36,
+          "image": "https://leafly-production.imgix.net/https%3A%2F%2Fleaflogixmedia.blob.core.windows.net%2Fproduct-image%2Fexample-image-northern-lights.jpg",
+          "description": "A classic strain known for its calming effects.",
+          "effects": "Relaxed, Happy, Sleepy"
+        }
+      ],
+      "metadata": {
+        "url": "https://www.leafly.com/dispensary-info/the-grove---pahrump/menu",
+        "fields": [
+          "name",
+          "type",
+          "price",
+          "thc",
+          "cbd",
+          "image",
+          "description",
+          "effects"
+        ],
+        "items_extracted": 8,
+        "execution_time": 48.940999269485474,
+        "extraction_source": "direct_llm",
+        "code_cached": null,
+        "schema_quality": null,
+        "pagination_detected": "url_param",
+        "total_pages_scraped": 1,
+        "auto_pagination": false,
+        "early_exit": true,
+        "direct_llm_quality": 98.4375,
+        "field_coverage": {
+          "name": 8,
+          "type": 8,
+          "price": 8,
+          "thc": 8,
+          "cbd": 7,
+          "image": 8,
+          "description": 8,
+          "effects": 8
+        },
+        "missing_fields": [],
+        "missing_required_fields": [],
+        "pattern_cache_hit": false,
+        "pattern_learned": false,
+        "direct_llm_cached": true,
+        "timestamp": 1766779861.535646
+      },
+      "source": "direct_llm"
+    },
+    "analysis": {
+      "success": true,
+      "items_extracted": 8,
+      "expected_fields": [
+        "name",
+        "type",
+        "price",
+        "thc",
+        "cbd",
+        "image",
+        "description",
+        "effects"
+      ],
+      "field_coverage": {
+        "name": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "type": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "price": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "thc": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "cbd": {
+          "coverage": 0.75,
+          "items_with_field": 6,
+          "total_items": 8
+        },
+        "image": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "description": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        },
+        "effects": {
+          "coverage": 1.0,
+          "items_with_field": 8,
+          "total_items": 8
+        }
+      },
+      "quality_score": 0.984375,
+      "quality_from_scraper": 98.4375,
+      "meets_90_percent_threshold": true,
+      "issues": [],
+      "cache_info": {
+        "code_cached": null,
+        "pattern_cached": null,
+        "direct_llm_cached": true,
+        "extraction_source": "direct_llm",
+        "early_exit": true
+      },
+      "missing_fields": [],
+      "low_coverage_fields": []
+    },
+    "performance": {
+      "elapsed_time": 48.94156193733215,
+      "items_per_second": 0.16346025102843473
+    },
+    "timestamp": "2025-12-26T14:11:01.536163"
+  }
+]

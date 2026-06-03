@@ -1,0 +1,215 @@
+{
+  "data": [
+    {
+      "title": "Cursor",
+      "description": "Cursor excels for developers needing repo-aware agents, multi-file refactors, and PR reviews.",
+      "url": "https://www.producthunt.com/products/cursor",
+      "review score": 5.0
+    },
+    {
+      "title": "v0 by Vercel",
+      "description": "v0 rapidly scaffolds polished React/Tailwind UIs for Next.js.",
+      "url": "https://www.producthunt.com/products/v0",
+      "review score": 4.6
+    },
+    {
+      "title": "Lovable",
+      "description": "The world's first AI Fullstack Engineer",
+      "url": "https://www.producthunt.com/products/lovable",
+      "review score": 4.6
+    },
+    {
+      "title": "Windsurf",
+      "description": "The first agentic IDE. Tomorrow's editor, today.",
+      "url": "https://www.producthunt.com/products/windsurf",
+      "review score": 4.6
+    },
+    {
+      "title": "Replit",
+      "description": "Idea to app, fast.",
+      "url": "https://www.producthunt.com/products/replit",
+      "review score": 4.6
+    },
+    {
+      "title": "Softr",
+      "description": "Build custom business apps powered by AI and no-code.",
+      "url": "https://www.producthunt.com/products/softr",
+      "review score": 4.7
+    },
+    {
+      "title": "Softr",
+      "description": "Build custom business apps powered by AI and no-code.",
+      "url": "/products/softr",
+      "review score": 4.7
+    },
+    {
+      "title": "bolt.new",
+      "description": "Prompt, run, edit, and deploy full-stack web apps",
+      "url": "/products/bolt-new",
+      "review score": 4.4
+    },
+    {
+      "title": "Base44",
+      "description": "Build fully-functional apps in minutes No coding necessary",
+      "url": "/products/base44",
+      "review score": 4.4
+    },
+    {
+      "title": "Base44 Build fully-functional apps in minutes No coding necessary",
+      "description": null,
+      "url": "https://www.producthunt.com/products/base44",
+      "review score": 4.4
+    },
+    {
+      "title": "Reflex A unified platform to build and deploy all in Python.",
+      "description": null,
+      "url": "https://www.producthunt.com/products/reflex-5",
+      "review score": 4.9
+    },
+    {
+      "title": "Solid AI that builds real web apps",
+      "description": null,
+      "url": "https://www.producthunt.com/products/solid-3",
+      "review score": 4.6
+    },
+    {
+      "title": "SolidAI that builds real web apps",
+      "description": null,
+      "url": "/products/solid-3",
+      "review score": 4.6
+    },
+    {
+      "title": "DreamflowThe Fastest Way to Build Mobile Apps, powered by Flutter",
+      "description": null,
+      "url": "/products/dreamflow",
+      "review score": 4.9
+    },
+    {
+      "title": "FlootBuild serious apps with AI without getting stuck",
+      "description": null,
+      "url": "/products/floot",
+      "review score": 4.2
+    },
+    {
+      "title": "UI BakeryCustom internal tools on top of databases and APIs.",
+      "description": null,
+      "url": "/products/ui-bakery",
+      "review score": 5.0
+    },
+    {
+      "title": "CREAOInfinitely personalized software for every team member",
+      "description": null,
+      "url": "/products/creao-ai",
+      "review score": 4.5
+    },
+    {
+      "title": "CREAO",
+      "description": "Infinitely personalized software for every team member",
+      "url": "https://www.producthunt.com/products/creao-ai",
+      "review score": 4.5
+    },
+    {
+      "title": "Tempo Visual Editor for React, Powered by AI",
+      "description": null,
+      "url": "https://www.producthunt.com/products/tempo-labs",
+      "review score": 4.2
+    },
+    {
+      "title": "n8n",
+      "description": null,
+      "url": "https://www.producthunt.com/products/n8n-io",
+      "review score": null
+    },
+    {
+      "title": "Attio",
+      "description": null,
+      "url": "https://www.producthunt.com/products/attio",
+      "review score": null
+    },
+    {
+      "title": "PostHog",
+      "description": null,
+      "url": "https://www.producthunt.com/products/posthog",
+      "review score": null
+    },
+    {
+      "title": "Vapi",
+      "description": null,
+      "url": "https://www.producthunt.com/products/vapi",
+      "review score": null
+    },
+    {
+      "title": "Granola",
+      "description": null,
+      "url": "https://www.producthunt.com/products/granola",
+      "review score": null
+    },
+    {
+      "title": "Raycast",
+      "description": null,
+      "url": "https://www.producthunt.com/products/raycast",
+      "review score": null
+    },
+    {
+      "title": "Supabase",
+      "description": null,
+      "url": "https://www.producthunt.com/products/supabase",
+      "review score": null
+    },
+    {
+      "title": "Screen Studio",
+      "description": null,
+      "url": "https://www.producthunt.com/products/screen-studio",
+      "review score": null
+    },
+    {
+      "title": "bolt.new",
+      "description": null,
+      "url": "https://www.producthunt.com/products/bolt-new",
+      "review score": null
+    },
+    {
+      "title": "Wispr Flow",
+      "description": null,
+      "url": "https://www.producthunt.com/products/wisprflow",
+      "review score": null
+    },
+    {
+      "title": "Framer",
+      "description": null,
+      "url": "https://www.producthunt.com/products/framer",
+      "review score": null
+    }
+  ],
+  "metadata": {
+    "url": "https://www.producthunt.com/categories/vibe-coding",
+    "fields": [
+      "title",
+      "description",
+      "url",
+      "review score"
+    ],
+    "items_extracted": 30,
+    "execution_time": 64.27737283706665,
+    "extraction_source": "direct_llm",
+    "code_cached": null,
+    "schema_quality": null,
+    "pagination_detected": "url_param",
+    "total_pages_scraped": 1,
+    "auto_pagination": false,
+    "early_exit": true,
+    "direct_llm_quality": 84.5,
+    "field_coverage": {
+      "title": 30,
+      "description": 10,
+      "url": 30,
+      "review score": 19
+    },
+    "missing_fields": [],
+    "missing_required_fields": [],
+    "pattern_cache_hit": false,
+    "pattern_learned": true,
+    "timestamp": 1766386428.8446012
+  },
+  "source": "direct_llm"
+}

@@ -1,0 +1,48 @@
+{
+  "mode": "scrape_only",
+  "urls": [
+    {
+      "url": "https://www.reddit.com/r/webscraping/"
+    }
+  ],
+  "fields": [
+    "title",
+    "author",
+    "upvotes",
+    "comments"
+  ],
+  "browserConfig": {
+    "useCamoufox": true,
+    "headless": true,
+    "waitForNetworkIdle": true,
+    "captureApiRequests": true
+  },
+  "proxyConfiguration": {
+    "useApifyProxy": true,
+    "apifyProxyGroups": ["RESIDENTIAL"]
+  },
+  "apiKeys": {
+    "openaiApiKey": "<YOUR_OPENAI_KEY>"
+  },
+  "crawlConfig": {
+    "maxDepth": 0,
+    "maxPages": 1,
+    "maxItems": 100,
+    "handlePagination": false,
+    "discoverApis": true,
+    "enableSearchDiscovery": false
+  },
+  "schemaConfig": {
+    "useSchema": false,
+    "strictSchema": false
+  },
+  "outputFormat": "json",
+  "debugMode": true
+}
+
+
+
+
+
+
+
