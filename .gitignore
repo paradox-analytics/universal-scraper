@@ -60,65 +60,24 @@ firestore.rules.backup
 firestore.rules.temp
 
 # ==============================================================================
-# Loose root files — only track essential config and docs
+# Root files — ignore everything except LICENSE, README, CHANGELOG, requirements
 # ==============================================================================
 
-# Loose scripts (test, debug, utility, deploy shell scripts)
-/test_*.py
-/test_*.sh
-/test_*.json
-/test_*.txt
-/debug_*.py
-/debug_*.html
-/debug_*.json
-/debug_*.png
-/debug_*.txt
-/reproduce_*.py
-/repro_*.py
-/repro_*.txt
-/repro_*.md
-/verify_*.py
-/extract_*.py
-/fix_*.py
-/update_*.py
-/inspect_*.py
-/diagnose_*.py
-/analyze_*.py
-/check_*.py
-/generate_*.py
-/save_*.py
-/install_*.py
-/quick_*.py
-/deploy_*.sh
-/setup_*.sh
-/update_*.sh
-
-# Loose data files (results, samples, captures)
-/*.csv
-/*.png
-/*.html
-/*.json
+# Ignore all root files by default
+/*
+# Keep only these
 !/.gitignore
-!/.firebaserc
-!/.gcloudignore
-!/.scraping_strategies.json
-!/firebase.json
-!/firestore.indexes.json
-!/package.json
-
-# Loose text outputs
-/final_test_*.txt
-/backend_log*.txt
-/leafly_*.txt
-/quick_test_*.txt
-/simple_test_*.txt
-/product_hunt_*.txt
-
-# Session notes and dev logs (not real documentation)
-/[A-Z][A-Z]*.md
+!/LICENSE
 !/README.md
 !/CHANGELOG.md
-!/CONTRIBUTING.md
+!/requirements.txt
+
+# Track source directories
+!/api/
+!/frontend/
+!/universal_scraper/
+!/examples/
+!/infrastructure/
 
 # Test data directories
 /html_samples/
