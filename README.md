@@ -33,7 +33,22 @@ URL → HTML Fetcher → Smart Cleaner → JSON Detector → Structural Hash →
 
 ## Quick Start
 
-### Installation
+### Docker (Recommended)
+
+```bash
+# Clone and configure
+git clone https://github.com/paradox-analytics/universal-scraper.git
+cd universal-scraper
+cp .env.example .env  # Edit with your API keys
+
+# Start API + Redis
+docker compose up -d
+
+# API is now running at http://localhost:8080
+curl http://localhost:8080/health
+```
+
+### Manual Installation
 
 ```bash
 cd universal-scraper
@@ -297,6 +312,37 @@ scraper = UniversalScraper(
 - **Solution**: 
   - Enable caching (`enable_cache=True`) to skip LLM generation for known structures.
   - Reuse the `scraper` instance instead of creating a new one for every request.
+
+## API Documentation
+
+Interactive API docs are available when the server is running:
+
+- **Swagger UI**: [http://localhost:8080/docs](http://localhost:8080/docs)
+- **ReDoc**: [http://localhost:8080/redoc](http://localhost:8080/redoc)
+
+## Testing
+
+```bash
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run specific test module
+pytest tests/test_json_detector.py -v
+
+# Run with coverage
+pytest --cov=universal_scraper --cov-report=html
+```
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration:
+
+- **Python lint + tests** — ruff linting, import validation, pytest suite
+- **Frontend lint + build** — ESLint, TypeScript type checking, Vite build
+- **Docker build** — validates the Dockerfile builds successfully
 
 ## Contributing
 

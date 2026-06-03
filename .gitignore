@@ -67,13 +67,22 @@ firestore.rules.temp
 /*
 # Keep only these
 !/.gitignore
+!/.dockerignore
 !/CLAUDE.md
+!/CONTRIBUTING.md
 !/LICENSE
 !/README.md
 !/CHANGELOG.md
 !/requirements.txt
+!/setup.py
+!/pytest.ini
+!/Dockerfile
+!/docker-compose.yml
+!/.env.example
 
-# Track core product directories only
+# Track source and config directories
 !/api/
 !/frontend/
 !/universal_scraper/
+!/tests/
+!/.github/
