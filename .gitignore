@@ -67,6 +67,7 @@ firestore.rules.temp
 /*
 # Keep only these
 !/.gitignore
+!/CLAUDE.md
 !/LICENSE
 !/README.md
 !/CHANGELOG.md
