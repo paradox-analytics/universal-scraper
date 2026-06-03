@@ -1,22 +1,22 @@
 import pytest
-from universal_scraper.core.html_cleaner import HTMLCleaner
+from universal_scraper.core.html_cleaner import SmartHTMLCleaner
 
 
-class TestHTMLCleaner:
+class TestSmartHTMLCleaner:
     def setup_method(self):
-        self.cleaner = HTMLCleaner()
+        self.cleaner = SmartHTMLCleaner()
 
     def test_removes_script_tags(self):
         html = "<html><body><script>alert('xss')</script><p>Content</p></body></html>"
         result = self.cleaner.clean(html)
-        cleaned = result if isinstance(result, str) else result.get("html", "")
+        cleaned = result.get("html", "") if isinstance(result, dict) else str(result)
         assert "<script>" not in cleaned
         assert "Content" in cleaned
 
     def test_removes_style_tags(self):
         html = "<html><body><style>body{color:red}</style><p>Content</p></body></html>"
         result = self.cleaner.clean(html)
-        cleaned = result if isinstance(result, str) else result.get("html", "")
+        cleaned = result.get("html", "") if isinstance(result, dict) else str(result)
         assert "<style>" not in cleaned
         assert "Content" in cleaned
 
@@ -28,7 +28,7 @@ class TestHTMLCleaner:
         </body></html>
         """
         result = self.cleaner.clean(html)
-        cleaned = result if isinstance(result, str) else result.get("html", "")
+        cleaned = result.get("html", "") if isinstance(result, dict) else str(result)
         assert "Title" in cleaned
         assert "$10" in cleaned
 
@@ -40,5 +40,5 @@ class TestHTMLCleaner:
         bloated_html = "<html><head>" + "<style>.x{color:red}</style>" * 100
         bloated_html += "</head><body><p>Small content</p></body></html>"
         result = self.cleaner.clean(bloated_html)
-        cleaned = result if isinstance(result, str) else result.get("html", "")
+        cleaned = result.get("html", "") if isinstance(result, dict) else str(result)
         assert len(cleaned) < len(bloated_html)

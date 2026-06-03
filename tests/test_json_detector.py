@@ -10,7 +10,6 @@ class TestJSONDetector:
         result = self.detector.detect_and_extract(
             html=sample_json_html,
             url="https://example.com/product",
-            fields=["name", "price", "brand"],
         )
         assert result is not None
         assert result.get("json_found") is True
@@ -19,7 +18,6 @@ class TestJSONDetector:
         result = self.detector.detect_and_extract(
             html=sample_html,
             url="https://example.com/product",
-            fields=["name", "price"],
         )
         json_found = result.get("json_found", False) if result else False
         assert not json_found or len(result.get("data", [])) == 0
@@ -28,7 +26,6 @@ class TestJSONDetector:
         result = self.detector.detect_and_extract(
             html="",
             url="https://example.com",
-            fields=["title"],
         )
         assert result is None or result.get("json_found") is False
 
@@ -41,6 +38,5 @@ class TestJSONDetector:
         result = self.detector.detect_and_extract(
             html=html,
             url="https://example.com",
-            fields=["name"],
         )
         assert result is None or result.get("json_found") is False
