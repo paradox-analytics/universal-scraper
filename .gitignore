@@ -72,13 +72,7 @@ firestore.rules.temp
 !/CHANGELOG.md
 !/requirements.txt
 
-# Track source directories
+# Track core product directories only
 !/api/
 !/frontend/
 !/universal_scraper/
-!/examples/
-!/infrastructure/
-
-# Test data directories
-/html_samples/
-/tests/
