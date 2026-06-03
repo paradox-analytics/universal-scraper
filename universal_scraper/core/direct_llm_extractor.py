@@ -21,7 +21,7 @@ import time
 from typing import List, Dict, Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .redis_cache import RedisCache
+    pass
 import litellm
 
 # Optional langchain imports
@@ -49,16 +49,16 @@ logger = logging.getLogger(__name__)
 class DirectLLMExtractor:
     """
     Direct LLM extraction - the proven approach used by ScrapeGraphAI, Parsera, etc.
-    
+
     ENHANCED: Now uses hybrid extraction that captures structured data (data attributes,
     form options, hidden inputs) before markdown conversion to prevent data loss.
-    
+
     Quality Modes:
     - conservative: Like ScrapeGraphAI (≥70% fields filled, fewer items, higher quality)
     - balanced: Default (≥50% fields filled, good balance)
     - aggressive: Maximum extraction (≥30% fields filled, more items)
     """
-    
+
     def __init__(
         self,
         api_key: str,
@@ -80,7 +80,7 @@ class DirectLLMExtractor:
         self.enable_cache = enable_cache
         self.cache_ttl = cache_ttl
         self.redis_cache = redis_cache  # Store Redis cache reference
-        
+
         # Initialize cache (prefer Redis if available, otherwise UnifiedPatternCache)
         if self.enable_cache:
             try:
@@ -95,36 +95,36 @@ class DirectLLMExtractor:
                 self.enable_cache = False
         else:
             self.result_cache = None
-        
+
         # Initialize hybrid extractor if available
         if self.use_hybrid_extraction:
             self.hybrid_extractor = HybridMarkdownExtractor()
             logger.info(" Hybrid extraction enabled (captures data attributes, forms, etc.)")
         else:
             self.hybrid_extractor = None
-        
+
         # Use Langchain's Html2TextTransformer as fallback (if available)
         if LANGCHAIN_AVAILABLE:
             self.html_transformer = Html2TextTransformer()
         else:
             self.html_transformer = None
-        
+
         # Quality thresholds by mode
         self.quality_thresholds = {
             'conservative': 0.30,  # Items with ≥30% fields (more lenient for specific fields)
             'balanced': 0.20,      # Default - at least 1-2 fields filled (works with any number of fields)
             'aggressive': 0.10     # Maximum extraction - at least 1 field
         }
-        
+
         if quality_mode not in self.quality_thresholds:
             logger.warning(f"Invalid quality_mode '{quality_mode}', using 'balanced'")
             self.quality_mode = "balanced"
-        
+
         # Initialize quality validator for garbage filtering
         self.quality_validator = JSONQualityValidator()
-        
+
         logger.info(f" DirectLLMExtractor initialized (model={model_name}, quality={quality_mode})")
-    
+
     async def extract(
         self,
         html: str,
@@ -136,7 +136,7 @@ class DirectLLMExtractor:
     ) -> List[Dict[str, Any]]:
         """
         Extract data directly from HTML using LLM
-        
+
         Args:
             html: Cleaned HTML content
             fields: List of fields to extract
@@ -144,10 +144,10 @@ class DirectLLMExtractor:
             quality_mode: Override quality mode for this extraction
                          ('conservative', 'balanced', 'aggressive')
             url: Optional URL for cache key generation
-            
+
         Returns:
             List of extracted items
-            
+
         ENHANCED (from ScrapeGraphAI + Parsera analysis):
         - Skip chunking for small pages (fits in single LLM context)
         - Conditional retry if quality is poor
@@ -158,26 +158,26 @@ class DirectLLMExtractor:
         """
         # Use provided quality_mode or fall back to instance default
         quality_mode = quality_mode or self.quality_mode
-        
+
         logger.info(f" Direct LLM extraction: {len(fields)} fields from {len(html):,} bytes (quality={quality_mode})")
-        
+
         # Check if content is empty or blocked (prevent hallucination)
         if self._is_content_empty_or_blocked(html):
             logger.warning("   Content appears empty or blocked - returning empty results to prevent hallucination")
             return []
-        
+
         # NEW: Check cache first (use URL for domain-based key, more reliable than structure hash)
         if self.enable_cache and self.result_cache:
             # Generate cache key BEFORE processing (use URL for domain-based key)
             # This is more reliable than structure hash which can vary
             cache_key = self._generate_cache_key(html, fields, url)
             logger.info(f" Checking Direct LLM cache: {cache_key}")
-            
+
             # Try to get cached result
             cached_result = await self.result_cache.backend.get(cache_key)
             if cached_result:
                 logger.info(f" Direct LLM cache hit: {cache_key[:50]}...")
-                
+
                 # For domain-based cache, skip validation (domain + fields is reliable enough)
                 # Only validate if using structure-based cache
                 if cache_key.startswith("direct_llm_") and "_" in cache_key:
@@ -187,11 +187,11 @@ class DirectLLMExtractor:
                         first_part = key_parts[0]
                         # Check if first part looks like a domain (has letters) vs hash (hex only)
                         is_domain_based = any(c.isalpha() and c not in 'abcdef' for c in first_part.lower())
-                        
+
                         if is_domain_based:
                             logger.info(" Domain-based cache - using without validation (domain + fields match)")
                             return cached_result.get('items', [])
-                
+
                 # For structure-based cache, validate
                 if self._validate_cached_result(cached_result, html, fields):
                     logger.info(" Cached result validated - using cache (no LLM call)")
@@ -201,40 +201,40 @@ class DirectLLMExtractor:
                     # Fall through to LLM extraction
             else:
                 logger.info(f" Direct LLM cache miss: {cache_key[:50]}... (not found in cache)")
-        
+
         # LLM extraction (cache miss or validation failed)
-        
+
         #  OPTIMIZATION 1: Skip chunking for small pages (ScrapeGraphAI approach)
         # If content fits in a single LLM context, process it directly for better quality
         # INCREASED threshold to reduce chunking (faster for most pages)
         SMALL_PAGE_THRESHOLD = self.max_tokens_per_chunk * 8  # ~32K chars = 8K tokens (increased from 4x)
-        
+
         if len(html) <= SMALL_PAGE_THRESHOLD:
             logger.info(f"    Small page ({len(html):,} bytes) - processing without chunking")
-            
-            #  ITERATIVE REFINEMENT: The key insight is that autoregressive/iterative 
+
+            #  ITERATIVE REFINEMENT: The key insight is that autoregressive/iterative
             # generation works for agentic tasks. Let the model see and refine its output.
             items = await self._extract_with_refinement(html, fields, context, target, quality_mode, url=url)
-            
+
             # Infer and convert data types
             items = self._infer_and_convert_types(items, fields)
             logger.info(f" Total extracted: {len(items)} items")
-            
+
             # Cache the result
             if self.enable_cache and self.result_cache:
                 await self._cache_result(html, fields, items, url)
-            
+
             return items
-        
+
         # For larger pages, use chunking with overlap
         # OPTIMIZED: Reduced overlap for faster processing (20% instead of 33%)
         OVERLAP_FACTOR = 5  # 20% overlap (reduced from 33% for speed)
         chunks = self._chunk_html_with_overlap(html, self.max_tokens_per_chunk, overlap_factor=OVERLAP_FACTOR)
         logger.info(f"    Large page - split into {len(chunks)} chunks (with {100//OVERLAP_FACTOR}% overlap)")
-        
+
         all_items = []
         previous_items = []  # Track previous chunk's items for context (Parsera-style)
-        
+
         # OPTIMIZED: Process more chunks in parallel (increased threshold from 4 to 8)
         # For small number of chunks, use sequential extraction with context passing
         # This helps fill in truncated values and ensures continuity
@@ -243,7 +243,7 @@ class DirectLLMExtractor:
                 logger.info(f"   Processing chunk {i+1}/{len(chunks)} (with context from {len(previous_items)} previous items)...")
                 try:
                     items = await self._extract_chunk(
-                        chunk, fields, context, target, quality_mode, 
+                        chunk, fields, context, target, quality_mode,
                         previous_items=previous_items[-5:] if previous_items else None,  # Pass last 5 items
                         url=url  # Pass URL for field context
                     )
@@ -268,21 +268,21 @@ class DirectLLMExtractor:
                     logger.info(f"       Chunk {i+1}/{len(chunks)}: {len(items)} items")
                 except Exception as e:
                     logger.error(f"       Chunk {i+1}/{len(chunks)} failed: {e}")
-            
+
             # Process remaining chunks in parallel batches
             # OPTIMIZED: Larger batch size for better parallelism (increased to 20 for faster processing)
             # With cleaned HTML, we have fewer chunks, so larger batches are safe
             remaining_chunks = chunks[2:]
             BATCH_SIZE = 20  # Increased from 10 to 20 for faster parallel processing
-            
+
             for batch_start in range(0, len(remaining_chunks), BATCH_SIZE):
                 batch_end = min(batch_start + BATCH_SIZE, len(remaining_chunks))
                 batch_chunks = remaining_chunks[batch_start:batch_end]
-                
+
                 batch_num = batch_start // BATCH_SIZE + 1
                 total_batches = (len(remaining_chunks) + BATCH_SIZE - 1) // BATCH_SIZE
                 logger.info(f"   Processing batch {batch_num}/{total_batches} (chunks {batch_start+3}-{batch_end+2})...")
-                
+
                 # Create parallel extraction tasks (pass previous_items for context)
                 tasks = [
                     self._extract_chunk(
@@ -292,10 +292,10 @@ class DirectLLMExtractor:
                     )
                     for chunk in batch_chunks
                 ]
-                
+
                 try:
                     results = await asyncio.gather(*tasks, return_exceptions=True)
-                    
+
                     for i, result in enumerate(results):
                         chunk_idx = batch_start + i + 3  # +3 for the first 2 sequential chunks
                         if isinstance(result, Exception):
@@ -306,34 +306,34 @@ class DirectLLMExtractor:
                 except Exception as e:
                     logger.error(f"       Batch extraction failed: {e}")
                     continue
-        
+
         #  ScrapeGraphAI's secret: DEDUPLICATE items from multiple chunks!
         # Even more important with overlapping chunks
         if len(chunks) > 1:
             all_items = self._deduplicate_items(all_items, fields)
             logger.info(f"   After deduplication: {len(all_items)} items")
-        
+
         # Calculate quality for large pages
         if all_items:
             quality = self._calculate_quality(all_items, fields)
             logger.info(f"   Quality: {quality:.1%} field completeness")
-            
+
             #  ITERATIVE REFINEMENT for chunked pages
             # Apply the same refinement logic we use for small pages
             if quality < 0.7 and len(all_items) > 0:
-                logger.info(f"    Quality below 70%, applying iterative refinement...")
-                
+                logger.info("    Quality below 70%, applying iterative refinement...")
+
                 # Find incomplete fields
                 missing_fields = self._find_incomplete_fields(all_items, fields)
-                
+
                 if missing_fields:
                     logger.info(f"   Refining {len(missing_fields)} incomplete fields: {missing_fields}")
-                    
+
                     # Refine by showing model the merged items
                     refined_items = await self._refine_extraction(
                         html, fields, all_items, missing_fields, context, target, quality_mode
                     )
-                    
+
                     if refined_items:
                         new_quality = self._calculate_quality(refined_items, fields)
                         if new_quality > quality:
@@ -342,27 +342,27 @@ class DirectLLMExtractor:
                             quality = new_quality
                         else:
                             logger.info(f"    Keeping original (refinement quality: {new_quality:.1%})")
-        
+
         # Infer and convert data types for better quality
         all_items = self._infer_and_convert_types(all_items, fields)
-        
+
         logger.info(f" Total extracted before filtering: {len(all_items)} items")
-        
+
         # Apply quality filtering (but be lenient for items with at least 1 field)
         if all_items:
             filtered_items = self._filter_quality_items(all_items, fields, quality_mode)
             if len(filtered_items) < len(all_items):
                 logger.info(f"   Filtered {len(all_items) - len(filtered_items)} items ({len(filtered_items)} kept, mode={quality_mode})")
             all_items = filtered_items
-        
+
         logger.info(f" Total extracted after filtering: {len(all_items)} items")
-        
+
         # Cache the result
         if self.enable_cache and self.result_cache:
             await self._cache_result(html, fields, all_items, url)
-        
+
         return all_items
-    
+
     async def _extract_single_pass(
         self,
         html: str,
@@ -376,7 +376,7 @@ class DirectLLMExtractor:
         """
         Extract data in a single LLM pass (no chunking).
         Used for small pages or as a retry mechanism.
-        
+
         Args:
             html: HTML content
             fields: Fields to extract
@@ -387,7 +387,7 @@ class DirectLLMExtractor:
         # Use hybrid extraction for markdown + metadata
         extracted_content = None
         metadata_context = ""
-        
+
         if self.use_hybrid_extraction and self.hybrid_extractor:
             try:
                 extracted_content = self.hybrid_extractor.extract(html)
@@ -396,7 +396,7 @@ class DirectLLMExtractor:
             except Exception as e:
                 logger.warning(f"   Hybrid extraction failed: {e}")
                 extracted_content = None
-        
+
         # Fallback to html2text
         if extracted_content is None:
             if self.use_html2text and self.html_transformer is not None and Document is not None:
@@ -405,14 +405,14 @@ class DirectLLMExtractor:
                 content_for_llm = transformed_docs[0].page_content if transformed_docs else html
             else:
                 content_for_llm = html
-        
+
         # Build prompt (optionally enhanced for retry)
         prompt = self._build_extraction_prompt(
             content_for_llm, fields, context, target, None, metadata_context,
             enhanced_prompt=enhanced_prompt,
             url=url  # Pass URL for field context
         )
-        
+
         # Call LLM
         try:
             response = await litellm.acompletion(
@@ -426,28 +426,28 @@ class DirectLLMExtractor:
                 max_tokens=4096,
                 response_format={"type": "json_object"}
             )
-            
+
             content = response.choices[0].message.content
             result = json.loads(content)
-            
+
             items = []
             if "items" in result:
                 items = result["items"]
             elif isinstance(result, list):
                 items = result
-            
+
             # Filter quality
             filtered_items = self._filter_quality_items(items, fields, quality_mode)
-            
+
             if len(filtered_items) < len(items):
                 logger.debug(f"   Filtered {len(items) - len(filtered_items)} low-quality items")
-            
+
             return filtered_items
-            
+
         except Exception as e:
             logger.error(f" Single-pass extraction failed: {e}")
             return []
-    
+
     async def _extract_with_refinement(
         self,
         html: str,
@@ -462,49 +462,49 @@ class DirectLLMExtractor:
         """
         Iterative refinement extraction - the key insight is that autoregressive/iterative
         generation works surprisingly well for agentic tasks.
-        
+
         Instead of single-shot extraction, we:
         1. Extract initial data
         2. Calculate quality
         3. If below threshold, refine by showing model its own output
         4. Repeat until quality met or max iterations
-        
+
         This mimics next-token prediction where each output informs the next step.
         """
         # Initial extraction
         items = await self._extract_single_pass(html, fields, context, target, quality_mode, url=url)
-        
+
         if not items:
-            logger.info(f"   Initial extraction returned 0 items, trying enhanced prompt...")
+            logger.info("   Initial extraction returned 0 items, trying enhanced prompt...")
             items = await self._extract_single_pass(html, fields, context, target, quality_mode, enhanced_prompt=True, url=url)
             if not items:
                 return []
-        
+
         quality = self._calculate_quality(items, fields)
         logger.info(f"   Iteration 1: {len(items)} items, {quality:.1%} quality")
-        
+
         # Iterative refinement loop
         for iteration in range(2, max_iterations + 1):
             if quality >= quality_threshold:
                 logger.info(f"    Quality threshold met ({quality:.1%} >= {quality_threshold:.0%})")
                 break
-            
+
             # Find what's missing
             missing_fields = self._find_incomplete_fields(items, fields)
-            
+
             if not missing_fields:
                 break
-            
+
             logger.info(f"    Iteration {iteration}: Refining {len(missing_fields)} incomplete fields...")
-            
+
             # Refine by showing model its own output
             refined_items = await self._refine_extraction(
                 html, fields, items, missing_fields, context, target, quality_mode
             )
-            
+
             if refined_items:
                 new_quality = self._calculate_quality(refined_items, fields)
-                
+
                 if new_quality > quality:
                     items = refined_items
                     quality = new_quality
@@ -515,22 +515,22 @@ class DirectLLMExtractor:
             else:
                 logger.info(f"   Iteration {iteration}: Refinement failed, keeping previous")
                 break
-        
+
         return items
-    
+
     def _find_incomplete_fields(self, items: List[Dict[str, Any]], fields: List[str]) -> List[str]:
         """Find fields that have low fill rates across items"""
         if not items:
             return fields
-        
+
         field_fill_rates = {}
         for field in fields:
             filled = sum(1 for item in items if item.get(field) not in [None, '', 'null', 'None'])
             field_fill_rates[field] = filled / len(items)
-        
+
         # Return fields with < 70% fill rate
         return [f for f, rate in field_fill_rates.items() if rate < 0.7]
-    
+
     async def _refine_extraction(
         self,
         html: str,
@@ -554,7 +554,7 @@ class DirectLLMExtractor:
                 metadata_context = extracted_content.get_metadata_summary()
             except:
                 extracted_content = None
-        
+
         if extracted_content is None:
             if self.use_html2text and self.html_transformer is not None and Document is not None:
                 doc = Document(page_content=html)
@@ -563,12 +563,12 @@ class DirectLLMExtractor:
             else:
                 content_for_llm = html
             metadata_context = ""
-        
+
         # Build refinement prompt - show model its own output
         prompt = self._build_refinement_prompt(
             content_for_llm, fields, previous_items, missing_fields, context, target, metadata_context
         )
-        
+
         try:
             response = await litellm.acompletion(
                 model=self.model_name,
@@ -581,12 +581,12 @@ class DirectLLMExtractor:
                 max_tokens=4096,
                 response_format={"type": "json_object"}
             )
-            
+
             content = response.choices[0].message.content
             result = json.loads(content)
-            
+
             items = result.get("items", result) if isinstance(result, dict) else result
-            
+
             # Validate that we got the same number of items (refinement should not change count)
             if len(items) != len(previous_items):
                 logger.warning(f"  Refinement returned {len(items)} items, expected {len(previous_items)}. Merging to preserve all items.")
@@ -604,13 +604,13 @@ class DirectLLMExtractor:
                     else:
                         merged_items.append(original_item)
                 items = merged_items
-            
+
             return self._filter_quality_items(items, fields, quality_mode)
-            
+
         except Exception as e:
             logger.error(f" Refinement failed: {e}")
             return []
-    
+
     def _build_refinement_prompt(
         self,
         html: str,
@@ -622,10 +622,9 @@ class DirectLLMExtractor:
         metadata_context: str = ""
     ) -> str:
         """Build prompt that shows model its previous output for refinement"""
-        
+
         # Show ALL items, not just first 10 (fixes bug where refinement reduced items from 30 to 10)
         # If too many items, show summary + all items in compact format
-        items_to_show = previous_items
         items_preview = ""
         if len(previous_items) > 50:
             # For very large lists, show first 5 and last 5 with summary
@@ -635,10 +634,9 @@ class DirectLLMExtractor:
             items_preview += "\n\n... (showing all items in response) ...\n\n"
             items_preview += "Last 5 items:\n"
             items_preview += json.dumps(previous_items[-5:], indent=2)
-            items_to_show = previous_items  # Still pass all items for context
         else:
             items_preview = json.dumps(previous_items, indent=2)
-        
+
         prompt_parts = [
             f"You previously extracted {len(previous_items)} items from a webpage:",
             "",
@@ -658,14 +656,14 @@ class DirectLLMExtractor:
             "Original content:",
             html[:8000],  # Limit content size
         ]
-        
+
         if metadata_context:
             prompt_parts.extend([
                 "",
                 "Additional metadata:",
                 metadata_context
             ])
-        
+
         prompt_parts.extend([
             "",
             f"Extract items with these fields: {', '.join(fields)}",
@@ -673,9 +671,9 @@ class DirectLLMExtractor:
             "Return JSON with 'items' array. Fields are OPTIONAL - extract what exists, use null for missing fields.",
             "Capture ALL items, even if some don't have all fields.",
         ])
-        
+
         return "\n".join(prompt_parts)
-    
+
     def _get_refinement_system_prompt(self) -> str:
         """System prompt for refinement - emphasizes completing missing data"""
         return """You are refining a previous extraction. Your job is to:
@@ -693,28 +691,28 @@ For numeric fields, extract only the number.
 If truly not found after careful search, use null.
 
 Return complete JSON with 'items' array containing the same number of items."""
-    
+
     def _calculate_quality(self, items: List[Dict[str, Any]], fields: List[str]) -> float:
         """
         Calculate extraction quality as percentage of fields filled across all items.
-        
+
         Returns:
             Float between 0 and 1 representing field completeness
         """
         if not items or not fields:
             return 0.0
-        
+
         total_fields = len(items) * len(fields)
         filled_fields = 0
-        
+
         for item in items:
             for field in fields:
                 value = item.get(field)
                 if value is not None and str(value).strip() not in ['', 'null', 'None', 'N/A']:
                     filled_fields += 1
-        
+
         return filled_fields / total_fields if total_fields > 0 else 0.0
-    
+
     def _chunk_html_with_overlap(self, html: str, max_tokens: int, overlap_factor: int = 3) -> List[str]:
         """
         Split HTML into overlapping chunks (Parsera-style).
@@ -724,19 +722,19 @@ Return complete JSON with 'items' array containing the same number of items."""
         chars_per_token = 4
         chunk_size = max_tokens * chars_per_token
         overlap_size = chunk_size // overlap_factor
-        
+
         chunks = []
         start = 0
-        
+
         while start < len(html):
             end = start + chunk_size
-            
+
             # Try to break at a sensible boundary (closing tag)
             if end < len(html):
                 # Look for </div>, </article>, </tr>, </li> etc near the end
                 break_patterns = ['</div>', '</article>', '</tr>', '</li>', '</p>', '</section>']
                 best_break = end
-                
+
                 for pattern in break_patterns:
                     # Look in the last 20% of the chunk
                     search_start = end - (chunk_size // 5)
@@ -744,20 +742,20 @@ Return complete JSON with 'items' array containing the same number of items."""
                     if idx > search_start and idx > best_break - chunk_size // 5:
                         best_break = idx + len(pattern)
                         break
-                
+
                 end = best_break
-            
+
             chunks.append(html[start:end])
-            
+
             # Move forward with overlap
             start = end - overlap_size
             if start < 0:
                 start = 0
             if start >= len(html):
                 break
-        
+
         return chunks
-    
+
     async def _extract_from_chunk(
         self,
         html_chunk: str,
@@ -770,10 +768,10 @@ Return complete JSON with 'items' array containing the same number of items."""
     ) -> List[Dict[str, Any]]:
         """
         Extract data from a single HTML chunk using LLM
-        
+
         ENHANCED: Now uses hybrid extraction that captures structured data
         (data attributes, form options, hidden inputs) before markdown conversion.
-        
+
         PARSERA-STYLE: Optionally receives previous_items from earlier chunks
         to help fill in truncated values and maintain extraction continuity.
         """
@@ -791,17 +789,17 @@ Return complete JSON with 'items' array containing the same number of items."""
             )
         except:
             potential_items = None
-        
+
         #  HYBRID EXTRACTION: Extract structured data + convert to markdown
         extracted_content = None
         metadata_context = ""
-        
+
         if self.use_hybrid_extraction and self.hybrid_extractor:
             try:
                 extracted_content = self.hybrid_extractor.extract(html_chunk)
                 content_for_llm = extracted_content.markdown
                 metadata_context = extracted_content.get_metadata_summary()
-                
+
                 if metadata_context:
                     css_count = len(extracted_content.css_class_data) if hasattr(extracted_content, 'css_class_data') else 0
                     logger.debug(f"   Hybrid: captured {len(extracted_content.data_attributes)} data attrs, "
@@ -809,7 +807,7 @@ Return complete JSON with 'items' array containing the same number of items."""
             except Exception as e:
                 logger.warning(f"   Hybrid extraction failed, falling back: {e}")
                 extracted_content = None
-        
+
         # Fallback to standard html2text if hybrid not available or failed
         if extracted_content is None:
             if self.use_html2text and self.html_transformer is not None and Document is not None:
@@ -819,14 +817,14 @@ Return complete JSON with 'items' array containing the same number of items."""
                 logger.debug(f"   Converted HTML to text: {len(html_chunk)} → {len(content_for_llm)} chars")
             else:
                 content_for_llm = html_chunk
-        
+
         # Create extraction prompt (now includes metadata context and previous items if available)
         prompt = self._build_extraction_prompt(
             content_for_llm, fields, context, potential_items, metadata_context,
             previous_items=previous_items,  # Parsera-style: pass previous chunk's items
             url=url  # Pass URL for field context
         )
-        
+
         # Call LLM
         try:
             response = await litellm.acompletion(
@@ -846,11 +844,11 @@ Return complete JSON with 'items' array containing the same number of items."""
                 max_tokens=16384,  # Increased to allow extracting many items (50+ items with 7 fields each)
                 response_format={"type": "json_object"}
             )
-            
+
             # Parse response
             content = response.choices[0].message.content
             result = json.loads(content)
-            
+
             # Extract items array
             items = []
             if "items" in result:
@@ -860,15 +858,15 @@ Return complete JSON with 'items' array containing the same number of items."""
             else:
                 logger.warning(f"  Unexpected response format: {list(result.keys())}")
                 return []
-            
+
             # Post-extraction quality filtering (now more lenient to match ScrapeGraphAI)
             filtered_items = self._filter_quality_items(items, fields, quality_mode)
-            
+
             if len(filtered_items) < len(items):
                 logger.info(f"    Filtered {len(items) - len(filtered_items)} low-quality items ({len(filtered_items)} kept, mode={quality_mode})")
-            
+
             return filtered_items
-                
+
         except json.JSONDecodeError as e:
             logger.error(f" Failed to parse LLM response as JSON: {e}")
             logger.error(f"   Response: {content[:200]}")
@@ -876,7 +874,7 @@ Return complete JSON with 'items' array containing the same number of items."""
         except Exception as e:
             logger.error(f" LLM extraction failed: {e}")
             return []
-    
+
     def _deduplicate_items(
         self,
         items: List[Dict[str, Any]],
@@ -884,37 +882,37 @@ Return complete JSON with 'items' array containing the same number of items."""
     ) -> List[Dict[str, Any]]:
         """
         Deduplicate items extracted from multiple chunks (ScrapeGraphAI approach)
-        
+
         Uses smart deduplication:
         - Primary key fields (title, name, id, url) for exact matching
         - Fuzzy matching for near-duplicates
         - Keep the item with most fields filled
-        
+
         Args:
             items: All extracted items (may have duplicates)
             fields: Field names
-            
+
         Returns:
             Deduplicated list of items
         """
         if not items:
             return items
-        
+
         # Identify primary key fields (used for deduplication)
         primary_keys = []
         for field in fields:
             field_lower = field.lower()
             if any(key in field_lower for key in ['title', 'name', 'id', 'url', 'slug', 'repository']):
                 primary_keys.append(field)
-        
+
         # If no obvious primary key, use all fields
         if not primary_keys:
             primary_keys = fields
-        
+
         # Track seen items by their primary key values
         seen = {}
         deduplicated = []
-        
+
         for item in items:
             # Create a key from primary key fields
             key_parts = []
@@ -923,34 +921,34 @@ Return complete JSON with 'items' array containing the same number of items."""
                 if value is not None:
                     # Normalize the value for comparison
                     key_parts.append(str(value).strip().lower())
-            
+
             if not key_parts:
                 # No primary key values found, keep item
                 deduplicated.append(item)
                 continue
-            
+
             item_key = "|||".join(key_parts)
-            
+
             if item_key in seen:
                 # Duplicate found - keep the one with more filled fields
                 existing_item = seen[item_key]
                 existing_filled = sum(1 for f in fields if existing_item.get(f) not in [None, ''])
                 current_filled = sum(1 for f in fields if item.get(f) not in [None, ''])
-                
+
                 if current_filled > existing_filled:
                     # Replace with better item
                     seen[item_key] = item
             else:
                 # New item
                 seen[item_key] = item
-        
+
         # Return deduplicated items
         deduplicated = list(seen.values())
-        
+
         logger.debug(f"   Deduplicated: {len(items)} → {len(deduplicated)} items")
-        
+
         return deduplicated
-    
+
     def _filter_quality_items(
         self,
         items: List[Dict[str, Any]],
@@ -959,68 +957,68 @@ Return complete JSON with 'items' array containing the same number of items."""
     ) -> List[Dict[str, Any]]:
         """
         Filter out low-quality items post-extraction
-        
+
         Quality criteria (based on quality_mode):
         - conservative: ≥70% fields filled (like ScrapeGraphAI)
         - balanced: ≥50% fields filled (default)
         - aggressive: ≥30% fields filled (maximum extraction)
-        
+
         All modes also check for:
         - Meaningful values (not just "null", "None", "N/A")
         - No obvious navigation/UI text ("Home", "Menu", "Contact", "Subscribe")
-        
+
         Args:
             items: Extracted items from LLM
             fields: Requested fields
             quality_mode: Quality mode ('conservative', 'balanced', 'aggressive')
-            
+
         Returns:
             Filtered high-quality items only
         """
         if not items or not fields:
             return items
-        
+
         # Get threshold for this quality mode
         min_fill_rate = self.quality_thresholds.get(quality_mode, 0.50)
-        
+
         filtered = []
-        
+
         # Only reject OBVIOUS navigation/UI keywords (very conservative to match ScrapeGraphAI)
         # Only full-match exact phrases, not substrings
         nav_keywords = [
             # Only the most obvious UI elements that would NEVER be content
         ]  # Empty for now - ScrapeGraphAI doesn't filter aggressively
-        
+
         for item in items:
             # Count filled fields
             filled_count = 0
             has_nav_text = False
-            
+
             for field in fields:
                 value = item.get(field)
-                
+
                 if value is not None:
                     value_str = str(value).strip().lower()
-                    
+
                     # Check if value is meaningful
                     if value_str and value_str not in ['null', 'none', 'n/a', 'undefined', '']:
                         filled_count += 1
-                        
+
                         # Check for navigation/UI text (only in text fields, not numbers)
                         if field in ['title', 'name', 'product_name', 'article_title', 'heading']:
                             if any(keyword in value_str for keyword in nav_keywords):
                                 has_nav_text = True
                                 break
-                        
+
                         # NEW: Check for garbage/obfuscated content
                         if self.quality_validator.contains_garbage(str(value)):
                             logger.debug(f"   Rejected item with garbage value in field '{field}'")
                             has_nav_text = True # Treat as invalid
                             break
-            
+
             # Calculate fill rate
             fill_rate = filled_count / len(fields) if fields else 0
-            
+
             # UNIVERSAL FIX: When there are many fields, be more lenient
             # If an item has at least 1 meaningful field, it's likely valid
             # The threshold should scale with number of fields
@@ -1037,7 +1035,7 @@ Return complete JSON with 'items' array containing the same number of items."""
             else:
                 # Few fields: use percentage-based threshold
                 meets_threshold = fill_rate >= min_fill_rate
-            
+
             # Score/Rating validation (for review/rating sites like Metacritic, IMDB, etc.)
             # If a score/rating field exists, validate it's a reasonable value
             has_invalid_score = False
@@ -1060,13 +1058,13 @@ Return complete JSON with 'items' array containing the same number of items."""
                             # Score is not numeric (might be "None", "N/A", etc.)
                             # This is okay - some items legitimately don't have scores yet
                             pass
-            
+
             # Quality threshold: accept if meets threshold AND has at least 1 field AND no nav/invalid score
             if meets_threshold and filled_count >= 1 and not has_nav_text and not has_invalid_score:
                 filtered.append(item)
-        
+
         return filtered
-    
+
     def _infer_and_convert_types(
         self,
         items: List[Dict[str, Any]],
@@ -1074,13 +1072,13 @@ Return complete JSON with 'items' array containing the same number of items."""
     ) -> List[Dict[str, Any]]:
         """
         Convert string values to appropriate types (numbers, booleans, etc.)
-        
+
         Improves data quality by returning properly typed values like ScrapeGraphAI.
-        
+
         Args:
             items: Extracted items
             fields: Field names (used to guess type from name)
-            
+
         Returns:
             Items with properly typed values
         """
@@ -1091,23 +1089,23 @@ Return complete JSON with 'items' array containing the same number of items."""
             'count', 'number', 'quantity', 'total', 'sum',
             'comments', 'replies', 'views', 'shares'
         ]
-        
+
         for item in items:
             for key, value in list(item.items()):
                 if value is None or value == "":
                     continue
-                
+
                 # Check if field name suggests it should be numeric
                 is_numeric_field = any(
                     pattern in key.lower()
                     for pattern in numeric_field_patterns
                 )
-                
+
                 if is_numeric_field and isinstance(value, str):
                     # Try to convert to number
                     # Remove currency symbols, units, and common formatting
                     cleaned = value.strip()
-                    
+
                     # Remove common units and words
                     units_to_remove = [
                         'points', 'point', 'pts', 'pt',
@@ -1117,14 +1115,14 @@ Return complete JSON with 'items' array containing the same number of items."""
                         'stars', 'star', 'reviews', 'review',
                         'items', 'item', 'results', 'result'
                     ]
-                    
+
                     # Remove units (case-insensitive)
                     for unit in units_to_remove:
                         cleaned = re.sub(rf'\b{unit}\b', '', cleaned, flags=re.IGNORECASE)
-                    
+
                     # Remove currency symbols and common formatting
                     cleaned = re.sub(r'[$€£¥₹,\s]', '', cleaned.strip())
-                    
+
                     try:
                         # Try integer first
                         if '.' not in cleaned:
@@ -1134,9 +1132,9 @@ Return complete JSON with 'items' array containing the same number of items."""
                     except ValueError:
                         # Keep as string if conversion fails
                         pass
-        
+
         return items
-    
+
     def _build_extraction_prompt(
         self,
         html: str,
@@ -1151,7 +1149,7 @@ Return complete JSON with 'items' array containing the same number of items."""
     ) -> str:
         """
         Build extraction prompt for LLM
-        
+
         Args:
             html: HTML to extract from (now markdown if hybrid extraction used)
             fields: Fields to extract
@@ -1178,14 +1176,14 @@ Return complete JSON with 'items' array containing the same number of items."""
             },
             "required": ["items"]
         }
-        
+
         # Build the extraction question (ScrapeGraphAI style: simple and direct)
         field_list = ', '.join(fields)
-        
+
         # NEW: Add website-specific field context (critical for correct extraction)
         # "next token is always the most important for context on what to actually extract, and it varies per website"
         field_context = self._get_field_context(url, html[:500] if html else "", fields)
-        
+
         # Detect if this is a ranked/numbered list page (e.g., "worst movies", "top 10", etc.)
         is_ranked_list = False
         ranked_list_hint = ""
@@ -1194,21 +1192,21 @@ Return complete JSON with 'items' array containing the same number of items."""
             if any(keyword in url_lower for keyword in ['worst', 'best', 'top', 'ranked', 'list', '/#']):
                 is_ranked_list = True
                 ranked_list_hint = "\n\nCRITICAL: This page contains a RANKED or NUMBERED LIST. Extract ALL numbered items (#15, #14, #13, etc. or #1, #2, #3, etc.). Do NOT extract the page header or title - only extract the individual list items."
-        
+
         # Also check HTML for numbered list patterns
         if not is_ranked_list and html:
             html_sample = html[:2000].lower()
             if any(pattern in html_sample for pattern in ['#15', '#14', '#13', '#12', '#11', '#10', '#9', '#8', '#7', '#6', '#5', '#4', '#3', '#2', '#1']):
                 is_ranked_list = True
                 ranked_list_hint = "\n\nCRITICAL: This page contains a NUMBERED LIST (items marked #15, #14, #13, etc.). Extract ALL numbered list items. Do NOT extract the page header - only extract the individual numbered items."
-        
+
         if context:
             user_question = f"{context}\nExtract these fields: {field_list}"
         elif target:
             user_question = f"Extract ALL {target} from this content with these fields: {field_list}"
         else:
             user_question = f"Extract ALL items from this content with these fields: {field_list}"
-        
+
         # CRITICAL: Emphasize extracting ALL items, even if fields are missing
         # Count how many items are visible (for Product Hunt, Reddit, etc. this helps the LLM)
         user_question += "\n\nCRITICAL EXTRACTION RULES:"
@@ -1220,18 +1218,18 @@ Return complete JSON with 'items' array containing the same number of items."""
         user_question += "\n3. Set missing fields to null (do NOT skip items)"
         user_question += "\n4. Look for repeating patterns (cards, articles, list items) - extract ALL of them"
         user_question += "\n5. Do NOT stop early - continue extracting until you've captured every item"
-        
+
         # Add ranked list hint if detected
         if is_ranked_list:
             user_question += ranked_list_hint
-        
+
         # Add field context to user question
         if field_context:
             user_question += f"\n\n{field_context}"
-        
+
         # Simple prompt like ScrapeGraphAI (their secret is SIMPLICITY!)
         content_type_desc = "content from a website converted in markdown format" if self.use_html2text else "content from a website"
-        
+
         # Build the prompt
         prompt_parts = [
             f"You are a website scraper and you have just scraped the following {content_type_desc}.",
@@ -1253,7 +1251,7 @@ Return complete JSON with 'items' array containing the same number of items."""
             "",
             "Make sure the output format is JSON and does not contain errors."
         ]
-        
+
         # Enhanced guidance for retry (ScrapeGraphAI "reasoning" step inspired)
         if enhanced_prompt:
             prompt_parts.extend([
@@ -1267,7 +1265,7 @@ Return complete JSON with 'items' array containing the same number of items."""
                 "- If you see numbered items (#1, #2, #3, etc. or #15, #14, #13, etc.), extract EACH numbered item as a separate entry",
                 "- Do NOT extract page headers, titles, or navigation - only extract the actual list items"
             ])
-        
+
         #  PARSERA-STYLE: Add previous items context if available
         # This helps fill in truncated values and maintain extraction continuity
         if previous_items and len(previous_items) > 0:
@@ -1280,7 +1278,7 @@ Return complete JSON with 'items' array containing the same number of items."""
                 "If an item appears truncated, try to find its complete data in the current content.",
                 f"Previous items: {prev_items_str}"
             ])
-        
+
         # Check if any requested fields are vote-related
         vote_fields = [f for f in fields if any(v in f.lower() for v in ['vote', 'upvote', 'like', 'point', 'score'])]
         if vote_fields:
@@ -1293,7 +1291,7 @@ Return complete JSON with 'items' array containing the same number of items."""
                 "- Match each product with the vote count that appears near it",
                 f"For the '{vote_fields[0]}' field, extract the numeric value from these patterns."
             ])
-        
+
         prompt_parts.extend([
             "",
             f"Output instructions: {json.dumps(schema, indent=2)}",
@@ -1303,7 +1301,7 @@ Return complete JSON with 'items' array containing the same number of items."""
             "Website content:",
             html
         ])
-        
+
         # Add metadata context if available (from hybrid extraction)
         if metadata_context:
             prompt_parts.extend([
@@ -1312,16 +1310,16 @@ Return complete JSON with 'items' array containing the same number of items."""
                 "ADDITIONAL DATA (extracted from HTML attributes and forms - check these for field values):",
                 metadata_context
             ])
-        
+
         prompt_parts.append("")
         prompt_parts.append("Return ONLY valid JSON. No explanations.")
-        
+
         return "\n".join(prompt_parts)
-    
+
     def _get_system_prompt(self, enhanced: bool = False) -> str:
         """
         Get system prompt that guides LLM behavior (ScrapeGraphAI approach: keep it simple!)
-        
+
         Args:
             enhanced: If True, return more detailed prompt for retry attempts
         """
@@ -1349,7 +1347,7 @@ For numeric fields (like prices, ratings, points, comments):
 
 If the content appears empty, blocked, or shows an error message, return an empty items array [].
 """
-        
+
         if enhanced:
             # Enhanced prompt inspired by ScrapeGraphAI's "reasoning" node
             return base_prompt + """
@@ -1363,9 +1361,9 @@ ENHANCED EXTRACTION MODE:
 - Extract partial data rather than skipping items entirely
 - Focus on content quality over quantity
 """
-        
+
         return base_prompt
-    
+
     def _is_content_empty_or_blocked(self, html: str) -> bool:
         """
         Check if HTML content is empty, blocked, or shows an error message.
@@ -1373,9 +1371,9 @@ ENHANCED EXTRACTION MODE:
         """
         if not html or len(html.strip()) < 100:
             return True
-        
+
         html_lower = html.lower()
-        
+
         # Check for common blocking/error messages
         blocked_indicators = [
             'access denied',
@@ -1410,7 +1408,7 @@ ENHANCED EXTRACTION MODE:
             'login required',
             'authentication required'
         ]
-        
+
         # Check if content is mostly empty or contains blocking messages
         # Use word boundaries to avoid false positives (e.g., "robots" meta tag is OK)
         # Note: We don't check for just "robot" as it appears in normal HTML meta tags
@@ -1420,27 +1418,27 @@ ENHANCED EXTRACTION MODE:
             if indicator in html_lower:
                 logger.warning(f"   Detected blocking indicator: {indicator}")
                 return True
-        
+
         # Check if content is too short (likely empty or blocked)
         # Reddit and similar sites should have substantial content
         text_content = html_lower.replace('<', ' <').split()
         if len(text_content) < 50:  # Very few words = likely empty
             return True
-        
+
         return False
-    
+
     def _get_field_context(self, url: Optional[str], html_sample: str, fields: List[str]) -> str:
         """
         Generate website-specific context about what each field means.
-        
+
         This is CRITICAL: "next token is always the most important for context on what to actually extract,
         and it varies per website" - we need to tell the LLM what "title" means for THIS website.
-        
+
         Args:
             url: Source URL (preferred for domain detection)
             html_sample: Sample HTML to detect website type (fallback)
             fields: Requested fields
-            
+
         Returns:
             Context string explaining field meanings for this website
         """
@@ -1449,13 +1447,13 @@ ENHANCED EXTRACTION MODE:
         if url:
             from urllib.parse import urlparse
             domain = urlparse(url).netloc.lower()
-        
+
         html_lower = html_sample.lower() if html_sample else ""
-        
+
         # Detect website type from domain (preferred) or HTML sample
         is_ecommerce = any(site in domain for site in ['chewy', 'amazon', 'ebay', 'etsy', 'shopify', 'product', 'store', 'buy']) or \
                       any(indicator in html_lower for indicator in [
-                          'product-card', 'add-to-cart', 'product-title', 
+                          'product-card', 'add-to-cart', 'product-title',
                           'product-name', 'buy now', 'shopping', 'e-commerce'
                       ])
         is_news = any(indicator in html_lower for indicator in [
@@ -1464,12 +1462,12 @@ ENHANCED EXTRACTION MODE:
         is_social = any(indicator in html_lower for indicator in [
             'reddit', 'twitter', 'facebook', 'post', 'tweet', 'comment'
         ])
-        
+
         field_contexts = []
-        
+
         for field in fields:
             field_lower = field.lower()
-            
+
             # Title field - varies by website type
             if 'title' in field_lower or field_lower == 'name':
                 if is_ecommerce:
@@ -1491,34 +1489,34 @@ ENHANCED EXTRACTION MODE:
                     field_contexts.append(
                         f"**{field}**: Extract the complete, descriptive name/title. Prefer full names over short labels."
                     )
-            
+
             # URL field
             elif 'url' in field_lower or 'link' in field_lower:
                 field_contexts.append(
                     f"**{field}**: Extract the complete URL (e.g., 'https://www.chewy.com/dp/12345'). "
                     f"Look for href attributes, link elements, or construct from data-id if needed."
                 )
-            
+
             # Rating field
             elif 'rating' in field_lower:
                 field_contexts.append(
                     f"**{field}**: Extract only the numeric rating (e.g., 4.5, 4.6). No stars or text."
                 )
-            
+
             # Review count field
             elif 'review' in field_lower and 'count' in field_lower:
                 field_contexts.append(
                     f"**{field}**: Extract only the number of reviews (e.g., 2391, 1655). No text."
                 )
-        
+
         if field_contexts:
             return "\n\nFIELD-SPECIFIC INSTRUCTIONS (website-specific meanings):\n" + "\n".join(field_contexts)
         return ""
-    
+
     def _chunk_html(self, html: str, max_tokens: int) -> List[str]:
         """
         Split HTML into chunks if it's too large
-        
+
         Uses smart chunking:
         - Try to keep complete HTML elements together
         - Split at natural boundaries (closing tags)
@@ -1526,23 +1524,23 @@ ENHANCED EXTRACTION MODE:
         """
         # Rough estimate: 1 token ≈ 4 characters
         max_chars = max_tokens * 4
-        
+
         if len(html) <= max_chars:
             return [html]
-        
+
         chunks = []
         current_chunk = ""
-        
+
         # Split by major HTML elements (to keep structure intact)
         # Look for closing tags of container elements
         split_points = []
         for match in re.finditer(r'</(?:div|article|section|li|tr|tbody|table)>', html):
             split_points.append(match.end())
-        
+
         if not split_points:
             # Fallback: simple character-based chunking
             return [html[i:i+max_chars] for i in range(0, len(html), max_chars)]
-        
+
         last_pos = 0
         for pos in split_points:
             if pos - last_pos > max_chars:
@@ -1551,42 +1549,42 @@ ENHANCED EXTRACTION MODE:
                     chunks.append(current_chunk)
                     current_chunk = ""
                 last_pos = pos
-            
+
             current_chunk += html[last_pos:pos]
-            
+
             if len(current_chunk) >= max_chars:
                 chunks.append(current_chunk)
                 current_chunk = ""
                 last_pos = pos
-        
+
         # Add remaining
         if current_chunk:
             chunks.append(current_chunk)
         elif last_pos < len(html):
             chunks.append(html[last_pos:])
-        
+
         logger.debug(f"   Chunked {len(html):,} bytes into {len(chunks)} chunks")
         return chunks
-    
+
     def _generate_cache_key(self, html: str, fields: List[str], url: Optional[str] = None) -> str:
         """
         Generate cache key for Direct LLM results
-        
+
         Uses domain + fields for reliable caching (domain-based is more stable than structure hash).
         This allows reuse across different pages on same domain with same fields.
-        
+
         Args:
             html: HTML content (used for structure hash if domain unavailable)
             fields: List of fields to extract
             url: Optional URL (preferred for domain extraction)
-            
+
         Returns:
             Cache key string
         """
         # Hash of fields (sorted for consistency)
         fields_str = ','.join(sorted(fields))
         fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
-        
+
         # Extract domain from URL for domain-based caching (MOST RELIABLE)
         domain = None
         if url:
@@ -1596,7 +1594,7 @@ ENHANCED EXTRACTION MODE:
                 domain = parsed_url.netloc.replace('www.', '')  # Normalize domain
             except Exception:
                 pass
-        
+
         # PRIORITY 1: Use domain-based key (allows reuse across pages on same domain)
         # This is more reliable than structure hash which can vary
         if domain:
@@ -1605,7 +1603,7 @@ ENHANCED EXTRACTION MODE:
             cache_key = f"direct_llm_{domain_normalized}_{fields_hash}"
             logger.debug(f" Generated domain-based cache key: {cache_key}")
             return cache_key
-        
+
         # PRIORITY 2: Use structure hash if domain unavailable
         try:
             from .structural_hash import StructuralHashGenerator
@@ -1622,21 +1620,21 @@ ENHANCED EXTRACTION MODE:
             cache_key = f"direct_llm_{structure_hash}_{fields_hash}"
             logger.debug(f" Generated fallback cache key: {cache_key}")
             return cache_key
-    
+
     def _validate_cached_result(self, cached_result: Dict, html: str, fields: List[str]) -> bool:
         """
         Validate cached result without calling LLM
-        
+
         Checks:
         1. Structure hash matches (same layout)
         2. Cached items have expected fields
         3. Cached items count is reasonable
-        
+
         Args:
             cached_result: Cached result dict
             html: Current HTML content
             fields: Expected fields
-            
+
         Returns:
             True if cached result is still valid
         """
@@ -1649,27 +1647,27 @@ ENHANCED EXTRACTION MODE:
                     hash_gen = StructuralHashGenerator()
                     current_hash_result = hash_gen.generate_hash(html)
                     current_structure_hash = current_hash_result['hash'][:16]
-                    
+
                     if current_structure_hash != cached_structure_hash:
                         logger.debug(f"   Structure changed: {cached_structure_hash[:8]}... != {current_structure_hash[:8]}...")
                         return False
                 except Exception as e:
                     logger.warning(f"   Failed to validate structure hash: {e}")
                     # Continue with other validations
-            
+
             # Check items exist and have expected fields
             items = cached_result.get('items', [])
             if not items:
                 logger.debug("   No items in cache")
                 return False
-            
+
             # Check field completeness (sample first 3 items)
             for item in items[:3]:
                 for field in fields:
                     if field not in item:
                         logger.debug(f"   Missing field '{field}' in cached item")
                         return False
-            
+
             # Check timestamp (optional TTL check)
             cached_timestamp = cached_result.get('timestamp', 0)
             if cached_timestamp and self.cache_ttl > 0:
@@ -1677,18 +1675,18 @@ ENHANCED EXTRACTION MODE:
                 if age > self.cache_ttl:
                     logger.debug(f"   Cache expired (age: {age:.0f}s > TTL: {self.cache_ttl}s)")
                     return False
-            
+
             logger.debug("   Cached result validated successfully")
             return True
-            
+
         except Exception as e:
             logger.warning(f"   Validation error: {e}")
             return False
-    
+
     async def _cache_result(self, html: str, fields: List[str], items: List[Dict], url: Optional[str] = None) -> None:
         """
         Cache Direct LLM extraction result
-        
+
         Args:
             html: HTML content
             fields: Fields extracted
@@ -1697,10 +1695,10 @@ ENHANCED EXTRACTION MODE:
         """
         if not self.enable_cache or not self.result_cache:
             return
-        
+
         try:
             cache_key = self._generate_cache_key(html, fields, url)
-            
+
             # Generate structure hash for validation
             structure_hash = None
             try:
@@ -1710,7 +1708,7 @@ ENHANCED EXTRACTION MODE:
                 structure_hash = hash_result['hash'][:16]
             except Exception:
                 pass
-            
+
             # Extract domain from URL for domain-based caching
             domain = None
             if url:
@@ -1720,7 +1718,7 @@ ENHANCED EXTRACTION MODE:
                     domain = parsed_url.netloc
                 except Exception:
                     pass
-            
+
             # Prepare cache entry
             cache_entry = {
                 'items': items,
@@ -1731,34 +1729,34 @@ ENHANCED EXTRACTION MODE:
                 'timestamp': time.time(),
                 'item_count': len(items)
             }
-            
+
             # Store in cache (uses UnifiedPatternCache which handles Apify KV Store)
             await self.result_cache.backend.set(cache_key, cache_entry)
             logger.info(f" Cached Direct LLM result: {cache_key[:32]}... ({len(items)} items)")
-            
+
         except Exception as e:
             logger.warning(f"  Failed to cache result: {e}")
-    
+
     def estimate_cost(self, html_length: int, fields_count: int) -> float:
         """
         Estimate extraction cost
-        
+
         Args:
             html_length: Length of HTML in characters
             fields_count: Number of fields to extract
-            
+
         Returns:
             Estimated cost in USD
         """
         # Estimate tokens (input + output)
         input_tokens = (html_length / 4) + (fields_count * 50)  # HTML + prompt
         output_tokens = fields_count * 100  # Rough estimate for JSON output
-        
+
         # GPT-4o-mini pricing (as of Nov 2024)
         # Input: $0.15 / 1M tokens
         # Output: $0.60 / 1M tokens
         input_cost = (input_tokens / 1_000_000) * 0.15
         output_cost = (output_tokens / 1_000_000) * 0.60
-        
+
         return input_cost + output_cost
 

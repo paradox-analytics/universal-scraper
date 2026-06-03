@@ -24,7 +24,7 @@ class ConfigPreset(Enum):
 class BrowserConfigGenerator:
     """
     Generates browser configurations with comprehensive anti-blocking settings.
-    
+
     Supports all settings from the user's list:
     - Performance optimization (block images, styles, ads)
     - Fingerprinting (canvas, audio, WebGL, fonts, etc.)
@@ -32,7 +32,7 @@ class BrowserConfigGenerator:
     - Anti-detection (webdriver, toString masking, profile rotation)
     - Proxy settings (type, rotation interval)
     """
-    
+
     # Default configuration templates
     PRESETS = {
         ConfigPreset.STEALTH: {
@@ -43,7 +43,7 @@ class BrowserConfigGenerator:
             'blockTracking': True,
             'blockSocialMedia': True,
             'blockRequestsBetweenActions': True,
-            
+
             # Fingerprinting (all enabled for maximum randomization)
             'allowCanvasReading': True,
             'generateCanvasString': True,
@@ -61,7 +61,7 @@ class BrowserConfigGenerator:
             'generateChromeApp': True,
             'generateChromeRuntime': True,
             'generateUserAgentData': True,
-            
+
             # Browser capabilities
             'loadInsecureContent': False,
             'loadPDF': False,
@@ -69,22 +69,22 @@ class BrowserConfigGenerator:
             'loadGpu': True,
             'loadWebGL': True,
             'loadWebGpu': False,
-            
+
             # Anti-detection
             'rotateProfile': True,
             'webdriver': False,  # Hide webdriver
             'maskToStringPrototype': True,
-            
+
             # Proxy
             'proxyType': 'residential',
             'proxyRotationInterval': 'per_request',
             'geoip': True,
-            
+
             # Browser dimensions
             'dynamicBrowserWidth': None,  # Random
             'dynamicBrowserHeight': None,  # Random
         },
-        
+
         ConfigPreset.BALANCED: {
             # Performance
             'blockImages': False,
@@ -93,7 +93,7 @@ class BrowserConfigGenerator:
             'blockTracking': True,
             'blockSocialMedia': True,
             'blockRequestsBetweenActions': False,
-            
+
             # Fingerprinting (selective)
             'allowCanvasReading': True,
             'generateCanvasString': True,
@@ -111,7 +111,7 @@ class BrowserConfigGenerator:
             'generateChromeApp': True,
             'generateChromeRuntime': True,
             'generateUserAgentData': True,
-            
+
             # Browser capabilities
             'loadInsecureContent': False,
             'loadPDF': True,
@@ -119,22 +119,22 @@ class BrowserConfigGenerator:
             'loadGpu': True,
             'loadWebGL': True,
             'loadWebGpu': True,
-            
+
             # Anti-detection
             'rotateProfile': False,
             'webdriver': False,
             'maskToStringPrototype': True,
-            
+
             # Proxy
             'proxyType': 'residential',
             'proxyRotationInterval': 'per_domain',
             'geoip': True,
-            
+
             # Browser dimensions
             'dynamicBrowserWidth': 1920,
             'dynamicBrowserHeight': 1080,
         },
-        
+
         ConfigPreset.AGGRESSIVE: {
             # Performance (block everything possible)
             'blockImages': True,
@@ -143,7 +143,7 @@ class BrowserConfigGenerator:
             'blockTracking': True,
             'blockSocialMedia': True,
             'blockRequestsBetweenActions': True,
-            
+
             # Fingerprinting (minimal)
             'allowCanvasReading': False,
             'generateCanvasString': False,
@@ -161,7 +161,7 @@ class BrowserConfigGenerator:
             'generateChromeApp': False,
             'generateChromeRuntime': False,
             'generateUserAgentData': False,
-            
+
             # Browser capabilities (minimal)
             'loadInsecureContent': False,
             'loadPDF': False,
@@ -169,23 +169,23 @@ class BrowserConfigGenerator:
             'loadGpu': False,
             'loadWebGL': False,
             'loadWebGpu': False,
-            
+
             # Anti-detection
             'rotateProfile': False,
             'webdriver': False,
             'maskToStringPrototype': True,
-            
+
             # Proxy
             'proxyType': 'datacenter',
             'proxyRotationInterval': 'static',
             'geoip': False,
-            
+
             # Browser dimensions
             'dynamicBrowserWidth': 1366,
             'dynamicBrowserHeight': 768,
         }
     }
-    
+
     # Common viewport sizes for randomization
     VIEWPORT_SIZES = [
         (1920, 1080),  # Full HD
@@ -194,17 +194,17 @@ class BrowserConfigGenerator:
         (1440, 900),   # WXGA+
         (2560, 1440),  # QHD
     ]
-    
+
     def __init__(self, preset: ConfigPreset = ConfigPreset.BALANCED):
         """
         Initialize configuration generator.
-        
+
         Args:
             preset: Configuration preset to use
         """
         self.preset = preset
         logger.info(f"🎛️  Browser Config Generator initialized (preset={preset.value})")
-    
+
     def generate(
         self,
         preset: Optional[ConfigPreset] = None,
@@ -213,33 +213,33 @@ class BrowserConfigGenerator:
     ) -> Dict[str, Any]:
         """
         Generate a browser configuration.
-        
+
         Args:
             preset: Override the default preset
             overrides: Custom settings to override preset
             randomize_viewport: Randomize viewport dimensions
-            
+
         Returns:
             Complete browser configuration dict
         """
         # Start with preset
         preset = preset or self.preset
         config = self.PRESETS[preset].copy()
-        
+
         # Randomize viewport if requested
         if randomize_viewport and config['dynamicBrowserWidth'] is None:
             width, height = random.choice(self.VIEWPORT_SIZES)
             config['dynamicBrowserWidth'] = width
             config['dynamicBrowserHeight'] = height
-        
+
         # Apply overrides
         if overrides:
             config.update(overrides)
-        
+
         logger.debug(f"Generated config: preset={preset.value}, viewport={config['dynamicBrowserWidth']}x{config['dynamicBrowserHeight']}")
-        
+
         return config
-    
+
     def generate_variations(
         self,
         base_preset: ConfigPreset = ConfigPreset.BALANCED,
@@ -247,17 +247,17 @@ class BrowserConfigGenerator:
     ) -> List[Dict[str, Any]]:
         """
         Generate multiple configuration variations for testing.
-        
+
         Args:
             base_preset: Base preset to start from
             num_variations: Number of variations to generate
-            
+
         Returns:
             List of configuration dicts
         """
         variations = []
         base_config = self.PRESETS[base_preset].copy()
-        
+
         # Define settings to vary
         vary_settings = [
             'blockImages',
@@ -268,34 +268,34 @@ class BrowserConfigGenerator:
             'proxyRotationInterval',
             'geoip',
         ]
-        
+
         for i in range(num_variations):
             config = base_config.copy()
-            
+
             # Randomly toggle some settings
             for setting in random.sample(vary_settings, k=random.randint(1, 3)):
                 if isinstance(config[setting], bool):
                     config[setting] = not config[setting]
                 elif setting == 'proxyRotationInterval':
                     config[setting] = random.choice(['static', 'per_domain', 'per_request'])
-            
+
             # Randomize viewport
             width, height = random.choice(self.VIEWPORT_SIZES)
             config['dynamicBrowserWidth'] = width
             config['dynamicBrowserHeight'] = height
-            
+
             variations.append(config)
-        
+
         logger.info(f"Generated {num_variations} configuration variations")
         return variations
-    
+
     def to_camoufox_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert our config format to Camoufox-compatible format.
-        
+
         Args:
             config: Our browser configuration
-            
+
         Returns:
             Camoufox-compatible configuration dict
         """
@@ -309,23 +309,23 @@ class BrowserConfigGenerator:
                 'height': config.get('dynamicBrowserHeight', 1080)
             }
         }
-        
+
         # Add fingerprinting settings
         if config.get('generateCanvasString'):
             camoufox_config['canvas'] = 'noise'
-        
+
         if config.get('generateAudioContext'):
             camoufox_config['audio'] = 'noise'
-        
+
         if config.get('generateWebGL'):
             camoufox_config['webgl'] = 'noise'
-        
+
         # Add webdriver hiding
         if not config.get('webdriver', True):
             camoufox_config['webdriver'] = False
-        
+
         return camoufox_config
-    
+
     @staticmethod
     def get_preset_description(preset: ConfigPreset) -> str:
         """Get human-readable description of a preset."""

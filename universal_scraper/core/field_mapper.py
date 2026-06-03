@@ -18,7 +18,7 @@ Cost per 100 pages:
 import logging
 import json
 import hashlib
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Optional
 from urllib.parse import urlparse
 from dataclasses import dataclass, asdict
 import litellm
@@ -55,7 +55,7 @@ class UniversalFieldMapper:
     Maps user-requested fields to semantic meanings and HTML locations.
     Uses LLM for understanding but caches aggressively for cost efficiency.
     """
-    
+
     def __init__(
         self,
         api_key: str,
@@ -65,7 +65,7 @@ class UniversalFieldMapper:
     ):
         """
         Initialize the Universal Field Mapper
-        
+
         Args:
             api_key: API key for LLM
             model: Model to use for analysis
@@ -76,7 +76,7 @@ class UniversalFieldMapper:
         self.model = model
         self.cache_dir = Path(cache_dir)
         self.enable_cache = enable_cache
-        
+
         # Create cache directories
         if enable_cache:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
@@ -84,15 +84,15 @@ class UniversalFieldMapper:
             self.field_cache_dir = self.cache_dir / "fields"
             self.domain_cache_dir.mkdir(exist_ok=True)
             self.field_cache_dir.mkdir(exist_ok=True)
-        
+
         # In-memory caches (for performance)
         self.domain_contexts: Dict[str, DomainContext] = {}
         self.field_semantics: Dict[str, Dict[str, FieldSemantics]] = {}
-        
+
         logger.info(f"  Universal Field Mapper initialized with {model}")
         if enable_cache:
             logger.info(f"   Cache directory: {cache_dir}")
-    
+
     def map_fields(
         self,
         fields: List[str],
@@ -102,18 +102,18 @@ class UniversalFieldMapper:
     ) -> Dict[str, Dict[str, Any]]:
         """
         Map user fields to semantic meanings and extraction hints.
-        
+
         This is the main entry point that orchestrates:
         1. Domain context analysis (cached by domain)
         2. Field semantic mapping (cached by domain + fields)
         3. Extraction hint generation (combines above + structure)
-        
+
         Args:
             fields: List of field names to extract
             url: Source URL
             html_sample: Sample of HTML content (first 3-5K chars)
             structure_analysis: Optional structural analysis from DOM detector
-        
+
         Returns:
             Dict mapping field names to extraction hints:
             {
@@ -128,13 +128,13 @@ class UniversalFieldMapper:
             }
         """
         domain = self._extract_domain(url)
-        
+
         logger.info(f"  Mapping {len(fields)} fields for {domain}...")
-        
+
         # Step 1: Get or infer domain context (cached by domain)
         domain_context = self._get_domain_context(domain, url, html_sample)
         logger.info(f"   Domain type: {domain_context.website_type} ({domain_context.entity_type})")
-        
+
         # Step 2: Get or infer field semantics (cached by domain + fields)
         field_semantics = self._get_field_semantics(
             fields,
@@ -142,7 +142,7 @@ class UniversalFieldMapper:
             domain_context,
             html_sample
         )
-        
+
         # Step 3: Generate extraction hints (combines semantic + structural)
         extraction_hints = {}
         for field in fields:
@@ -157,16 +157,16 @@ class UniversalFieldMapper:
                 # Fallback: no semantic info available
                 logger.warning(f"     No semantic mapping for '{field}', using generic")
                 extraction_hints[field] = self._generic_extraction_hint(field)
-        
+
         return extraction_hints
-    
+
     def _extract_domain(self, url: str) -> str:
         """Extract clean domain from URL"""
         parsed = urlparse(url)
         # Remove www. prefix if present
         domain = parsed.netloc.replace('www.', '')
         return domain
-    
+
     def _get_domain_context(
         self,
         domain: str,
@@ -175,7 +175,7 @@ class UniversalFieldMapper:
     ) -> DomainContext:
         """
         Get domain context (cached by domain).
-        
+
         This is expensive (LLM call) but cached forever per domain.
         Cost: ~$0.01 per new domain
         """
@@ -183,7 +183,7 @@ class UniversalFieldMapper:
         if domain in self.domain_contexts:
             logger.debug(f"   Using in-memory domain context for {domain}")
             return self.domain_contexts[domain]
-        
+
         # Check disk cache
         if self.enable_cache:
             cache_file = self.domain_cache_dir / f"{domain}.json"
@@ -197,11 +197,11 @@ class UniversalFieldMapper:
                         return context
                 except Exception as e:
                     logger.warning(f"   Failed to load domain cache: {e}")
-        
+
         # Infer from LLM (expensive!)
         logger.info(f"    Inferring domain context for {domain} (LLM call, ~$0.01)...")
         context = self._infer_domain_context_llm(domain, url, html_sample)
-        
+
         # Cache results
         self.domain_contexts[domain] = context
         if self.enable_cache:
@@ -209,9 +209,9 @@ class UniversalFieldMapper:
             with open(cache_file, 'w') as f:
                 json.dump(asdict(context), f, indent=2)
             logger.debug(f"   Cached domain context to {cache_file}")
-        
+
         return context
-    
+
     def _infer_domain_context_llm(
         self,
         domain: str,
@@ -219,7 +219,7 @@ class UniversalFieldMapper:
         html_sample: str
     ) -> DomainContext:
         """Use LLM to understand the domain and its patterns"""
-        
+
         prompt = f"""Analyze this website to understand its domain and data structure.
 
 URL: {url}
@@ -231,10 +231,10 @@ HTML Sample (first 2000 chars):
 Identify:
 1. **Website Type**: What kind of website is this?
    - Options: tech_platform, e-commerce, social_media, news, blog, documentation, forum, repository, job_board, other
-   
+
 2. **Primary Entity Type**: What are the main data items on this page?
    - Examples: repositories, products, articles, posts, comments, jobs, documentation_pages, users, etc.
-   
+
 3. **Common Patterns**: What structural/semantic patterns are common on this domain?
    - Layout patterns (e.g., card-based, list-based, table-based)
    - Naming conventions (e.g., GitHub uses "repository", "stars")
@@ -255,7 +255,7 @@ Return a JSON object with this structure:
 
 Be specific and analyze the actual HTML structure provided.
 """
-        
+
         try:
             response = litellm.completion(
                 model=self.model,
@@ -266,12 +266,12 @@ Be specific and analyze the actual HTML structure provided.
                 temperature=0.1,
                 api_key=self.api_key
             )
-            
+
             result_text = response.choices[0].message.content
-            
+
             # Extract JSON from response
             result_json = self._extract_json(result_text)
-            
+
             return DomainContext(
                 domain=domain,
                 website_type=result_json.get('website_type', 'unknown'),
@@ -279,7 +279,7 @@ Be specific and analyze the actual HTML structure provided.
                 common_patterns=result_json.get('common_patterns', {}),
                 confidence=result_json.get('confidence', 0.7)
             )
-        
+
         except Exception as e:
             logger.error(f"    Failed to infer domain context: {e}")
             # Return generic fallback
@@ -290,7 +290,7 @@ Be specific and analyze the actual HTML structure provided.
                 common_patterns={},
                 confidence=0.3
             )
-    
+
     def _get_field_semantics(
         self,
         fields: List[str],
@@ -300,19 +300,19 @@ Be specific and analyze the actual HTML structure provided.
     ) -> Dict[str, FieldSemantics]:
         """
         Get field semantic mappings (cached by domain + fields).
-        
+
         This is expensive (LLM call) but cached per domain+field combination.
         Cost: ~$0.02 per new domain+field combo
         """
         # Create cache key from domain + sorted fields
         fields_key = ':'.join(sorted(fields))
         cache_key = f"{domain}_{hashlib.md5(fields_key.encode()).hexdigest()[:8]}"
-        
+
         # Check in-memory cache
         if cache_key in self.field_semantics:
-            logger.debug(f"   Using in-memory field semantics")
+            logger.debug("   Using in-memory field semantics")
             return self.field_semantics[cache_key]
-        
+
         # Check disk cache
         if self.enable_cache:
             cache_file = self.field_cache_dir / f"{cache_key}.json"
@@ -324,20 +324,20 @@ Be specific and analyze the actual HTML structure provided.
                             k: FieldSemantics(**v) for k, v in data.items()
                         }
                         self.field_semantics[cache_key] = semantics
-                        logger.debug(f"   Using cached field semantics")
+                        logger.debug("   Using cached field semantics")
                         return semantics
                 except Exception as e:
                     logger.warning(f"   Failed to load field semantics cache: {e}")
-        
+
         # Infer from LLM (expensive!)
-        logger.info(f"    Inferring field semantics (LLM call, ~$0.02)...")
+        logger.info("    Inferring field semantics (LLM call, ~$0.02)...")
         semantics = self._infer_field_semantics_llm(
             fields,
             domain,
             domain_context,
             html_sample
         )
-        
+
         # Cache results
         self.field_semantics[cache_key] = semantics
         if self.enable_cache:
@@ -346,9 +346,9 @@ Be specific and analyze the actual HTML structure provided.
                 serialized = {k: asdict(v) for k, v in semantics.items()}
                 json.dump(serialized, f, indent=2)
             logger.debug(f"   Cached field semantics to {cache_file}")
-        
+
         return semantics
-    
+
     def _infer_field_semantics_llm(
         self,
         fields: List[str],
@@ -357,7 +357,7 @@ Be specific and analyze the actual HTML structure provided.
         html_sample: str
     ) -> Dict[str, FieldSemantics]:
         """Use LLM to map fields to their semantic meanings and HTML locations"""
-        
+
         prompt = f"""Given this domain context, map the requested fields to their semantic meanings and likely HTML locations.
 
 DOMAIN CONTEXT:
@@ -389,23 +389,23 @@ HTML SAMPLE (analyze to find patterns):
 For each field, provide:
 1. **Semantic Meaning**: What does this field represent in this domain context?
    - Example: "repository" on GitHub = "Repository name or full user/repo path"
-   
+
 2. **Likely HTML Elements**: ACTUAL CSS selectors from the HTML above (NOT generic guesses!)
    - Look at the HTML and provide selectors that ACTUALLY exist
    - Examples: ["h2 a", "p.col-9", "span[itemprop='programmingLanguage']"]
    - NOT: [".description", ".star-count"] <- these are WRONG if they don't exist in HTML
-   
+
 3. **Common Attributes**: What HTML attributes might contain this data?
    - Examples: ["data-repo", "href", "title", "itemprop"]
-   
+
 4. **Common Class Patterns**: What CSS class patterns are actually used in the HTML?
    - Look at the actual classes in the HTML sample
    - Examples: ["col-9", "Box-row", "octicon-star"]
-   
+
 5. **Extraction Strategy**: How should we extract this field from the HTML above?
    - Example: "Look for the p tag inside each article element"
    - Be specific about the actual structure you see
-   
+
 6. **Code Example**: A working BeautifulSoup snippet based on the actual HTML
    - Example: "elem.select_one('p').text.strip()" if you see a p tag
    - Example: "elem.select_one('span[itemprop=\"programmingLanguage\"]').text.strip()" if you see this
@@ -446,7 +446,7 @@ Return JSON:
 
 REMEMBER: Analyze the ACTUAL HTML structure, don't guess generic class names!
 """
-        
+
         try:
             response = litellm.completion(
                 model=self.model,
@@ -457,12 +457,12 @@ REMEMBER: Analyze the ACTUAL HTML structure, don't guess generic class names!
                 temperature=0.1,
                 api_key=self.api_key
             )
-            
+
             result_text = response.choices[0].message.content
-            
+
             # Extract JSON from response
             result_json = self._extract_json(result_text)
-            
+
             # Convert to FieldSemantics objects
             semantics = {}
             for field in fields:
@@ -482,14 +482,14 @@ REMEMBER: Analyze the ACTUAL HTML structure, don't guess generic class names!
                     # Fallback for missing fields
                     logger.warning(f"   LLM didn't map field '{field}', using generic")
                     semantics[field] = self._generic_field_semantics(field)
-            
+
             return semantics
-        
+
         except Exception as e:
             logger.error(f"    Failed to infer field semantics: {e}")
             # Return generic fallback for all fields
             return {field: self._generic_field_semantics(field) for field in fields}
-    
+
     def _generate_extraction_hint(
         self,
         semantics: FieldSemantics,
@@ -508,7 +508,7 @@ REMEMBER: Analyze the ACTUAL HTML structure, don't guess generic class names!
             'code_example': semantics.code_example,
             'confidence': semantics.confidence
         }
-        
+
         # Add structural context if available
         if structure_analysis and structure_analysis.get('best_pattern'):
             pattern = structure_analysis['best_pattern']
@@ -517,7 +517,7 @@ REMEMBER: Analyze the ACTUAL HTML structure, don't guess generic class names!
                 'count': pattern.get('count', 0),
                 'type': pattern.get('type', 'unknown')
             }
-            
+
             # Combine semantic + structural for better strategy
             hint['combined_strategy'] = f"""
 {semantics.extraction_strategy}
@@ -527,9 +527,9 @@ Structural context:
 - There are {pattern.get('count', 'multiple')} instances
 - Focus extraction within each {pattern.get('selector', 'item')} element
 """
-        
+
         return hint
-    
+
     def _generic_field_semantics(self, field: str) -> FieldSemantics:
         """Fallback generic semantics when LLM fails"""
         return FieldSemantics(
@@ -542,7 +542,7 @@ Structural context:
             code_example=f"elem.select_one('.{field}').text if elem.select_one('.{field}') else None",
             confidence=0.3
         )
-    
+
     def _generic_extraction_hint(self, field: str) -> Dict[str, Any]:
         """Fallback generic hint when mapping fails"""
         return {
@@ -550,15 +550,15 @@ Structural context:
             'likely_locations': [f'.{field}', f'#{field}'],
             'common_attributes': [field, f'data-{field}'],
             'common_classes': [field],
-            'extraction_strategy': f'Standard CSS selector or attribute lookup',
+            'extraction_strategy': 'Standard CSS selector or attribute lookup',
             'code_example': f"elem.select_one('.{field}').text",
             'confidence': 0.3
         }
-    
+
     def _extract_json(self, text: str) -> Dict:
         """Extract JSON from LLM response (may be wrapped in markdown)"""
         import re
-        
+
         # Try to find JSON in markdown code block
         json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', text, re.DOTALL)
         if json_match:
@@ -566,13 +566,13 @@ Structural context:
                 return json.loads(json_match.group(1))
             except:
                 pass
-        
+
         # Try to parse the entire response as JSON
         try:
             return json.loads(text)
         except:
             pass
-        
+
         # Try to find any JSON object in the text
         json_match = re.search(r'\{.*\}', text, re.DOTALL)
         if json_match:
@@ -580,17 +580,17 @@ Structural context:
                 return json.loads(json_match.group(0))
             except:
                 pass
-        
+
         logger.error("    Failed to extract JSON from LLM response")
         return {}
-    
+
     def clear_cache(self, domain: Optional[str] = None):
         """Clear cached data (for testing or updates)"""
         if domain:
             # Clear specific domain
             if domain in self.domain_contexts:
                 del self.domain_contexts[domain]
-            
+
             if self.enable_cache:
                 cache_file = self.domain_cache_dir / f"{domain}.json"
                 if cache_file.exists():

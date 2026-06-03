@@ -13,11 +13,11 @@ class JSONQualityValidator:
     """
     Performs fast, universal, and LLM-free quality validation on extracted JSON data.
     Checks for field overlap, presence of metadata keywords, and data density.
-    
+
     This is a first-pass filter to reject obvious garbage (tracking data, config, etc.)
     before expensive LLM validation.
     """
-    
+
     def __init__(
         self,
         min_field_overlap_ratio: float = 0.3,
@@ -25,14 +25,14 @@ class JSONQualityValidator:
     ):
         """
         Initialize the JSON Quality Validator
-        
+
         Args:
             min_field_overlap_ratio: Minimum ratio of requested fields found in extracted items
             min_data_density_score: Minimum score for data density (0-1)
         """
         self.min_field_overlap_ratio = min_field_overlap_ratio
         self.min_data_density_score = min_data_density_score
-        
+
         # Metadata/tracking keywords (bad signals)
         self.metadata_keywords = [
             'session', 'token', 'tracking', 'cookie', 'correlation', 'guid', 'config',
@@ -45,7 +45,7 @@ class JSONQualityValidator:
             'csrf_token', 'nonce', 'signature', 'hash', 'checksum', 'fingerprint',
             'x_ebay_c', 'correlation_session', 'signed-out', 'signed-in', 'recognized'
         ]
-        
+
         # Data keywords (good signals)
         self.data_keywords = [
             'title', 'name', 'product', 'item', 'price', 'cost', 'amount', 'currency',
@@ -57,7 +57,7 @@ class JSONQualityValidator:
             'phone', 'email', 'contact', 'brand', 'model', 'sku', 'mpn', 'gtin', 'isbn',
             'dimensions', 'weight', 'size', 'color', 'material', 'features', 'specs'
         ]
-    
+
     def validate(
         self,
         extracted_items: List[Dict[str, Any]],
@@ -70,55 +70,55 @@ class JSONQualityValidator:
         requested_fields = requested_fields or []
         if not extracted_items:
             return False, "No items to validate", 0.0
-        
+
         logger.info(f" Validating {len(extracted_items)} JSON items...")
-        
+
         #  FREQUENCY-BASED VALIDATION (Universal!)
         # Valuable data has HIGH frequency patterns!
         # If JSON extraction returns < 5 items, it's likely garbage metadata
         item_count = len(extracted_items)
-        
+
         if item_count < 5:
             logger.warning(f"    Low frequency: {item_count} items (expected 5+ for real data)")
-            logger.warning(f"    Real data appears multiple times (15+ posts, 20+ products, etc.)")
-            logger.warning(f"    Single items are usually metadata/tracking/config")
+            logger.warning("    Real data appears multiple times (15+ posts, 20+ products, etc.)")
+            logger.warning("    Single items are usually metadata/tracking/config")
             return False, f"Low frequency: {item_count} items (expected 5+ for real data)", 0.1
-        
+
         logger.info(f"    Good frequency: {item_count} items (likely real data)")
-        
+
         # Collect all keys from all items
         all_keys = set()
         for item in extracted_items[:10]:  # Sample first 10 items
             if isinstance(item, dict):
                 all_keys.update(item.keys())
-        
+
         if not all_keys:
             return False, "No keys found in items", 0.0
-        
+
         # Convert keys to lowercase for comparison
         keys_lower = [str(k).lower() for k in all_keys]
-        
+
         # 1. Check for metadata/tracking keywords (BAD)
         metadata_count = sum(
-            1 for key in keys_lower 
-            for keyword in self.metadata_keywords 
+            1 for key in keys_lower
+            for keyword in self.metadata_keywords
             if keyword in key
         )
         metadata_ratio = metadata_count / len(keys_lower) if keys_lower else 0
-        
+
         # 2. Check for data keywords (GOOD)
         data_count = sum(
-            1 for key in keys_lower 
-            for keyword in self.data_keywords 
+            1 for key in keys_lower
+            for keyword in self.data_keywords
             if keyword in key
         )
         data_ratio = data_count / len(keys_lower) if keys_lower else 0
-        
+
         # 3. Check field overlap with requested fields
         requested_lower = [f.lower() for f in requested_fields]
         overlap_count = sum(1 for key in keys_lower if any(req in key or key in req for req in requested_lower))
         field_overlap_ratio = overlap_count / len(requested_fields) if requested_fields else 0
-        
+
         # 4. Check for actual data values (not None/empty)
         non_null_count = 0
         total_values = 0
@@ -128,9 +128,9 @@ class JSONQualityValidator:
                     total_values += 1
                     if value is not None and value != '' and value != {}:
                         non_null_count += 1
-        
+
         value_density = non_null_count / total_values if total_values > 0 else 0
-        
+
         # Calculate overall confidence score
         # Penalize metadata, reward data keywords and field overlap
         confidence = (
@@ -139,34 +139,34 @@ class JSONQualityValidator:
             field_overlap_ratio * 0.25 +     # More requested fields = better
             value_density * 0.25             # More non-null values = better
         )
-        
-        logger.info(f"    JSON validation scores:")
+
+        logger.info("    JSON validation scores:")
         logger.info(f"      Metadata: {metadata_ratio:.0%}, Field overlap: {field_overlap_ratio:.0%}, Data: {data_ratio:.0%}, Values: {value_density:.0%}")
-        
+
         # Validation logic
         if metadata_ratio > 0.5:
             return False, f"High metadata content: {metadata_ratio:.0%}", confidence
-        
+
         if data_ratio < 0.05 and field_overlap_ratio < 0.2:
             return False, "No data keywords found", confidence
-        
+
         if value_density < 0.3:
             return False, f"Low value density: {value_density:.0%}", confidence
-        
+
         if field_overlap_ratio < self.min_field_overlap_ratio and data_ratio < 0.15:
-            return False, f"Insufficient field overlap and data keywords", confidence
-        
+            return False, "Insufficient field overlap and data keywords", confidence
+
         # Passed all checks
         logger.info(f"    JSON validation passed (confidence: {confidence:.2f})")
         return True, "Validation passed", confidence
-    
+
     def suggest_fallback(self, failure_reason: str) -> str:
         """
         Suggest a fallback strategy based on failure reason
-        
+
         Args:
             failure_reason: The reason validation failed
-        
+
         Returns:
             Human-readable suggestion
         """
@@ -189,27 +189,27 @@ class JSONQualityValidator:
         """
         if value is None:
             return True # null is okay
-            
+
         if isinstance(value, (int, float, bool)):
             return True
-            
+
         if isinstance(value, str):
             return not self.contains_garbage(value)
-            
+
         if isinstance(value, list):
             if not value:
                 return True
             # Check a sample
             sample = value[:5]
             return all(self.is_high_quality_value(v) for v in sample)
-            
+
         if isinstance(value, dict):
             if not value:
                 return True
             # Check a sample of values
             sample_values = list(value.values())[:5]
             return all(self.is_high_quality_value(v) for v in sample_values)
-            
+
         return True
 
     def contains_garbage(self, text: str) -> bool:
@@ -218,34 +218,34 @@ class JSONQualityValidator:
         """
         if not text or len(text) < 2:
             return False
-            
+
         import re
-            
+
         # 1. Check for high ratio of non-printable/control characters
         # (excluding common whitespace)
         control_chars = sum(1 for c in text if ord(c) < 32 and c not in "\n\r\t")
         if len(text) > 10 and (control_chars / len(text)) > 0.1:
             return True
-            
+
         # 2. Check for high ratio of "weird" characters (non-ASCII, non-common-symbols)
-        # This is tricky for international sites, but for Product Hunt (English), 
+        # This is tricky for international sites, but for Product Hunt (English),
         # a high ratio of non-Latin characters in a JSON-LD context is suspicious.
         # We'll use a conservative threshold.
         weird_chars = sum(1 for c in text if ord(c) > 127 and ord(c) < 160) # C1 control chars
         if weird_chars > 0:
             return True
-            
+
         # 2b. Check for replacement characters (explicit corruption signal)
         if '\ufffd' in text:
             return True
-            
+
         # 3. Check for very long strings with no spaces (obfuscation signal)
         # but ignore URLs and long IDs
         if len(text) > 100 and ' ' not in text and 'http' not in text and '/' not in text:
             # If it's a long hex/base64-like string with no spaces, it might be junk
             if re.match(r'^[a-zA-Z0-9+/=]{50,}$', text):
                 return True
-                
+
         # 4. Check for specific garbage patterns seen in Product Hunt/Kasada
         # (e.g., strings with many \uXXXX escapes that are control characters)
         if "\\u00" in text:
@@ -253,5 +253,5 @@ class JSONQualityValidator:
             low_escapes = len(re.findall(r'\\u00[0-1][0-9a-f]', text.lower()))
             if low_escapes > 3:
                 return True
-                
+
         return False

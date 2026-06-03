@@ -19,7 +19,7 @@ import logging
 import hashlib
 import time
 import re
-from typing import List, Dict, Any, Optional, Literal
+from typing import List, Dict, Any, Optional
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 from urllib.parse import urlparse
@@ -44,25 +44,25 @@ class FieldExtractor:
     This is the atomic unit of extraction.
     """
     field_name: str
-    
+
     # Primary extraction method
     selector: Optional[str] = None       # CSS selector
     xpath: Optional[str] = None          # XPath expression
     json_path: Optional[str] = None      # JSON path (e.g., "data.items[*].title")
     attribute: Optional[str] = None      # HTML attribute (e.g., "data-author")
     regex: Optional[str] = None          # Regex pattern for text extraction
-    
+
     # Post-processing
     extract_text: bool = True            # Extract .text or use attribute
     strip: bool = True                   # Strip whitespace
     default_value: Optional[str] = None  # Default if not found
-    
+
     # Type conversion
     data_type: str = "string"            # string, int, float, bool, date, url
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {k: v for k, v in asdict(self).items() if v is not None}
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "FieldExtractor":
         return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
@@ -72,7 +72,7 @@ class FieldExtractor:
 class ExtractionPattern:
     """
     A complete extraction pattern for a domain/structure.
-    
+
     This is what gets cached and reused. It contains:
     1. How to find the container (list of items)
     2. How to extract each field from an item
@@ -82,49 +82,49 @@ class ExtractionPattern:
     pattern_id: str                      # Unique ID (hash of domain + structure)
     domain: str                          # Domain this pattern applies to
     structure_hash: str                  # Hash of the page structure
-    
+
     # Pattern type
     pattern_type: PatternType
-    
+
     # Container selection (how to find the list of items)
     container_selector: Optional[str] = None   # CSS selector for container
     container_xpath: Optional[str] = None      # XPath for container
     item_selector: Optional[str] = None        # CSS selector for each item
     item_xpath: Optional[str] = None           # XPath for each item
     json_items_path: Optional[str] = None      # JSON path to items array
-    
+
     # Field extractors
     field_extractors: List[FieldExtractor] = field(default_factory=list)
-    
+
     # Generated code (for CSS_SELECTORS type)
     extraction_code: Optional[str] = None      # Python code to execute
-    
+
     # JSON endpoint (for JSON_API type)
     json_endpoint: Optional[str] = None        # Direct JSON URL
     json_method: str = "GET"                   # HTTP method
     json_headers: Optional[Dict[str, str]] = None
-    
+
     # Metadata
     created_at: float = field(default_factory=time.time)
     last_used: float = field(default_factory=time.time)
     use_count: int = 0
     success_count: int = 0
     failure_count: int = 0
-    
+
     # Validation
     expected_fields: List[str] = field(default_factory=list)
     min_items: int = 1                         # Minimum expected items
     sample_output: Optional[List[Dict]] = None # Sample of extracted data
-    
+
     # Source tracking
     learned_from_url: Optional[str] = None     # URL where pattern was learned
     learned_via: str = "direct_llm"            # How pattern was created
-    
+
     @property
     def success_rate(self) -> float:
         total = self.success_count + self.failure_count
         return self.success_count / total if total > 0 else 0.0
-    
+
     def to_dict(self) -> Dict[str, Any]:
         data = {
             'pattern_id': self.pattern_id,
@@ -153,15 +153,15 @@ class ExtractionPattern:
             'learned_via': self.learned_via,
         }
         return {k: v for k, v in data.items() if v is not None}
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ExtractionPattern":
         # Convert field extractors
         field_extractors = [
-            FieldExtractor.from_dict(fe) 
+            FieldExtractor.from_dict(fe)
             for fe in data.get('field_extractors', [])
         ]
-        
+
         return cls(
             pattern_id=data['pattern_id'],
             domain=data['domain'],
@@ -193,15 +193,15 @@ class ExtractionPattern:
 class PatternGenerator:
     """
     Generates extraction patterns from successful LLM extractions.
-    
+
     This is the "learning" component - it observes what the LLM extracted
     and reverse-engineers a deterministic pattern that can be reused.
     """
-    
+
     def __init__(self, api_key: Optional[str] = None, model_name: str = "gpt-4o-mini"):
         self.api_key = api_key
         self.model_name = model_name
-    
+
     async def generate_pattern_from_extraction(
         self,
         html: str,
@@ -212,29 +212,29 @@ class PatternGenerator:
     ) -> Optional[ExtractionPattern]:
         """
         Generate a reusable pattern from a successful LLM extraction.
-        
+
         This is the key method - it takes what the LLM found and creates
         a deterministic pattern that can be reused without LLM.
-        
+
         Args:
             html: The HTML that was scraped
             extracted_items: Items extracted by Direct LLM
             fields: Fields that were requested
             url: Source URL
             structure_hash: Hash of the page structure
-            
+
         Returns:
             ExtractionPattern that can be cached and reused
         """
         if not extracted_items:
             return None
-        
+
         domain = urlparse(url).netloc
         pattern_id = self._generate_pattern_id(domain, structure_hash, fields)
-        
+
         logger.info(f"🔬 Generating extraction pattern for {domain}...")
         logger.info(f"   Analyzing {len(extracted_items)} extracted items with {len(fields)} fields")
-        
+
         # Step 1: Try to detect JSON source first (fastest path)
         json_pattern = await self._detect_json_pattern(html, extracted_items, fields, url)
         if json_pattern:
@@ -246,7 +246,7 @@ class PatternGenerator:
             json_pattern.sample_output = extracted_items[:3]
             logger.info(f"✅ Generated JSON pattern: {json_pattern.pattern_type.value}")
             return json_pattern
-        
+
         # Step 2: Generate CSS selector pattern (most common path)
         css_pattern = await self._generate_css_pattern(html, extracted_items, fields, url, structure_hash)
         if css_pattern:
@@ -256,9 +256,9 @@ class PatternGenerator:
             css_pattern.learned_from_url = url
             css_pattern.expected_fields = fields
             css_pattern.sample_output = extracted_items[:3]
-            logger.info(f"✅ Generated CSS selector pattern")
+            logger.info("✅ Generated CSS selector pattern")
             return css_pattern
-        
+
         # Step 3: Generate attribute-based pattern (for custom elements)
         attr_pattern = await self._generate_attribute_pattern(html, extracted_items, fields, url, structure_hash)
         if attr_pattern:
@@ -268,18 +268,18 @@ class PatternGenerator:
             attr_pattern.learned_from_url = url
             attr_pattern.expected_fields = fields
             attr_pattern.sample_output = extracted_items[:3]
-            logger.info(f"✅ Generated attribute pattern")
+            logger.info("✅ Generated attribute pattern")
             return attr_pattern
-        
+
         logger.warning(f"⚠️ Could not generate deterministic pattern for {domain}")
         return None
-    
+
     def _generate_pattern_id(self, domain: str, structure_hash: str, fields: List[str]) -> str:
         """Generate unique pattern ID"""
         fields_str = ",".join(sorted(fields))
         content = f"{domain}:{structure_hash}:{fields_str}"
         return hashlib.sha256(content.encode()).hexdigest()[:16]
-    
+
     async def _detect_json_pattern(
         self,
         html: str,
@@ -289,7 +289,7 @@ class PatternGenerator:
     ) -> Optional[ExtractionPattern]:
         """
         Detect if data came from embedded JSON (fastest extraction method).
-        
+
         Checks for:
         - JSON-LD (<script type="application/ld+json">)
         - Next.js data (__NEXT_DATA__)
@@ -298,14 +298,14 @@ class PatternGenerator:
         """
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         # Check JSON-LD
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
         for script in json_ld_scripts:
             try:
                 data = json.loads(script.string)
                 if self._json_contains_items(data, extracted_items, fields):
-                    logger.info(f"   Found data in JSON-LD")
+                    logger.info("   Found data in JSON-LD")
                     return ExtractionPattern(
                         pattern_id="",
                         domain="",
@@ -316,7 +316,7 @@ class PatternGenerator:
                     )
             except json.JSONDecodeError:
                 continue
-        
+
         # Check __NEXT_DATA__
         next_data = soup.find('script', id='__NEXT_DATA__')
         if next_data:
@@ -335,7 +335,7 @@ class PatternGenerator:
                     )
             except json.JSONDecodeError:
                 pass
-        
+
         # Check generic data scripts
         for script in soup.find_all('script'):
             if script.string and len(script.string) > 100:
@@ -357,21 +357,21 @@ class PatternGenerator:
                             )
                     except json.JSONDecodeError:
                         continue
-        
+
         return None
-    
+
     def _json_contains_items(self, data: Any, extracted_items: List[Dict], fields: List[str]) -> bool:
         """Check if JSON data contains the extracted items"""
         if not extracted_items:
             return False
-        
+
         first_item = extracted_items[0]
-        
+
         # Check if any field value from extracted items exists in JSON
         def search_json(obj, depth=0):
             if depth > 10:
                 return False
-            
+
             if isinstance(obj, dict):
                 # Check if this dict matches our extracted item
                 matches = 0
@@ -382,32 +382,32 @@ class PatternGenerator:
                             matches += 1
                 if matches >= 2:
                     return True
-                
+
                 # Recurse into values
                 for v in obj.values():
                     if search_json(v, depth + 1):
                         return True
-            
+
             elif isinstance(obj, list):
                 for item in obj[:10]:  # Check first 10 items
                     if search_json(item, depth + 1):
                         return True
-            
+
             return False
-        
+
         return search_json(data)
-    
+
     def _find_items_in_json(self, data: Any, extracted_items: List[Dict], fields: List[str], path: str = "") -> Optional[str]:
         """Find the JSON path where extracted items are located"""
         if not extracted_items:
             return None
-        
+
         first_item = extracted_items[0]
-        
+
         def search(obj, current_path, depth=0):
             if depth > 10:
                 return None
-            
+
             if isinstance(obj, list) and len(obj) > 0:
                 # Check if this list contains our items
                 matches = 0
@@ -419,28 +419,28 @@ class PatternGenerator:
                                 if any(value.lower() in str(v).lower() for v in list_item.values()):
                                     matches += 1
                                     break
-                
+
                 if matches >= min(2, len(obj)):
                     return current_path
-            
+
             if isinstance(obj, dict):
                 for key, value in obj.items():
                     new_path = f"{current_path}.{key}" if current_path else key
                     result = search(value, new_path, depth + 1)
                     if result:
                         return result
-            
+
             elif isinstance(obj, list):
                 for i, item in enumerate(obj[:5]):
                     result = search(item, f"{current_path}[{i}]", depth + 1)
                     if result:
                         # Return the array path, not the specific index
                         return current_path
-            
+
             return None
-        
+
         return search(data, path)
-    
+
     async def _generate_css_pattern(
         self,
         html: str,
@@ -451,25 +451,25 @@ class PatternGenerator:
     ) -> Optional[ExtractionPattern]:
         """
         Generate CSS selector pattern using LLM to analyze HTML structure.
-        
+
         This asks the LLM to generate BeautifulSoup code that can extract
         the same data deterministically.
         """
         import litellm
-        
+
         if not self.api_key:
             return None
-        
+
         # Prepare a sample of the HTML (truncate for LLM context)
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         # Find elements that might contain our data
         sample_html = self._get_relevant_html_sample(soup, extracted_items, fields)
-        
+
         if not sample_html or len(sample_html) < 100:
             return None
-        
+
         # Ask LLM to generate extraction code
         prompt = f"""Analyze this HTML and generate BeautifulSoup Python code to extract data.
 
@@ -512,18 +512,18 @@ Return ONLY the Python code, no explanations."""
                 temperature=0.1,
                 max_tokens=2000
             )
-            
+
             code = response.choices[0].message.content
-            
+
             # Clean up code
             code = self._clean_code(code)
-            
+
             # Validate the code works
             if self._validate_code(code, html, extracted_items, fields):
                 # Extract selectors from the code for the pattern
                 item_selector = self._extract_item_selector(code)
                 field_extractors = self._extract_field_extractors(code, fields)
-                
+
                 return ExtractionPattern(
                     pattern_id="",
                     domain="",
@@ -534,26 +534,26 @@ Return ONLY the Python code, no explanations."""
                     extraction_code=code,
                     learned_via="llm_code_generation"
                 )
-        
+
         except Exception as e:
             logger.error(f"Failed to generate CSS pattern: {e}")
-        
+
         return None
-    
+
     def _get_relevant_html_sample(self, soup, extracted_items: List[Dict], fields: List[str]) -> str:
         """Get a relevant sample of HTML containing the extracted data"""
         if not extracted_items:
             return str(soup)[:10000]
-        
+
         first_item = extracted_items[0]
-        
+
         # Find elements containing our data
         relevant_elements = []
-        
+
         for field in fields[:3]:
             if field in first_item and first_item[field]:
                 value = str(first_item[field])[:50]
-                
+
                 # Search for elements containing this text
                 for elem in soup.find_all(string=re.compile(re.escape(value[:20]), re.I)):
                     parent = elem.parent
@@ -564,54 +564,54 @@ Return ONLY the Python code, no explanations."""
                                 relevant_elements.append(parent)
                             break
                         parent = parent.parent if parent else None
-        
+
         if relevant_elements:
             # Return the parent of the first few elements (likely the container)
             container = relevant_elements[0].parent
             if container:
                 return str(container)[:10000]
-        
+
         return str(soup)[:10000]
-    
+
     def _clean_code(self, code: str) -> str:
         """Clean up LLM-generated code"""
         # Remove markdown code blocks
         code = re.sub(r'```python\s*', '', code)
         code = re.sub(r'```\s*', '', code)
-        
+
         # Remove any leading/trailing whitespace
         code = code.strip()
-        
+
         return code
-    
+
     def _validate_code(self, code: str, html: str, extracted_items: List[Dict], fields: List[str]) -> bool:
         """Validate that generated code produces similar results"""
         try:
             from bs4 import BeautifulSoup
             soup = BeautifulSoup(html, 'html.parser')
-            
+
             namespace = {'soup': soup, 'BeautifulSoup': BeautifulSoup, 're': re}
             exec(code, namespace)
-            
+
             if 'extract_data' not in namespace:
                 return False
-            
+
             result = namespace['extract_data'](soup)
-            
+
             if not result or not isinstance(result, list):
                 return False
-            
+
             # Filter out navigation/footer links and invalid items
             filtered_result = self._filter_invalid_items(result, extracted_items, fields)
-            
+
             if not filtered_result:
                 return False
-            
+
             # Check if result is similar to extracted_items
             # Allow some variance (code might find more/fewer items)
             if len(filtered_result) < len(extracted_items) * 0.5:
                 return False
-            
+
             # Check if extracted items match expected items (not just count)
             # Compare first few items to see if they're similar
             match_count = 0
@@ -620,12 +620,12 @@ Return ONLY the Python code, no explanations."""
                     if self._items_match(expected_item, extracted_item, fields):
                         match_count += 1
                         break
-            
+
             # At least 60% of expected items should match
             if match_count < len(extracted_items[:5]) * 0.6:
                 logger.warning(f"Pattern validation: Only {match_count}/{len(extracted_items[:5])} items matched expected items")
                 return False
-            
+
             # Check if fields are present (more lenient - fields are optional)
             if filtered_result:
                 first_result = filtered_result[0]
@@ -635,17 +635,17 @@ Return ONLY the Python code, no explanations."""
                     # Also accept if at least 1 field is present
                     if len(present_fields) < max(1, len(fields) * 0.3):
                         return False
-            
+
             return True
-        
+
         except Exception as e:
             logger.warning(f"Code validation failed: {e}")
             return False
-    
+
     def _filter_invalid_items(self, items: List[Dict], expected_items: List[Dict], fields: List[str]) -> List[Dict]:
         """Filter out navigation links, footer links, and other invalid items"""
         filtered = []
-        
+
         # Common patterns for invalid items (navigation/footer links)
         invalid_patterns = [
             r'^/$',  # Root path
@@ -663,29 +663,29 @@ Return ONLY the Python code, no explanations."""
             r'/apps',  # Apps pages
             r'/p/',  # Post pages (not products)
         ]
-        
+
         for item in items:
             if not isinstance(item, dict):
                 continue
-            
+
             # Check if item looks like a navigation/footer link
             url = item.get('url', '') or item.get('link', '') or ''
             title = item.get('title', '') or item.get('name', '') or ''
-            
+
             # Skip if URL matches invalid patterns
             is_invalid = False
             for pattern in invalid_patterns:
                 if re.search(pattern, str(url), re.I):
                     is_invalid = True
                     break
-            
+
             # Skip if title is just a path (likely navigation)
             if not is_invalid and title:
                 if title.startswith('/') and len(title) < 50:
                     # Check if it's a simple path (not a product name)
                     if not any(char.isupper() for char in title) and '/' in title:
                         is_invalid = True
-            
+
             # Skip if item has no meaningful content
             if not is_invalid:
                 has_content = False
@@ -696,39 +696,39 @@ Return ONLY the Python code, no explanations."""
                         if len(str(value)) > 3 and not str(value).startswith('/'):
                             has_content = True
                             break
-                
+
                 if not has_content:
                     is_invalid = True
-            
+
             if not is_invalid:
                 filtered.append(item)
-        
+
         return filtered
-    
+
     def _items_match(self, item1: Dict, item2: Dict, fields: List[str]) -> bool:
         """Check if two items match (similar content)"""
         matches = 0
         total_checked = 0
-        
+
         for field in fields:
             val1 = item1.get(field)
             val2 = item2.get(field)
-            
+
             if val1 and val2:
                 total_checked += 1
                 # Normalize values for comparison
                 val1_str = str(val1).lower().strip()
                 val2_str = str(val2).lower().strip()
-                
+
                 # Check if values are similar (exact match or substring)
                 if val1_str == val2_str or val1_str in val2_str or val2_str in val1_str:
                     matches += 1
-        
+
         # Items match if at least 50% of compared fields match
         if total_checked == 0:
             return False
         return matches / total_checked >= 0.5
-    
+
     def _extract_item_selector(self, code: str) -> Optional[str]:
         """Extract the item selector from generated code"""
         # Look for .select() or .find_all() calls
@@ -736,33 +736,33 @@ Return ONLY the Python code, no explanations."""
             r"\.select\(['\"]([^'\"]+)['\"]\)",
             r"\.find_all\(['\"]([^'\"]+)['\"]\)",
         ]
-        
+
         for pattern in patterns:
             matches = re.findall(pattern, code)
             if matches:
                 return matches[0]
-        
+
         return None
-    
+
     def _extract_field_extractors(self, code: str, fields: List[str]) -> List[FieldExtractor]:
         """Extract field extractors from generated code"""
         extractors = []
-        
+
         for field in fields:
             # Look for patterns like: item['field'] = ... or 'field': ...
             patterns = [
                 rf"['\"]?{field}['\"]?\s*[=:]\s*([^\n,}}]+)",
             ]
-            
+
             for pattern in patterns:
                 match = re.search(pattern, code, re.I)
                 if match:
                     extraction_expr = match.group(1).strip()
-                    
+
                     # Try to extract selector from expression
                     selector_match = re.search(r"\.select_one\(['\"]([^'\"]+)['\"]\)", extraction_expr)
                     attr_match = re.search(r"\.get\(['\"]([^'\"]+)['\"]\)", extraction_expr)
-                    
+
                     extractor = FieldExtractor(
                         field_name=field,
                         selector=selector_match.group(1) if selector_match else None,
@@ -773,9 +773,9 @@ Return ONLY the Python code, no explanations."""
             else:
                 # Default extractor
                 extractors.append(FieldExtractor(field_name=field))
-        
+
         return extractors
-    
+
     async def _generate_attribute_pattern(
         self,
         html: str,
@@ -786,47 +786,47 @@ Return ONLY the Python code, no explanations."""
     ) -> Optional[ExtractionPattern]:
         """
         Generate pattern for custom elements with data attributes.
-        
+
         This handles cases like:
         - <shreddit-post author="user" score="100">
         - <div data-title="..." data-price="...">
         """
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         if not extracted_items:
             return None
-        
+
         first_item = extracted_items[0]
-        
+
         # Find elements with data attributes matching our values
         for elem in soup.find_all(True):
             attrs = elem.attrs
             if not attrs:
                 continue
-            
+
             matches = 0
             field_to_attr = {}
-            
+
             for field in fields:
                 if field not in first_item or not first_item[field]:
                     continue
-                
+
                 value = str(first_item[field])[:50].lower()
-                
+
                 # Check each attribute
                 for attr_name, attr_value in attrs.items():
                     if isinstance(attr_value, str) and value in attr_value.lower():
                         matches += 1
                         field_to_attr[field] = attr_name
                         break
-            
+
             if matches >= len(fields) * 0.5:
                 # Found a good match!
                 item_selector = elem.name
                 if elem.get('class'):
                     item_selector += '.' + '.'.join(elem.get('class'))
-                
+
                 field_extractors = [
                     FieldExtractor(
                         field_name=field,
@@ -835,7 +835,7 @@ Return ONLY the Python code, no explanations."""
                     )
                     for field in fields
                 ]
-                
+
                 return ExtractionPattern(
                     pattern_id="",
                     domain="",
@@ -845,62 +845,62 @@ Return ONLY the Python code, no explanations."""
                     field_extractors=field_extractors,
                     learned_via="attribute_detection"
                 )
-        
+
         return None
 
 
 class PatternExecutor:
     """
     Executes extraction patterns to extract data.
-    
+
     This is the fast path - no LLM needed, just deterministic extraction.
     """
-    
+
     def execute(self, pattern: ExtractionPattern, html: str) -> List[Dict[str, Any]]:
         """
         Execute an extraction pattern on HTML.
-        
+
         Args:
             pattern: The extraction pattern to use
             html: HTML content to extract from
-            
+
         Returns:
             List of extracted items (filtered to exclude navigation/footer links)
         """
         logger.info(f"⚡ Executing {pattern.pattern_type.value} pattern (no LLM)")
-        
+
         items = []
         if pattern.pattern_type == PatternType.JSON_EMBEDDED:
             items = self._execute_json_embedded(pattern, html)
-        
+
         elif pattern.pattern_type == PatternType.CSS_SELECTORS:
             items = self._execute_css_selectors(pattern, html)
-        
+
         elif pattern.pattern_type == PatternType.ATTRIBUTE_MAP:
             items = self._execute_attribute_map(pattern, html)
-        
+
         elif pattern.pattern_type == PatternType.JSON_API:
             items = self._execute_json_api(pattern)
-        
+
         else:
             logger.warning(f"Unknown pattern type: {pattern.pattern_type}")
             return []
-        
+
         # Filter out invalid items (navigation/footer links) for all pattern types
         filtered_items = [item for item in items if self._is_valid_item(item, pattern.expected_fields)]
-        
+
         if len(filtered_items) < len(items):
             logger.info(f"   Filtered out {len(items) - len(filtered_items)} invalid items (navigation/footer links)")
-        
+
         return filtered_items
-    
+
     def _execute_json_embedded(self, pattern: ExtractionPattern, html: str) -> List[Dict[str, Any]]:
         """Execute JSON embedded pattern"""
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         items_path = pattern.json_items_path or ""
-        
+
         # Find the JSON source
         if "__NEXT_DATA__" in items_path:
             script = soup.find('script', id='__NEXT_DATA__')
@@ -916,12 +916,12 @@ class PatternExecutor:
                                 data = data.get(key, [])
                             else:
                                 data = data.get(part, {})
-                    
+
                     if isinstance(data, list):
                         return self._extract_fields_from_json(data, pattern.expected_fields)
                 except Exception as e:
                     logger.error(f"JSON embedded extraction failed: {e}")
-        
+
         # Try JSON-LD
         for script in soup.find_all('script', type='application/ld+json'):
             try:
@@ -933,49 +933,49 @@ class PatternExecutor:
                         return self._extract_fields_from_json(data["@graph"], pattern.expected_fields)
             except Exception:
                 continue
-        
+
         return []
-    
+
     def _execute_css_selectors(self, pattern: ExtractionPattern, html: str) -> List[Dict[str, Any]]:
         """Execute CSS selector pattern"""
         from bs4 import BeautifulSoup
-        
+
         # If we have generated code, execute it
         if pattern.extraction_code:
             try:
                 soup = BeautifulSoup(html, 'html.parser')
                 namespace = {'soup': soup, 'BeautifulSoup': BeautifulSoup, 're': re}
                 exec(pattern.extraction_code, namespace)
-                
+
                 if 'extract_data' in namespace:
                     return namespace['extract_data'](soup)
             except Exception as e:
                 logger.error(f"Code execution failed: {e}")
-        
+
         # Fallback to using field extractors
         if pattern.item_selector and pattern.field_extractors:
             soup = BeautifulSoup(html, 'html.parser')
             items = []
-            
+
             for elem in soup.select(pattern.item_selector):
                 item = {}
                 for extractor in pattern.field_extractors:
                     value = self._extract_field(elem, extractor)
                     item[extractor.field_name] = value
                 items.append(item)
-            
+
             return items
-        
+
         return []
-    
+
     def _execute_attribute_map(self, pattern: ExtractionPattern, html: str) -> List[Dict[str, Any]]:
         """Execute attribute map pattern"""
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         if not pattern.item_selector:
             return []
-        
+
         items = []
         for elem in soup.select(pattern.item_selector):
             # Skip navigation/footer elements
@@ -989,10 +989,10 @@ class PatternExecutor:
                     parent = parent.parent
                 else:
                     break
-            
+
             if skip:
                 continue
-            
+
             # Extract item
             item = {}
             for extractor in pattern.field_extractors:
@@ -1000,50 +1000,50 @@ class PatternExecutor:
                     value = elem.get(extractor.attribute)
                 else:
                     value = elem.get(f"data-{extractor.field_name}") or elem.get(extractor.field_name)
-                
+
                 item[extractor.field_name] = value
             items.append(item)
-        
+
         return items
-    
+
     def _is_valid_item(self, item: Dict, fields: List[str]) -> bool:
         """Check if item is valid (not a navigation/footer link)"""
         url = item.get('url', '') or item.get('link', '') or ''
         title = item.get('title', '') or item.get('name', '') or ''
-        
+
         # Invalid patterns
         invalid_patterns = [
             r'^/$', r'^/#', r'/categories\?', r'/products/.*/reviews',
             r'\?ref=footer', r'^mailto:', r'/legal', r'/about',
             r'/sponsor', r'/newsletters', r'/apps', r'/p/'
         ]
-        
+
         # Check URL
         for pattern in invalid_patterns:
             if re.search(pattern, str(url), re.I):
                 return False
-        
+
         # Check if title is just a path
         if title and title.startswith('/') and len(title) < 50:
             if not any(char.isupper() for char in title) and '/' in title:
                 return False
-        
+
         # Must have at least one meaningful field
         for field in fields:
             value = item.get(field)
             if value and str(value).strip() and str(value) not in ['/', '#', 'null', 'None']:
                 if len(str(value)) > 3 and not str(value).startswith('/'):
                     return True
-        
+
         return False
-    
+
     def _execute_json_api(self, pattern: ExtractionPattern) -> List[Dict[str, Any]]:
         """Execute JSON API pattern (direct endpoint)"""
         import requests
-        
+
         if not pattern.json_endpoint:
             return []
-        
+
         try:
             response = requests.request(
                 method=pattern.json_method,
@@ -1053,7 +1053,7 @@ class PatternExecutor:
             )
             response.raise_for_status()
             data = response.json()
-            
+
             if isinstance(data, list):
                 return self._extract_fields_from_json(data, pattern.expected_fields)
             elif isinstance(data, dict) and pattern.json_items_path:
@@ -1062,19 +1062,19 @@ class PatternExecutor:
                 for part in path_parts:
                     if part:
                         data = data.get(part, {})
-                
+
                 if isinstance(data, list):
                     return self._extract_fields_from_json(data, pattern.expected_fields)
-        
+
         except Exception as e:
             logger.error(f"JSON API extraction failed: {e}")
-        
+
         return []
-    
+
     def _extract_field(self, elem, extractor: FieldExtractor) -> Any:
         """Extract a single field from an element"""
         value = None
-        
+
         if extractor.selector:
             sub_elem = elem.select_one(extractor.selector)
             if sub_elem:
@@ -1082,26 +1082,26 @@ class PatternExecutor:
                     value = sub_elem.get(extractor.attribute)
                 elif extractor.extract_text:
                     value = sub_elem.get_text(strip=extractor.strip)
-        
+
         elif extractor.attribute:
             value = elem.get(extractor.attribute)
-        
+
         elif extractor.extract_text:
             value = elem.get_text(strip=extractor.strip)
-        
+
         if value is None:
             value = extractor.default_value
-        
+
         return value
-    
+
     def _extract_fields_from_json(self, items: List[Dict], fields: List[str]) -> List[Dict[str, Any]]:
         """Extract specified fields from JSON items"""
         result = []
-        
+
         for item in items:
             if not isinstance(item, dict):
                 continue
-            
+
             extracted = {}
             for field in fields:
                 # Try exact match
@@ -1113,9 +1113,9 @@ class PatternExecutor:
                         if key.lower() == field.lower():
                             extracted[field] = value
                             break
-            
+
             if extracted:
                 result.append(extracted)
-        
+
         return result
 

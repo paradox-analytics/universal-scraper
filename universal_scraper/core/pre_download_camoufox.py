@@ -24,17 +24,17 @@ except Exception as e:
 
 try:
     from camoufox.sync_api import Camoufox
-    
+
     print(" Initializing Camoufox (this will download ~713MB browser)...")
     print(" Pre-downloading GeoIP database (this will download ~63MB database)...")
-    
+
     # Initialize with geoip=True to pre-download GeoIP database during build
     # This ensures the database is cached in the Docker image
     browser = Camoufox(headless=True, geoip=True)
     print(" Entering browser context...")
     context = browser.__enter__()
     print(" Camoufox initialized successfully")
-    
+
     # Verify cache location
     cache_dir = os.path.expanduser("~/.cache/camoufox")
     if os.path.exists(cache_dir):
@@ -44,7 +44,7 @@ try:
         print(f"   Cache contains {len(files)} files/directories")
     else:
         print(f" Cache directory not found at {cache_dir}")
-    
+
     # Verify GeoIP database is downloaded
     # The geoip2 library downloads the database to ~/.cache/geoip2/GeoLite2-City.mmdb
     # when Camoufox initializes with geoip=True
@@ -61,7 +61,7 @@ try:
     else:
         print(f" GeoIP cache directory not found at {geoip_cache_dir}")
         print("   (This is OK - it will be created on first use)")
-    
+
     browser.__exit__(None, None, None)
     print(" Pre-download complete!")
     print("   Both Camoufox browser and GeoIP database are now cached in the Docker image")

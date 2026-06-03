@@ -26,7 +26,7 @@ class FieldMapping:
     transformer: Optional[Callable] = None  # Optional transformation function
     aliases: List[str] = field(default_factory=list)  # Alternative field names
     description: str = ""
-    
+
     def find_value(self, source_data: Dict[str, Any]) -> Optional[Any]:
         """Find value from source data using priority list"""
         # Try exact matches first
@@ -35,17 +35,17 @@ class FieldMapping:
                 value = source_data[source_field]
                 if value is not None:
                     return self._transform(value)
-        
+
         # Try aliases (case-insensitive)
         all_possible_names = self.source_fields + self.aliases + [self.output_field]
         source_data_lower = {k.lower(): v for k, v in source_data.items()}
-        
+
         for name in all_possible_names:
             if name.lower() in source_data_lower:
                 value = source_data_lower[name.lower()]
                 if value is not None:
                     return self._transform(value)
-        
+
         # Try fuzzy matching (partial matches)
         for name in all_possible_names:
             for key, value in source_data.items():
@@ -53,9 +53,9 @@ class FieldMapping:
                     if value is not None:
                         logger.debug(f" Fuzzy match: '{name}' -> '{key}'")
                         return self._transform(value)
-        
+
         return None
-    
+
     def _transform(self, value: Any) -> Any:
         """Apply transformation if defined"""
         if self.transformer:
@@ -74,14 +74,14 @@ class SchemaDefinition:
     version: str
     fields: List[FieldMapping]
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
-    
+
     def get_field_mapping(self, output_field: str) -> Optional[FieldMapping]:
         """Get field mapping by output field name"""
         for field_map in self.fields:
             if field_map.output_field == output_field:
                 return field_map
         return None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Serialize schema to dict"""
         return {
@@ -101,7 +101,7 @@ class SchemaDefinition:
                 for f in self.fields
             ]
         }
-    
+
     def get_hash(self) -> str:
         """Get unique hash of schema definition"""
         schema_str = json.dumps(self.to_dict(), sort_keys=True)
@@ -111,7 +111,7 @@ class SchemaDefinition:
 class SchemaManager:
     """
     Manages schema integrity and field mapping for production environments.
-    
+
     Features:
     - Stable output schema regardless of source changes
     - Intelligent field mapping with fallbacks
@@ -120,7 +120,7 @@ class SchemaManager:
     - Schema versioning and migration
     - AI-powered field discovery when mappings fail
     """
-    
+
     def __init__(
         self,
         schema: Optional[SchemaDefinition] = None,
@@ -130,7 +130,7 @@ class SchemaManager:
     ):
         """
         Initialize Schema Manager
-        
+
         Args:
             schema: Predefined schema definition
             ai_generator: AI generator for intelligent field mapping
@@ -141,7 +141,7 @@ class SchemaManager:
         self.ai_generator = ai_generator
         self.strict_mode = strict_mode
         self.enable_ai_mapping = enable_ai_mapping
-        
+
         # Track mapping performance
         self.stats = {
             'total_items': 0,
@@ -150,37 +150,37 @@ class SchemaManager:
             'ai_assisted_mappings': 0,
             'field_coverage': {}
         }
-        
+
         # Cache for discovered mappings
         self.discovered_mappings: Dict[str, List[str]] = {}
-        
-        logger.info(f" Schema Manager initialized")
+
+        logger.info(" Schema Manager initialized")
         if schema:
             logger.info(f"   Schema: {schema.name} v{schema.version}")
             logger.info(f"   Fields: {len(schema.fields)}")
             logger.info(f"   Strict Mode: {strict_mode}")
-    
+
     def normalize_item(self, source_item: Dict[str, Any]) -> Dict[str, Any]:
         """
         Normalize a source item to match the defined schema
-        
+
         Args:
             source_item: Raw data item from scraper
-            
+
         Returns:
             Normalized item matching schema
         """
         if not self.schema:
             logger.warning("  No schema defined, returning source item as-is")
             return source_item
-        
+
         normalized = {}
         missing_fields = []
-        
+
         for field_mapping in self.schema.fields:
             # Try to find value using field mapping
             value = field_mapping.find_value(source_item)
-            
+
             # If not found and AI mapping enabled, try AI discovery
             if value is None and self.enable_ai_mapping and self.ai_generator:
                 value = self._ai_discover_field(
@@ -189,7 +189,7 @@ class SchemaManager:
                 )
                 if value is not None:
                     self.stats['ai_assisted_mappings'] += 1
-            
+
             # Handle missing values
             if value is None:
                 if field_mapping.required:
@@ -202,36 +202,36 @@ class SchemaManager:
                         logger.warning(f"  Required field missing: {field_mapping.output_field}")
                 else:
                     value = field_mapping.default_value
-            
+
             # Validate and normalize type
             value = self._normalize_type(value, field_mapping.field_type)
-            
+
             # Set normalized value
             normalized[field_mapping.output_field] = value
-            
+
             # Track field coverage
             if value is not None:
                 self.stats['field_coverage'][field_mapping.output_field] = \
                     self.stats['field_coverage'].get(field_mapping.output_field, 0) + 1
-        
+
         # Update stats
         self.stats['total_items'] += 1
         if not missing_fields:
             self.stats['successful_mappings'] += 1
         else:
             self.stats['missing_required_fields'] += len(missing_fields)
-        
+
         return normalized
-    
+
     def normalize_batch(self, source_items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Normalize a batch of items"""
         return [self.normalize_item(item) for item in source_items]
-    
+
     def _normalize_type(self, value: Any, expected_type: str) -> Any:
         """Normalize value to expected type"""
         if value is None:
             return None
-        
+
         try:
             if expected_type == 'string':
                 return str(value)
@@ -257,7 +257,7 @@ class SchemaManager:
         except Exception as e:
             logger.warning(f"Type normalization failed: {e}")
             return value
-    
+
     def _ai_discover_field(
         self,
         target_field: str,
@@ -265,7 +265,7 @@ class SchemaManager:
     ) -> Optional[Any]:
         """
         Use AI to discover which source field maps to target field
-        
+
         This is called when standard mapping fails
         """
         # Check cache first
@@ -274,10 +274,10 @@ class SchemaManager:
                 if source_field in source_item:
                     logger.debug(f" Using cached AI mapping: {target_field} <- {source_field}")
                     return source_item[source_field]
-        
+
         # Use AI to analyze source data and find best match
         try:
-            prompt = f"""
+            f"""
 Analyze this data item and identify which field best matches "{target_field}".
 
 Source data fields:
@@ -288,31 +288,31 @@ Sample values:
 
 Return ONLY the exact field name that best matches "{target_field}", or "NONE" if no match.
 """
-            
+
             # This would call the AI generator (simplified for now)
             logger.debug(f" AI analyzing field mapping for: {target_field}")
             # In production, you'd call: self.ai_generator.suggest_field_mapping(...)
-            
+
             # For now, return None (would be implemented with actual AI call)
             return None
-            
+
         except Exception as e:
             logger.warning(f"AI field discovery failed: {e}")
             return None
-    
+
     def get_quality_report(self) -> Dict[str, Any]:
         """Generate quality report for monitoring"""
         if self.stats['total_items'] == 0:
             return {'status': 'no_data'}
-        
+
         success_rate = self.stats['successful_mappings'] / self.stats['total_items']
-        
+
         # Calculate field coverage
         field_coverage = {}
         for field_name, count in self.stats['field_coverage'].items():
             coverage = (count / self.stats['total_items']) * 100
             field_coverage[field_name] = round(coverage, 2)
-        
+
         # Determine status
         if success_rate >= 0.9:
             status = 'healthy'
@@ -320,7 +320,7 @@ Return ONLY the exact field name that best matches "{target_field}", or "NONE" i
             status = 'warning'
         else:
             status = 'critical'
-        
+
         return {
             'status': status,
             'success_rate': round(success_rate * 100, 2),
@@ -331,7 +331,7 @@ Return ONLY the exact field name that best matches "{target_field}", or "NONE" i
             'field_coverage': field_coverage,
             'timestamp': datetime.now().isoformat()
         }
-    
+
     def reset_stats(self):
         """Reset statistics"""
         self.stats = {

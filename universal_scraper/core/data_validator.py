@@ -7,7 +7,7 @@ Prevents false positives (e.g., cart config when user wants products).
 
 import json
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 import litellm
 from .context_manager import ExtractionContext
 
@@ -19,7 +19,7 @@ class LLMDataValidator:
     Uses LLM to validate extracted data matches user's intent
     Critical for universal scraping - prevents extracting wrong data
     """
-    
+
     def __init__(
         self,
         api_key: str,
@@ -28,7 +28,7 @@ class LLMDataValidator:
     ):
         """
         Initialize data validator
-        
+
         Args:
             api_key: OpenAI API key (or any LiteLLM-supported provider)
             model: Model to use for validation
@@ -38,9 +38,9 @@ class LLMDataValidator:
         self.model = model
         self.enable_cache = enable_cache
         self._cache = {}
-        
+
         logger.info(f" Data Validator initialized with {model}")
-    
+
     def validate_extraction(
         self,
         items: List[Dict[str, Any]],
@@ -49,12 +49,12 @@ class LLMDataValidator:
     ) -> Dict[str, Any]:
         """
         Validate that extracted items match user's extraction goal
-        
+
         Args:
             items: Extracted data items
             url: Source URL
             context: User's extraction context
-        
+
         Returns:
             {
                 "is_target_data": bool,
@@ -64,7 +64,7 @@ class LLMDataValidator:
                 "suggestion": str
             }
         """
-        
+
         if not items:
             return {
                 'is_target_data': False,
@@ -73,16 +73,16 @@ class LLMDataValidator:
                 'detected_type': 'empty',
                 'suggestion': 'Try different extraction method'
             }
-        
+
         # Check cache
         cache_key = self._get_cache_key(items, url, context)
         if self.enable_cache and cache_key in self._cache:
             logger.info(" Using cached validation result")
             return self._cache[cache_key]
-        
+
         # Prepare sample for LLM (limit size)
         sample_items = items[:3]  # Show up to 3 items
-        
+
         # Truncate large values
         truncated_sample = []
         for item in sample_items:
@@ -95,10 +95,10 @@ class LLMDataValidator:
                 else:
                     truncated[key] = value
             truncated_sample.append(truncated)
-        
+
         # Calculate field match rate (heuristic)
         field_match_rate = self._calculate_field_match_rate(items, context)
-        
+
         prompt = f"""You are an expert at validating web scraping results.
 
 {context.to_llm_prompt_section()}
@@ -145,7 +145,7 @@ Respond in JSON:
 
 Be pragmatic - accept partial matches if data type is correct and most fields are present.
 """
-        
+
         try:
             response = litellm.completion(
                 model=self.model,
@@ -163,38 +163,38 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
                 temperature=0.1,  # Low temperature for consistent validation
                 max_tokens=500
             )
-            
+
             content = response.choices[0].message.content
-            
+
             # Parse JSON response
             if isinstance(content, str):
                 result = json.loads(content)
             else:
                 result = content
-            
+
             # Validate response structure
             if not isinstance(result, dict):
                 raise ValueError("LLM returned non-dict response")
-            
+
             # Ensure all required fields exist
             result.setdefault('is_target_data', False)
             result.setdefault('confidence', 0.5)
             result.setdefault('reasoning', 'No reasoning provided')
             result.setdefault('detected_type', 'unknown')
             result.setdefault('suggestion', 'try_different_method')
-            
+
             # Log validation result
             status_icon = "" if result['is_target_data'] else ""
             logger.info(f"{status_icon} Validation: {result['is_target_data']} (confidence: {result['confidence']:.2f})")
             logger.info(f"   Detected: {result['detected_type']}")
             logger.info(f"   Reasoning: {result['reasoning']}")
-            
+
             # Cache result
             if self.enable_cache:
                 self._cache[cache_key] = result
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f" LLM validation failed: {e}")
             # Default to accepting data if validation fails (fail-open)
@@ -205,7 +205,7 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
                 'detected_type': 'unknown',
                 'suggestion': 'validation_error'
             }
-    
+
     def _calculate_field_match_rate(
         self,
         items: List[Dict],
@@ -217,17 +217,17 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
         """
         if not items or not context.fields:
             return 0.5  # Neutral if no fields specified
-        
+
         # Get all fields from first item (representative)
         extracted_fields = set(items[0].keys()) if items else set()
-        
+
         # Normalize field names for comparison
         extracted_lower = {f.lower() for f in extracted_fields}
         requested_lower = {f.lower() for f in context.fields}
-        
+
         # Count exact matches
         exact_matches = len(extracted_lower & requested_lower)
-        
+
         # Count fuzzy matches (field name contains requested field or vice versa)
         fuzzy_matches = 0
         for req in requested_lower:
@@ -235,17 +235,17 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
                 if req in ext or ext in req:
                     fuzzy_matches += 1
                     break
-        
+
         # Use best match count
         match_count = max(exact_matches, fuzzy_matches)
-        
+
         # Calculate rate
         if len(context.fields) == 0:
             return 0.5  # Neutral if no fields requested
-        
+
         rate = match_count / len(context.fields)
         return min(rate, 1.0)  # Cap at 100%
-    
+
     def _get_cache_key(
         self,
         items: List[Dict],
@@ -254,16 +254,16 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
     ) -> str:
         """Generate cache key from items structure and context"""
         import hashlib
-        
+
         # Create signature from item structure (fields only, not values)
         if items:
             item_signature = json.dumps(sorted(items[0].keys()))
         else:
             item_signature = "empty"
-        
+
         cache_input = f"{url}|{context.goal}|{item_signature}|{len(items)}"
         return hashlib.md5(cache_input.encode()).hexdigest()
-    
+
     def quick_validate(
         self,
         items: List[Dict],
@@ -275,11 +275,11 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
         """
         if not items:
             return False
-        
+
         # Check if we have multiple items (good sign)
         if len(items) < 1:
             return False
-        
+
         # Check if items have reasonable field count
         if items:
             field_count = len(items[0])
@@ -287,11 +287,11 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
                 return False
             if field_count > 100:  # Suspiciously many fields
                 return False
-        
+
         # Passed basic checks
         return True
 
-    
+
     def filter_items_by_target(
         self,
         items: List[Dict[str, Any]],
@@ -301,24 +301,24 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
         """
         Filter extracted items to only keep those matching the specific target description.
         Useful for separating "Main Product" from "Related Products" or "Nav Items".
-        
+
         Args:
             items: List of extracted items
             target_description: User's specific target (e.g. "Main product only, no related items")
             fields: list of fields to help context
-            
+
         Returns:
             List[Dict]: Filtered list of items
         """
         if not items or not target_description:
             return items
-            
+
         # If very few items, maybe no need to filter (unless strict single item requested)
         if len(items) <= 1:
             return items
-            
+
         logger.info(f" Filtering {len(items)} items using target: '{target_description}'")
-        
+
         # Create a condensed representation for the LLM (ID + Title/Name + 1-2 other fields)
         condensed_items = []
         for idx, item in enumerate(items):
@@ -328,24 +328,24 @@ Be pragmatic - accept partial matches if data type is correct and most fields ar
                 if k.lower() in ['title', 'name', 'headline', 'productname']:
                     label = str(v)[:50]
                     break
-            
+
             # Find an ID
             item_id = item.get('id', item.get('sku', item.get('uuid', str(idx))))
-            
+
             condensed_items.append({
                 'index': idx,
                 'label': label,
                 'id': str(item_id)[:20],
                 'sample_data': str(list(item.values())[:3])[:100] # First 3 values
             })
-            
+
         # Batch processing (LLM context limit)
         # We'll validatethe first 20 items. If we find the "Main" one, we might stop?
         # For now, process first 20 items.
-        batch = condensed_items[:20] 
-        
+        batch = condensed_items[:20]
+
         prompt = f"""You are a precise data filter.
-        
+
 TARGET DESCRIPTION: "{target_description}"
 
 CANDIDATE ITEMS (Index: Label):
@@ -373,18 +373,18 @@ Respond with a JSON object containing the INDICES of the matching items.
                 response_format={"type": "json_object"},
                 temperature=0.0
             )
-            
+
             content = response.choices[0].message.content
             result = json.loads(content)
-            
+
             valid_indices = set(result.get('matching_indices', []))
-            
+
             # Filter the original items
-            filtered_items = [item for i, item in enumerate(items) if i in valid_indices or i >= 20] # Keep items beyond 20 unchecked? Or discard? 
+            filtered_items = [item for i, item in enumerate(items) if i in valid_indices or i >= 20] # Keep items beyond 20 unchecked? Or discard?
             # Better safe approach: If we found matches in the first 20, assume the rest are noise if the goal was "Main Product".
             # If the goal was "All reviews", the rest might be valid.
             # Heuristic: If we selected < 50% of the batch, likely strictly filtering. Discard the rest.
-            
+
             if len(valid_indices) < len(batch) / 2:
                 # We are filtering heavily (likely picking out a specific item)
                 filtered_items = [item for i, item in enumerate(items) if i in valid_indices]
@@ -393,7 +393,7 @@ Respond with a JSON object containing the INDICES of the matching items.
                 # We are keeping most things, so assume the tail is also valid
                 filtered_items = [item for i, item in enumerate(items) if i in valid_indices or i >= 20]
                 logger.info(f" Loose filtering applied. Kept {len(filtered_items)} items.")
-                
+
             return filtered_items
 
         except Exception as e:

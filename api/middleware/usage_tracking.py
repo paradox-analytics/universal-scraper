@@ -1,9 +1,7 @@
 """
 Usage tracking for billing and analytics
 """
-import os
 import logging
-import asyncio
 from typing import Dict, Optional
 from datetime import datetime
 from universal_scraper.core.redis_cache import RedisCache
@@ -13,7 +11,7 @@ logger = logging.getLogger(__name__)
 class UsageTracker:
     """
     Track usage per tenant for billing and analytics
-    
+
     Metrics tracked:
     - Requests per tenant
     - Items extracted
@@ -21,11 +19,11 @@ class UsageTracker:
     - Execution time
     - API costs (LLM calls)
     """
-    
+
     def __init__(self, redis_cache: Optional[RedisCache] = None):
         self.redis = redis_cache or RedisCache()
         # In production, also write to database/Firestore
-    
+
     async def track_request(
         self,
         tenant_id: str,
@@ -39,7 +37,7 @@ class UsageTracker:
     ):
         """
         Track a request (async, non-blocking)
-        
+
         Args:
             tenant_id: Tenant identifier
             endpoint: API endpoint called
@@ -62,48 +60,48 @@ class UsageTracker:
                 "llm_cost_usd": llm_cost_usd,
                 "timestamp": datetime.utcnow().isoformat()
             }
-            
+
             # Update Redis counters (for real-time metrics)
             await self._update_counters(tenant_id, usage_log)
-            
+
             # TODO: Write to database/Firestore (async, non-blocking)
             # asyncio.create_task(self._write_to_database(usage_log))
-            
+
         except Exception as e:
             logger.error(f"Usage tracking failed: {e}", exc_info=True)
-    
+
     async def _update_counters(self, tenant_id: str, usage_log: Dict):
         """Update Redis counters for real-time metrics"""
         now = datetime.utcnow()
         day_key = f"usage:{tenant_id}:{now.strftime('%Y%m%d')}"
-        
+
         # Increment counters
         await self.redis.increment(f"{day_key}:requests")
         await self.redis.increment(f"{day_key}:items", usage_log.get("items_extracted", 0))
-        
+
         if usage_log.get("cache_hit"):
             await self.redis.increment(f"{day_key}:cache_hits")
-        
+
         # Track LLM costs
         if usage_log.get("llm_cost_usd", 0) > 0:
             current_cost = await self.redis.get(f"{day_key}:llm_cost") or "0"
             new_cost = float(current_cost) + usage_log["llm_cost_usd"]
             await self.redis.set(f"{day_key}:llm_cost", str(new_cost))
-    
+
     async def get_usage_stats(self, tenant_id: str, date: Optional[str] = None) -> Dict:
         """Get usage statistics for tenant"""
         if not date:
             date = datetime.utcnow().strftime('%Y%m%d')
-        
+
         day_key = f"usage:{tenant_id}:{date}"
-        
+
         requests = await self.redis.get(f"{day_key}:requests") or 0
         items = await self.redis.get(f"{day_key}:items") or 0
         cache_hits = await self.redis.get(f"{day_key}:cache_hits") or 0
         llm_cost = await self.redis.get(f"{day_key}:llm_cost") or "0"
-        
+
         cache_hit_rate = (int(cache_hits) / int(requests) * 100) if int(requests) > 0 else 0
-        
+
         return {
             "date": date,
             "requests": int(requests),

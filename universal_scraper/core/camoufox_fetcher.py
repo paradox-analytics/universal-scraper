@@ -7,9 +7,7 @@ import asyncio
 import logging
 import os
 import random
-import re
-from typing import Dict, Any, Optional, List
-from urllib.parse import urlparse
+from typing import Dict, Any, Optional
 import json
 import time
 
@@ -43,23 +41,22 @@ except ImportError:
 async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None):
     """
     UNIVERSAL SOLUTION 3: Smart Wait Strategy for JS-heavy sites
-    
+
     Adaptively waits for content to fully load without hardcoded delays.
     Works for ANY website regardless of rendering technology.
-    
+
     Strategy:
     1. Wait for network idle (no pending requests for 500ms)
     2. Wait for DOM stability (no mutations for 500ms)
     3. If selector provided, wait for that specific element
     4. Maximum wait: 10 seconds (prevent hanging)
-    
+
     Args:
         page: Playwright/Camoufox page object
         wait_for_selector: Optional CSS selector to wait for
     """
     start_time = time.time()
-    max_wait = 10  # seconds
-    
+
     try:
         # Strategy 1: Wait for network idle (most reliable for JS-heavy sites)
         logger.debug("   Waiting for network idle...")
@@ -67,7 +64,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
     except:
         # Timeout is OK, try other strategies
         pass
-    
+
     # Strategy 2: Wait for specific selector if provided
     if wait_for_selector:
         try:
@@ -76,7 +73,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
         except:
             # Selector not found, continue anyway
             pass
-    
+
     # Strategy 3: Wait for common content indicators (universal patterns)
     # Check for any of these common selectors that indicate content has loaded
     content_selectors = [
@@ -89,7 +86,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
         'li',
         'tr'
     ]
-    
+
     for selector in content_selectors:
         try:
             await page.wait_for_selector(selector, timeout=2000)
@@ -97,7 +94,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
             break
         except:
             continue
-    
+
     # Strategy 4: Minimum wait (ensures JS has time to execute)
     elapsed = time.time() - start_time
     if elapsed < 2:
@@ -123,17 +120,17 @@ def _camoufox_fetch_sync(
     captured_requests = []
     captured_json = []
     internal_log = []
-    
+
     def log_internal(message: str):
         internal_log.append({
             'timestamp': time.time(),
             'message': message
         })
         logger.info(f"    [Camoufox] {message}")
-    
+
     # CRITICAL: Import Camoufox inside the thread to avoid asyncio loop detection
     from camoufox.sync_api import Camoufox
-    
+
     # Initialize anti-detection manager if available
     if ANTI_DETECTION_AVAILABLE and anti_detection_config:
         anti_detect = AntiDetectionManager(**anti_detection_config)
@@ -144,20 +141,20 @@ def _camoufox_fetch_sync(
             'humanize': True,
             # NOTE: 'screen' removed - Camoufox generates this internally to avoid browserforge version conflicts
         }
-    
+
     # Add proxy to Camoufox constructor if configured
     if proxy_config and proxy_config.get('server'):
         server = proxy_config['server']
         if not server.startswith('http'):
             server = f"http://{server}"
-            
+
         camoufox_config['proxy'] = {
             'server': server,
             'username': proxy_config.get('username', ''),
             'password': proxy_config.get('password', '')
         }
         log_internal(f"Proxy configured: {server}")
-    
+
     # CRITICAL: Explicitly set the event loop to None in this thread.
     # Playwright Sync API checks `asyncio.get_event_loop()` and errors if it returns a running loop.
     # Even in a thread executor, some environments might leak a loop or have a default one.
@@ -167,16 +164,16 @@ def _camoufox_fetch_sync(
         asyncio.set_event_loop(None)
     except Exception:
         pass  # Ignore errors if we can't set it (unlikely)
-    
+
     # Log config (masking password)
     safe_config = camoufox_config.copy()
     if 'proxy' in safe_config:
         safe_config['proxy'] = safe_config['proxy'].copy()
         safe_config['proxy']['password'] = '********'
     log_internal(f"Launching Camoufox with config: {safe_config}")
-    
+
     browser = Camoufox(headless=headless, **camoufox_config)
-    
+
     with browser as b:
         # Get fingerprint from anti-detection manager
         if ANTI_DETECTION_AVAILABLE and anti_detection_config:
@@ -197,21 +194,21 @@ def _camoufox_fetch_sync(
                 'width': random.choice([1920, 1366, 1536, 1440]),
                 'height': random.choice([1080, 768, 864, 900])
             }
-        
+
         # Context options
         context_options = {
             'ignore_https_errors': True,
             'viewport': viewport,
             'user_agent': selected_ua
         }
-        
+
         # Proxy is now handled at the browser level in Camoufox constructor
         pass
-        
+
         # Create context and page
         context = b.new_context(**context_options)
         page = context.new_page()
-        
+
         # IP Verification (Debug)
         try:
             page.goto("https://api.ipify.org?format=json", timeout=10000)
@@ -219,17 +216,17 @@ def _camoufox_fetch_sync(
             log_internal(f"Proxy IP check result: {ip_data[:200]}")
         except Exception as e:
             logger.warning(f"    Proxy IP check failed: {e}")
-        
+
         # Inject advanced anti-detection scripts (from Parsera project)
         page.add_init_script("""
             // Advanced anti-detection for heavy blocking sites
-            
+
             // Override webdriver detection completely
-            Object.defineProperty(navigator, 'webdriver', { 
+            Object.defineProperty(navigator, 'webdriver', {
                 get: () => undefined,
-                configurable: true 
+                configurable: true
             });
-            
+
             // Realistic plugins array
             Object.defineProperty(navigator, 'plugins', {
                 get: () => ({
@@ -242,29 +239,29 @@ def _camoufox_fetch_sync(
                 }),
                 configurable: true
             });
-            
+
             // Realistic languages
             Object.defineProperty(navigator, 'languages', {
                 get: () => ['en-US', 'en'],
                 configurable: true
             });
-            
+
             // Chrome app and runtime
             window.chrome = {
                 app: { isInstalled: false, InstallState: { DISABLED: 'disabled', INSTALLED: 'installed', NOT_INSTALLED: 'not_installed' } },
                 runtime: { OnInstalledReason: { CHROME_UPDATE: 'chrome_update', INSTALL: 'install', SHARED_MODULE_UPDATE: 'shared_module_update', UPDATE: 'update' } }
             };
-            
+
             // Permissions API
             if (navigator.permissions) {
                 const originalQuery = navigator.permissions.query;
                 navigator.permissions.query = (parameters) => (
-                    parameters.name === 'notifications' ? 
-                        Promise.resolve({ state: Notification.permission }) : 
+                    parameters.name === 'notifications' ?
+                        Promise.resolve({ state: Notification.permission }) :
                         originalQuery(parameters)
                 );
             }
-            
+
             // WebGL Vendor and Renderer
             const getParameter = WebGLRenderingContext.prototype.getParameter;
             WebGLRenderingContext.prototype.getParameter = function(parameter) {
@@ -272,7 +269,7 @@ def _camoufox_fetch_sync(
                 if (parameter === 37446) return 'Intel Iris OpenGL Engine';
                 return getParameter.call(this, parameter);
             };
-            
+
             // Battery API
             if (navigator.getBattery) {
                 navigator.getBattery = () => Promise.resolve({
@@ -285,7 +282,7 @@ def _camoufox_fetch_sync(
                     dispatchEvent: () => true
                 });
             }
-            
+
             // Connection API
             Object.defineProperty(navigator, 'connection', {
                 get: () => ({
@@ -299,30 +296,30 @@ def _camoufox_fetch_sync(
                 }),
                 configurable: true
             });
-            
+
             // Hardware concurrency
             Object.defineProperty(navigator, 'hardwareConcurrency', {
                 get: () => 8,
                 configurable: true
             });
-            
+
             // Device memory
             Object.defineProperty(navigator, 'deviceMemory', {
                 get: () => 8,
                 configurable: true
             });
-            
+
             // Screen properties
             Object.defineProperty(screen, 'colorDepth', { get: () => 24 });
             Object.defineProperty(screen, 'pixelDepth', { get: () => 24 });
         """)
-        
+
         # Setup request/response monitoring for API capture
         def handle_response(response):
             try:
                 url_resp = response.url
                 content_type = response.headers.get('content-type', '')
-                
+
                 # UNIVERSAL: Detect API calls by multiple patterns
                 is_api = (
                     '/api/' in url_resp.lower() or
@@ -334,7 +331,7 @@ def _camoufox_fetch_sync(
                     'json' in content_type.lower() or  # Content type check
                     (response.request.method in ['POST', 'PUT', 'PATCH'] and 'application' in content_type.lower())  # POST requests with data
                 )
-                
+
                 if is_api:
                     captured_requests.append({
                         'url': url_resp,
@@ -342,7 +339,7 @@ def _camoufox_fetch_sync(
                         'status': response.status,
                         'content_type': content_type
                     })
-                    
+
                     # Try to extract JSON from any API-like response
                     if 'json' in content_type.lower() or response.status == 200:
                         try:
@@ -361,9 +358,9 @@ def _camoufox_fetch_sync(
                             pass
             except:
                 pass
-        
+
         page.on('response', handle_response)
-        
+
         # Navigate to URL
         start_time = time.time()
         try:
@@ -601,12 +598,12 @@ def _camoufox_fetch_sync(
                     'internal_log': internal_log,
                     'elapsed_time': time.time() - start_time
                 }
-        
+
         # Check if we got a Kasada or Cloudflare challenge page
         html_preview = page.content()[:2000].lower()
         is_kasada_challenge = 'kasada' in html_preview or 'kpsdk' in html_preview or 'ips.js' in html_preview
         is_cloudflare_challenge = 'verify you are human' in html_preview or 'just a moment' in html_preview or 'cloudflare-static' in html_preview
-        
+
         if is_kasada_challenge or is_cloudflare_challenge:
             challenge_type = "Kasada" if is_kasada_challenge else "Cloudflare"
             log_internal(f"Detected {challenge_type} challenge - waiting...")
@@ -618,11 +615,11 @@ def _camoufox_fetch_sync(
                 log_internal(f"Waited for {challenge_type} challenge")
             except:
                 logger.warning(f"    {challenge_type} challenge timeout - continuing anyway")
-        
+
         # UNIVERSAL SOLUTION 3: Smart Wait Strategy for JS-heavy sites
         # Adaptively waits for content to load without hardcoded delays
         _smart_wait_for_content(page, wait_for_selector)
-        
+
         # Check if page content still looks like a challenge/block page
         current_html = page.content()
         html_lower = current_html.lower()
@@ -636,19 +633,19 @@ def _camoufox_fetch_sync(
                 log_internal(f"After extended wait: {len(current_html):,} bytes")
             except:
                 pass
-        
+
         # Count initial API calls
         initial_api_count = len(captured_json)
         logger.debug(f"   Initial API calls captured: {initial_api_count}")
-        
+
         # Additional wait time for JavaScript rendering (if explicitly requested)
         if wait_time > 0:
             time.sleep(wait_time / 1000)
-        
+
         # Universal infinite scroll detection and scrolling
         if scroll_to_bottom:
             logger.info("    Scrolling to trigger lazy-loaded content (infinite scroll)...")
-            
+
             # Universal item detection - find repeating patterns dynamically
             # This works for any website by detecting common repeating structures
             scroll_result = page.evaluate("""
@@ -678,7 +675,7 @@ def _camoufox_fetch_sync(
                             '[data-component*="item"]',
                             '[data-component*="card"]'
                         ];
-                        
+
                         for (const selector of selectors) {
                             try {
                                 const items = document.querySelectorAll(selector);
@@ -700,31 +697,31 @@ def _camoufox_fetch_sync(
                                 continue;
                             }
                         }
-                        
+
                         // Fallback: return a generic selector that should work
                         return 'article, [role="article"], div[class*="item"], div[class*="card"]';
                     }
-                    
+
                     const itemSelector = detectRepeatingItems();
                     const distance = 500;
                     const delay = 500;
                     const maxScrolls = 30;  // Increased for better coverage
                     const maxNoChange = 5;  // Increased tolerance for slow-loading sites
-                    
+
                     let scrollCount = 0;
                     let noChangeCount = 0;
                     let prevHeight = document.scrollingElement.scrollHeight;
                     let prevItemCount = document.querySelectorAll(itemSelector).length;
-                    
+
                     while (scrollCount < maxScrolls) {
                         // Scroll down
                         document.scrollingElement.scrollBy(0, distance);
                         await new Promise(resolve => setTimeout(resolve, delay));
-                        
+
                         // Check if new content loaded
                         const newHeight = document.scrollingElement.scrollHeight;
                         const newItemCount = document.querySelectorAll(itemSelector).length;
-                        
+
                         if (newHeight > prevHeight || newItemCount > prevItemCount) {
                             scrollCount++;
                             noChangeCount = 0;
@@ -737,7 +734,7 @@ def _camoufox_fetch_sync(
                             }
                         }
                     }
-                    
+
                     return {
                         scrollCount: scrollCount,
                         finalItemCount: prevItemCount,
@@ -746,33 +743,33 @@ def _camoufox_fetch_sync(
                     };
                 })();
             """)
-            
+
             if scroll_result:
                 log_internal(f"Scrolled {scroll_result.get('scrollCount', 0)} times, found {scroll_result.get('finalItemCount', 0)} items")
-            
+
             # Wait for new API calls to complete after scrolling
             logger.debug("   ⏳ Waiting for API calls after scroll...")
             time.sleep(3)  # Give APIs more time to fire for Reddit
-            
+
             try:
                 # Wait for network idle again (new APIs might be loading)
                 page.wait_for_load_state('networkidle', timeout=5000)
             except:
                 pass  # Timeout is OK
-            
+
             new_api_count = len(captured_json)
             if new_api_count > initial_api_count:
                 logger.info(f"    Captured {new_api_count - initial_api_count} additional APIs after scroll")
             else:
-                logger.debug(f"   ℹ  No additional APIs captured")
-        
+                logger.debug("   ℹ  No additional APIs captured")
+
         # Get final HTML
         html = page.content()
         elapsed_time = time.time() - start_time
         # Cleanup
         page.close()
         context.close()
-        
+
         return {
             'html': html,
             'status_code': 200,  # Playwright/Camoufox usually only returns if successful or handles errors
@@ -788,16 +785,16 @@ def _camoufox_fetch_sync(
 class CamoufoxFetcher:
     """
     Advanced browser fetcher using Camoufox for superior anti-detection
-    
+
     Features:
     - Real browser fingerprints (not just stealth scripts)
     - Human-like behavior simulation
     - Better proxy support
     - Less likely to be detected than Playwright
-    
+
     Note: Runs in a separate thread to avoid asyncio conflicts
     """
-    
+
     def __init__(
         self,
         proxy_config: Optional[Dict[str, str]] = None,
@@ -815,7 +812,7 @@ class CamoufoxFetcher:
     ):
         """
         Initialize Camoufox fetcher
-        
+
         Args:
             proxy_config: Static proxy configuration dict with 'server', 'username', 'password' (deprecated)
             proxy_manager: ProxyManager instance for per-request rotation (recommended)
@@ -828,18 +825,18 @@ class CamoufoxFetcher:
         """
         if not CAMOUFOX_AVAILABLE:
             raise ImportError("Camoufox is required. Install with: pip install camoufox")
-        
+
         # Support both old (static) and new (manager) proxy approaches
         self.proxy_config = proxy_config  # For backward compatibility
         self.proxy_manager = proxy_manager  # NEW: For per-request rotation
         self.headless = headless
         self.timeout = timeout
         self.enable_js = enable_js
-        
+
         # NEW: Store anti-detection config
         # Default geoip to False if Web Unblocker is used, as it handles its own IP management
         effective_geoip = geoip if geoip is not None else (not bool(web_unblocker_api_key))
-        
+
         self.anti_detection_config = {
             'profile': anti_detection_profile,
             'humanize': humanize,
@@ -849,19 +846,19 @@ class CamoufoxFetcher:
         self.web_unblocker_api_key = web_unblocker_api_key
         self.web_unblocker_zone = web_unblocker_zone
         self.web_unblocker_customer_id = web_unblocker_customer_id
-        
-        logger.info(f" Camoufox Fetcher initialized")
+
+        logger.info(" Camoufox Fetcher initialized")
         logger.info(f"   Headless: {headless}, Timeout: {timeout}ms")
         logger.info(f"   Anti-Detection: Profile={anti_detection_profile}, Humanize={humanize}, Stealth={stealth_mode}")
         if proxy_manager:
-            logger.info(f"   Proxy: ProxyManager enabled (per-request rotation)")
+            logger.info("   Proxy: ProxyManager enabled (per-request rotation)")
         elif proxy_config:
-            logger.info(f"   Proxy: Static config enabled")
-    
+            logger.info("   Proxy: Static config enabled")
+
     async def _launch_browser(self):
         """Placeholder for compatibility - actual launch happens in _camoufox_fetch_sync"""
         pass
-    
+
     async def fetch(
         self,
         url: str,
@@ -877,23 +874,23 @@ class CamoufoxFetcher:
         Fetch page content with Async Camoufox
         """
         logger.info(f" Fetching with Async Camoufox: {url}")
-        
+
         # 1. Determine proxy configuration for this request
         proxy_config_for_request = self.proxy_config
-        
-        # BRIGHT DATA OPTIMIZATION: Default geoip to False for Web Unblocker 
+
+        # BRIGHT DATA OPTIMIZATION: Default geoip to False for Web Unblocker
         # as IP lookup services are often blocked or slow via unblocker
         is_using_web_unblocker = use_web_unblocker or bool(self.web_unblocker_api_key)
         if geoip is None and is_using_web_unblocker:
             logger.info("🛡️ Automatically disabling geoip for Web Unblocker performance")
             geoip = False
-        
+
         # If Web Unblocker is forced, skip standard proxies
         if use_web_unblocker:
             proxy_config_for_request = None
             logger.info("🛡️ Forcing Web Unblocker (ignoring standard proxies)")
-        
-        
+
+
         # Determine effective timeout
         req_timeout = browser_config.get('timeout', self.timeout) if browser_config else self.timeout
 
@@ -906,11 +903,11 @@ class CamoufoxFetcher:
                         proxy_url = await self.proxy_manager.get_apify_proxy_url(Actor)
                         if proxy_url:
                             proxy_config_for_request = self._parse_proxy_url(proxy_url)
-                            logger.info(f" Using rotated Apify proxy")
-                    except (ImportError, Exception) as e:
+                            logger.info(" Using rotated Apify proxy")
+                    except (ImportError, Exception):
                         # Ignore if not on Apify, will fall back to pool
                         pass
-                
+
                 # Use ProxyManager pool if no proxy selected yet
                 if not proxy_config_for_request:
                     from urllib.parse import urlparse
@@ -925,11 +922,11 @@ class CamoufoxFetcher:
                         logger.info(f" Using proxy from pool: {proxy_dict['server']}")
             except Exception as e:
                 logger.warning(f" Proxy rotation failed: {e}")
-        
+
         # 2. Handle Web Unblocker fallback if proxy_config is missing
         if not proxy_config_for_request and self.web_unblocker_api_key:
             api_key = self.web_unblocker_api_key.strip()
-            
+
             # Robust parsing for comma-separated credentials (host,port,user,pass)
             if ',' in api_key:
                 parts = [p.strip() for p in api_key.split(',')]
@@ -939,20 +936,20 @@ class CamoufoxFetcher:
                         'username': parts[2],
                         'password': parts[3]
                     }
-                    logger.info(f"🔐 Using Web Unblocker (comma-separated)")
+                    logger.info("🔐 Using Web Unblocker (comma-separated)")
                 elif len(parts) == 2:
                     proxy_config_for_request = {
                         'server': 'brd.superproxy.io:33335',
                         'username': parts[0],
                         'password': parts[1]
                     }
-                    logger.info(f"🔐 Using Web Unblocker (user,pass)")
-            
+                    logger.info("🔐 Using Web Unblocker (user,pass)")
+
             # Handle colon-separated credentials
             elif ':' in api_key:
                 # Split on colon
                 parts = [p.strip() for p in api_key.split(':')]
-                
+
                 # Case 1: host:port:user:pass (4 parts)
                 if len(parts) >= 4:
                     proxy_config_for_request = {
@@ -960,22 +957,22 @@ class CamoufoxFetcher:
                         'username': parts[2],
                         'password': parts[3]
                     }
-                    logger.info(f"🔐 Using Web Unblocker (host:port:user:pass)")
-                
+                    logger.info("🔐 Using Web Unblocker (host:port:user:pass)")
+
                 # Case 2: user:pass (2 parts)
                 elif len(parts) == 2:
                     username, password = parts
                     # Normalize username for Bright Data
                     if username.startswith('hl_'):
                         username = f"brd-customer-{username}-zone-{self.web_unblocker_zone}"
-                    
+
                     proxy_config_for_request = {
                         'server': 'brd.superproxy.io:33335',
                         'username': username,
                         'password': password
                     }
-                    logger.info(f"🔐 Using Web Unblocker (user:pass)")
-            
+                    logger.info("🔐 Using Web Unblocker (user:pass)")
+
             # Handle plain API key
             else:
                 customer_id = self.web_unblocker_customer_id or os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
@@ -984,35 +981,35 @@ class CamoufoxFetcher:
                     'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
                     'password': api_key
                 }
-                logger.info(f"🔐 Using Web Unblocker (plain API key)")
+                logger.info("🔐 Using Web Unblocker (plain API key)")
 
         # 3. Normalize proxy server string
         if proxy_config_for_request and 'server' in proxy_config_for_request:
             server = proxy_config_for_request['server'].replace(',', ':')
-            
+
             # BRIGHT DATA OPTIMIZATION: Port 33335 (HTTPS) often hangs in browsers
             # Port 22225 (HTTP) is much more reliable for Playwright/Camoufox
             if 'brd.superproxy.io' in server and ':33335' in server:
-                logger.info(f"🔄 Normalizing Bright Data proxy from 33335 (SSL) to 22225 (HTTP) for browser compatibility")
+                logger.info("🔄 Normalizing Bright Data proxy from 33335 (SSL) to 22225 (HTTP) for browser compatibility")
                 server = server.replace(':33335', ':22225')
                 if server.startswith('https://'):
                     server = server.replace('https://', 'http://')
-            
+
             if not server.startswith('http'):
                 server = f"http://{server}"
             proxy_config_for_request['server'] = server
-            
+
 
         # 4. Prepare Camoufox configuration
         from camoufox.async_api import AsyncCamoufox
-        
+
         # Determine which timeout to use (per-request or instance default)
         req_timeout = browser_config.get('timeout', self.timeout) if browser_config else self.timeout
         timeout_sec = int(req_timeout / 1000)
-        
+
         # Determine which config to use (per-request or instance default)
         config_to_use = browser_config if browser_config else self.anti_detection_config
-        
+
         # If stealth_mode is False, use a clean config (Golden Configuration for Home Depot)
         # This avoids conflicts with AntiDetectionManager's additional settings
         if config_to_use and not config_to_use.get('stealth_mode', True):
@@ -1058,9 +1055,9 @@ class CamoufoxFetcher:
                     'network.tcp.connect_timeout': timeout_sec
                 }
             }
-            
+
         logger.debug(f"   Configured Firefox network timeouts to {timeout_sec}s")
-        
+
         if proxy_config_for_request:
             # Clean proxy config to only include keys expected by Playwright/Camoufox
             clean_proxy = {}
@@ -1068,37 +1065,37 @@ class CamoufoxFetcher:
                 if key in proxy_config_for_request:
                     clean_proxy[key] = proxy_config_for_request[key]
             camoufox_config['proxy'] = clean_proxy
-            
+
             # Log proxy usage (redacted password)
             user = clean_proxy.get('username', 'N/A')
             server = clean_proxy.get('server', 'N/A')
             logger.info(f"   🌐 Browser Proxy: {server} (user: {user})")
-            
+
         # 5. Execute fetch
         captured_requests = []
         captured_json = []
-        
+
         # Extract ignore_https_errors from config (default to True for robustness)
         ignore_https_errors = camoufox_config.pop('ignore_https_errors', True)
-        
+
         try:
             async with AsyncCamoufox(headless=self.headless, **camoufox_config) as browser:
                 # Use explicit context creation to match debug script
                 context = await browser.new_context(ignore_https_errors=ignore_https_errors)
                 page = await context.new_page()
-                
+
                 # HARDENING: Explicitly set default timeouts to match the requested timeout
                 # This ensures that all operations (navigation, selectors, etc.) respect the global timeout
                 page.set_default_timeout(req_timeout)
                 page.set_default_navigation_timeout(req_timeout)
                 logger.debug(f"   Set page timeouts to {req_timeout}ms")
-                
+
                 # Capture API responses
                 async def handle_response(response):
                     try:
                         url = response.url
                         captured_requests.append(url)
-                        
+
                         content_type = response.headers.get('content-type', '').lower()
                         if 'application/json' in content_type:
                             try:
@@ -1112,9 +1109,9 @@ class CamoufoxFetcher:
                                 pass
                     except:
                         pass
-                
+
                 page.on('response', handle_response)
-                
+
                 # Navigate
                 logger.info(f"   🚀 Navigating to: {url} (timeout={self.timeout}ms)")
                 start_nav = time.time()
@@ -1124,29 +1121,29 @@ class CamoufoxFetcher:
                 except Exception as e:
                     logger.error(f"   ❌ Navigation failed after {time.time() - start_nav:.1f}s: {e}")
                     raise
-                
+
                 status = response.status if response else 0
-                
+
                 # Smart wait
-                logger.info(f"   ⏳ Starting smart wait for content...")
+                logger.info("   ⏳ Starting smart wait for content...")
                 start_wait = time.time()
                 await _smart_wait_for_content(page, wait_for_selector)
                 logger.info(f"   ✅ Smart wait finished in {time.time() - start_wait:.1f}s")
-                
+
                 # Scroll if requested
                 if scroll_to_bottom:
                     await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                     await asyncio.sleep(2)
-                
+
                 content = await page.content()
                 # The status from page.goto is more accurate for the initial navigation.
                 # If the page loads content, we assume 200 unless the initial navigation failed.
                 # status = 200 # Default for browser content - this line was removed as it overwrites the actual status
-            
+
                 logger.info(f"   📄 Content retrieved: {len(content)} bytes, status: {status}")
                 if status != 200 or len(content) < 1000:
                     logger.info(f"   ⚠️ Content preview: {content[:500]}")
-                
+
                 return {
                     'html': content,
                     'status_code': status,
@@ -1172,7 +1169,7 @@ class CamoufoxFetcher:
                     click_load_more=click_load_more,
                     geoip=False
                 )
-                
+
             logger.error(f"❌ Async Camoufox fetch failed: {e}")
             return {
                 'html': '',
@@ -1181,26 +1178,26 @@ class CamoufoxFetcher:
                 'error': str(e),
                 'internal_log': [{'timestamp': time.time(), 'message': str(e)}]
             }
-    
+
     def _parse_proxy_url(self, proxy_url: str) -> Dict[str, str]:
         """
         Parse Apify proxy URL into proxy_config format.
-        
+
         Args:
             proxy_url: Full proxy URL (http://username:password@host:port)
-            
+
         Returns:
             Dict with 'server', 'username', 'password'
         """
         from urllib.parse import urlparse as parse_url
         parsed = parse_url(proxy_url)
-        
+
         return {
             'server': f"{parsed.scheme}://{parsed.hostname}:{parsed.port}",
             'username': parsed.username or '',
             'password': parsed.password or ''
         }
-    
+
     async def close(self):
         """Close browser and cleanup"""
         # Camoufox uses context manager, so cleanup is automatic

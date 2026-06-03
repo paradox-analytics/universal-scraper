@@ -10,7 +10,7 @@ import logging
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..redis_cache import RedisCache
+    pass
 from pathlib import Path
 from abc import ABC, abstractmethod
 
@@ -19,22 +19,22 @@ logger = logging.getLogger(__name__)
 
 class CacheBackend(ABC):
     """Abstract cache backend interface"""
-    
+
     @abstractmethod
     async def get(self, key: str) -> Optional[Dict]:
         """Get value from cache"""
         pass
-    
+
     @abstractmethod
     async def set(self, key: str, value: Dict) -> None:
         """Set value in cache"""
         pass
-    
+
     @abstractmethod
     async def delete(self, key: str) -> None:
         """Delete value from cache"""
         pass
-    
+
     @abstractmethod
     async def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with optional prefix"""
@@ -46,57 +46,57 @@ class RedisCacheBackend(CacheBackend):
     Redis cache backend for Cloud Run/multi-tenant SaaS
     Uses Redis for distributed caching
     """
-    
+
     def __init__(self, redis_cache: Optional[Any] = None):
         """
         Initialize Redis cache backend
-        
+
         Args:
             redis_cache: RedisCache instance (optional)
         """
         self.redis_cache = redis_cache
         self.redis_client = redis_cache.redis_client if redis_cache else None
         logger.info(f" Using Redis cache backend: {redis_cache.redis_url if redis_cache else 'disabled'}")
-    
+
     async def get(self, key: str) -> Optional[Dict]:
         """Get value from Redis"""
         if not self.redis_cache:
             return None
-        
+
         try:
             return await self.redis_cache.get(key)
         except Exception as e:
             logger.warning(f"  Redis cache get failed: {e}")
             return None
-    
+
     async def set(self, key: str, value: Dict) -> None:
         """Set value in Redis"""
         if not self.redis_cache:
             return
-        
+
         try:
             # Use default TTL of 1 hour (3600s) for Direct LLM cache
             await self.redis_cache.set(key, value, ttl=3600)
             logger.debug(f" Cache SET (Redis): {key[:50]}...")
         except Exception as e:
             logger.error(f" Failed to write Redis cache: {e}")
-    
+
     async def delete(self, key: str) -> None:
         """Delete value from Redis"""
         if not self.redis_cache:
             return
-        
+
         try:
             await self.redis_cache.delete(key)
             logger.debug(f"  Cache DELETE (Redis): {key}")
         except Exception as e:
             logger.error(f" Failed to delete from Redis cache: {e}")
-    
+
     async def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with prefix"""
         if not self.redis_cache or not self.redis_client:
             return []
-        
+
         try:
             pattern = f"{prefix}*" if prefix else "*"
             keys = []
@@ -112,10 +112,10 @@ class LocalFileCache(CacheBackend):
     """
     Local file-based cache for development and Cloud Run
     Mimics Apify KV Store behavior
-    
+
     For Cloud Run: Uses /tmp directory which persists within instance
     """
-    
+
     def __init__(self, cache_dir: str = None):
         # For Cloud Run, use /tmp which persists within instance
         # For local dev, use ./local_cache
@@ -125,24 +125,24 @@ class LocalFileCache(CacheBackend):
                 cache_dir = "/tmp/paradocs_cache"
             else:
                 cache_dir = "./local_cache"
-        
+
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f" Using LOCAL file cache: {self.cache_dir}")
-    
+
     def _get_path(self, key: str) -> Path:
         """Get file path for key"""
         # Hash key to avoid filesystem issues with special characters
         key_hash = hashlib.md5(key.encode()).hexdigest()
         return self.cache_dir / f"{key_hash}.json"
-    
+
     async def get(self, key: str) -> Optional[Dict]:
         """Get value from file cache"""
         path = self._get_path(key)
-        
+
         if not path.exists():
             return None
-        
+
         try:
             with open(path, 'r') as f:
                 data = json.load(f)
@@ -151,15 +151,15 @@ class LocalFileCache(CacheBackend):
         except Exception as e:
             logger.warning(f"  Failed to read cache: {e}")
             return None
-    
+
     async def set(self, key: str, value: Dict) -> None:
         """Set value in file cache"""
         path = self._get_path(key)
-        
+
         try:
             with open(path, 'w') as f:
                 json.dump(value, f, indent=2)
-            
+
             # Also save key mapping for debugging and listing
             mapping_path = self.cache_dir / "key_mapping.json"
             mappings = {}
@@ -169,38 +169,38 @@ class LocalFileCache(CacheBackend):
                         mappings = json.load(f)
                 except Exception:
                     mappings = {}
-            
+
             mappings[key] = path.name
             with open(mapping_path, 'w') as f:
                 json.dump(mappings, f, indent=2)
-            
+
             logger.info(f" Cache SET (local): {key[:50]}... -> {path.name}")
         except Exception as e:
             logger.error(f" Failed to write cache: {e}")
-    
+
     async def delete(self, key: str) -> None:
         """Delete value from cache"""
         path = self._get_path(key)
         if path.exists():
             path.unlink()
             logger.debug(f"  Cache DELETE (local): {key}")
-    
+
     async def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys (requires key_mapping.json)"""
         mapping_path = self.cache_dir / "key_mapping.json"
         if not mapping_path.exists():
             logger.info(f"No key_mapping.json found in {self.cache_dir}")
             return []
-        
+
         try:
             with open(mapping_path, 'r') as f:
                 mappings = json.load(f)
-            
+
             if prefix:
                 keys = [k for k in mappings.keys() if k.startswith(prefix)]
             else:
                 keys = list(mappings.keys())
-            
+
             logger.info(f"LocalFileCache.list_keys: found {len(keys)} keys (prefix: '{prefix}')")
             return keys
         except Exception as e:
@@ -213,7 +213,7 @@ class ApifyKVCache(CacheBackend):
     Apify Key-Value Store cache for production
     Uses a named KV Store to persist across actor runs
     """
-    
+
     def __init__(self, store_name: str = "direct-llm-cache"):
         # Import only when needed (not available locally)
         try:
@@ -226,7 +226,7 @@ class ApifyKVCache(CacheBackend):
             logger.info(f"  Using APIFY KV Store cache (named store: {store_name})")
         except ImportError:
             raise RuntimeError("Apify SDK not available. Use LocalFileCache instead.")
-    
+
     async def _get_store(self):
         """Get named KV Store (persists across runs)"""
         if not hasattr(self, '_store') or self._store is None:
@@ -243,12 +243,12 @@ class ApifyKVCache(CacheBackend):
                 self._store = None
                 return None
         return self._store
-    
+
     async def get(self, key: str) -> Optional[Dict]:
         """Get value from Apify KV Store"""
         try:
             logger.info(f" Apify KV Store GET: {key[:50]}...")
-            
+
             # Try named store first (persists across runs)
             store = await self._get_store()
             if store:
@@ -267,7 +267,7 @@ class ApifyKVCache(CacheBackend):
                         return None
                 except Exception as e:
                     logger.warning(f"  Named store get failed: {e}, trying default store")
-            
+
             # Fallback to default store only if named store failed to open
             value = await self.Actor.get_value(key)
             if value:
@@ -278,12 +278,12 @@ class ApifyKVCache(CacheBackend):
         except Exception as e:
             logger.warning(f"  Failed to read Apify cache: {e}")
             return None
-    
+
     async def set(self, key: str, value: Dict) -> None:
         """Set value in Apify KV Store"""
         try:
             logger.info(f" Apify KV Store SET: {key[:50]}... ({len(value.get('items', []))} items)")
-            
+
             # Try named store first (persists across runs)
             store = await self._get_store()
             if store:
@@ -294,13 +294,13 @@ class ApifyKVCache(CacheBackend):
                     return
                 except Exception as e:
                     logger.warning(f"  Named store set failed: {e}, using default store")
-            
+
             # Fallback to default store (scoped per run)
             await self.Actor.set_value(key, value)
             logger.warning(f"  Cache SET (Apify default store): {key[:50]}... (saved, but WON'T persist across runs - using default store)")
         except Exception as e:
             logger.error(f" Failed to write Apify cache: {e}")
-    
+
     async def delete(self, key: str) -> None:
         """Delete value from Apify KV Store"""
         try:
@@ -308,7 +308,7 @@ class ApifyKVCache(CacheBackend):
             logger.debug(f"  Cache DELETE (Apify): {key}")
         except Exception as e:
             logger.error(f" Failed to delete from Apify cache: {e}")
-    
+
     async def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys in Apify KV Store"""
         # Note: Apify doesn't have a native list_keys, so this is limited
@@ -321,18 +321,18 @@ class UnifiedPatternCache:
     Unified pattern cache that works locally, on Apify, and with Redis
     Automatically detects environment and uses appropriate backend
     """
-    
+
     def __init__(self, force_local: bool = False, redis_cache: Optional[Any] = None):
         """
         Initialize cache with automatic backend selection
-        
+
         Args:
             force_local: Force local cache even if running on Apify (for testing)
             redis_cache: Optional RedisCache instance for Cloud Run/multi-tenant SaaS
         """
         # Detect environment
         self.is_apify = self._detect_apify_environment()
-        
+
         # Choose backend (priority: Redis > Apify > Local)
         if redis_cache and redis_cache.redis_client:
             # Use Redis for Cloud Run/multi-tenant SaaS
@@ -349,12 +349,12 @@ class UnifiedPatternCache:
                 logger.warning("  Apify not available, falling back to local cache")
                 self.backend = LocalFileCache()
                 self.env = "LOCAL (fallback)"
-        
+
         # In-memory cache for current run (L1)
         self.memory_cache: Dict[str, Dict] = {}
-        
+
         logger.info(f" Pattern Cache initialized: {self.env}")
-    
+
     def _detect_apify_environment(self) -> bool:
         """Detect if running on Apify"""
         # Apify sets these environment variables
@@ -363,62 +363,62 @@ class UnifiedPatternCache:
             os.environ.get('APIFY_ACTOR_ID') or
             os.environ.get('APIFY_ACTOR_RUN_ID')
         )
-    
+
     def _make_cache_key(self, embedding_hash: str, fields: List[str]) -> str:
         """Create cache key from embedding and fields"""
         fields_str = "_".join(sorted(fields))
         fields_hash = hashlib.md5(fields_str.encode()).hexdigest()[:8]
         return f"pattern_{embedding_hash}_{fields_hash}"
-    
+
     async def get_pattern(
-        self, 
-        embedding_hash: str, 
+        self,
+        embedding_hash: str,
         fields: List[str],
         domain: Optional[str] = None
     ) -> Optional[Dict]:
         """
         Get cached pattern
-        
+
         Args:
             embedding_hash: Hash of structural embedding
             fields: List of fields to extract
             domain: Optional domain name for logging
-            
+
         Returns:
             Cached pattern or None if not found
         """
         cache_key = self._make_cache_key(embedding_hash, fields)
-        
+
         # Check L1 cache (memory - fastest)
         if cache_key in self.memory_cache:
             logger.info(f" L1 Cache HIT (memory): {cache_key}")
             return self.memory_cache[cache_key]
-        
+
         # Check L2 cache (file/Apify KV - persistent)
         pattern = await self.backend.get(cache_key)
-        
+
         if pattern:
             logger.info(f" L2 Cache HIT ({self.env}): {cache_key}")
             if domain:
                 logger.info(f"   Domain: {domain}")
             logger.info(f"   Fields: {fields}")
-            
+
             # Warm up L1 cache
             self.memory_cache[cache_key] = pattern
-            
+
             # Update usage stats
             if 'metadata' in pattern:
                 pattern['metadata']['usage_count'] = pattern['metadata'].get('usage_count', 0) + 1
                 pattern['metadata']['last_used'] = str(Path.cwd())  # Timestamp placeholder
                 await self.backend.set(cache_key, pattern)
-            
+
             return pattern
-        
+
         logger.info(f" Cache MISS: {cache_key}")
         if domain:
             logger.info(f"   Domain: {domain} (will learn new pattern)")
         return None
-    
+
     async def save_pattern(
         self,
         embedding_hash: str,
@@ -429,19 +429,19 @@ class UnifiedPatternCache:
     ) -> str:
         """
         Save pattern to cache
-        
+
         Args:
             embedding_hash: Hash of structural embedding
             fields: List of fields to extract
             pattern: Extraction pattern to cache
             domain: Domain name
             url: Example URL
-            
+
         Returns:
             Cache key
         """
         cache_key = self._make_cache_key(embedding_hash, fields)
-        
+
         # Add metadata
         cached_data = {
             "pattern": pattern,
@@ -454,48 +454,48 @@ class UnifiedPatternCache:
                 "usage_count": 0
             }
         }
-        
+
         # Save to L2 (persistent)
         await self.backend.set(cache_key, cached_data)
-        
+
         # Save to L1 (memory)
         self.memory_cache[cache_key] = cached_data
-        
+
         logger.info(f" Pattern SAVED ({self.env}): {cache_key}")
         logger.info(f"   Domain: {domain}")
         logger.info(f"   Fields: {fields}")
         logger.info(f"   Cache location: {self.backend.cache_dir if hasattr(self.backend, 'cache_dir') else 'Apify KV'}")
-        
+
         return cache_key
-    
+
     async def clear_cache(self, prefix: str = "pattern_") -> int:
         """
         Clear cache (useful for testing)
-        
+
         Args:
             prefix: Only clear keys with this prefix
-            
+
         Returns:
             Number of keys cleared
         """
         keys = await self.backend.list_keys(prefix)
-        
+
         for key in keys:
             await self.backend.delete(key)
-        
+
         # Clear memory cache
         self.memory_cache.clear()
-        
+
         logger.info(f"  Cache CLEARED: {len(keys)} patterns removed")
         return len(keys)
-    
+
     async def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics"""
         keys = await self.backend.list_keys("pattern_")
-        
+
         total_patterns = len(keys)
         memory_patterns = len(self.memory_cache)
-        
+
         # Calculate total usage if possible
         total_usage = 0
         if isinstance(self.backend, LocalFileCache):
@@ -503,7 +503,7 @@ class UnifiedPatternCache:
                 pattern = await self.backend.get(key)
                 if pattern and 'metadata' in pattern:
                     total_usage += pattern['metadata'].get('usage_count', 0)
-        
+
         return {
             "environment": self.env,
             "total_patterns": total_patterns,

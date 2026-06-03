@@ -17,7 +17,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='Universal Web Scraper - AI-powered scraping for any website'
     )
-    
+
     # Input
     parser.add_argument(
         '--url',
@@ -29,7 +29,7 @@ def main():
         type=str,
         help='File containing URLs (one per line)'
     )
-    
+
     # Fields
     parser.add_argument(
         '--fields',
@@ -37,7 +37,7 @@ def main():
         required=True,
         help='Fields to extract (space-separated)'
     )
-    
+
     # AI Configuration
     parser.add_argument(
         '--api-key',
@@ -50,7 +50,7 @@ def main():
         default='gpt-4o-mini',
         help='AI model to use (default: gpt-4o-mini)'
     )
-    
+
     # Proxy
     parser.add_argument(
         '--proxy-server',
@@ -67,7 +67,7 @@ def main():
         type=str,
         help='Proxy password'
     )
-    
+
     # Cache
     parser.add_argument(
         '--cache-dir',
@@ -80,7 +80,7 @@ def main():
         action='store_true',
         help='Disable caching'
     )
-    
+
     # Output
     parser.add_argument(
         '--output',
@@ -99,27 +99,27 @@ def main():
         default='json',
         help='Output format (default: json)'
     )
-    
+
     # Other
     parser.add_argument(
         '--verbose',
         action='store_true',
         help='Enable verbose logging'
     )
-    
+
     args = parser.parse_args()
-    
+
     # Setup logging
     log_level = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(
         level=log_level,
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
-    
+
     # Validate input
     if not args.url and not args.urls:
         parser.error('Either --url or --urls is required')
-    
+
     # Collect URLs
     urls = []
     if args.url:
@@ -127,7 +127,7 @@ def main():
     elif args.urls:
         with open(args.urls, 'r') as f:
             urls = [line.strip() for line in f if line.strip()]
-    
+
     # Setup proxy config
     proxy_config = None
     if args.proxy_server:
@@ -136,7 +136,7 @@ def main():
             'username': args.proxy_username or '',
             'password': args.proxy_password or ''
         }
-    
+
     # Initialize scraper
     try:
         scraper = UniversalScraper(
@@ -150,11 +150,11 @@ def main():
     except Exception as e:
         print(f"❌ Failed to initialize scraper: {e}")
         sys.exit(1)
-    
+
     # Scrape
     try:
         results = scraper.scrape_multiple(urls, args.fields)
-        
+
         # Save results
         if args.output:
             save_results(results, args.output, args.format)
@@ -163,15 +163,15 @@ def main():
         else:
             # Print to stdout
             print(json.dumps(results, indent=2))
-        
+
         # Print summary
         total_items = sum(len(r['data']) for r in results)
-        print(f"\n✅ Scraping complete!")
+        print("\n✅ Scraping complete!")
         print(f"   URLs: {len(urls)}")
         print(f"   Items: {total_items}")
-        
+
         scraper.close()
-        
+
     except KeyboardInterrupt:
         print("\n⚠️ Interrupted by user")
         scraper.close()
@@ -186,12 +186,12 @@ def save_results(results: List, output_path: str, format: str):
     """Save results to file"""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Combine all data
     all_data = []
     for result in results:
         all_data.extend(result['data'])
-    
+
     if format == 'json' or output_path.suffix == '.json':
         with open(output_path, 'w') as f:
             json.dump(all_data, f, indent=2)
@@ -209,11 +209,11 @@ def save_multiple_results(results: List, output_dir: str, format: str):
     """Save each URL's results to separate file"""
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     for i, result in enumerate(results, 1):
         filename = f"result_{i}.{format}"
         filepath = output_dir / filename
-        
+
         if format == 'json':
             with open(filepath, 'w') as f:
                 json.dump(result['data'], f, indent=2)
@@ -223,7 +223,7 @@ def save_multiple_results(results: List, output_dir: str, format: str):
                     writer = csv.DictWriter(f, fieldnames=result['data'][0].keys())
                     writer.writeheader()
                     writer.writerows(result['data'])
-        
+
         print(f"💾 Saved {filepath}")
 
 

@@ -23,7 +23,7 @@ C. Recovery Mode (rare, hardest)
 """
 
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional
 from enum import Enum
 
 logger = logging.getLogger(__name__)
@@ -39,31 +39,31 @@ class ModelTier(Enum):
 class ModelRouter:
     """
     Routes tasks to appropriate model based on tier
-    
+
     Usage:
         router = ModelRouter(
             router_model="gpt-4o-mini",
             template_model="gpt-4o-mini",
             recovery_model="gpt-4o"
         )
-        
+
         # For routing/classification
         model = router.get_model(ModelTier.ROUTER)
-        
+
         # For template generation
         model = router.get_model(ModelTier.TEMPLATE)
-        
+
         # For recovery
         model = router.get_model(ModelTier.RECOVERY)
     """
-    
+
     # Default model configurations
     DEFAULT_MODELS = {
         ModelTier.ROUTER: "gpt-4o-mini",  # Fast, cheap
         ModelTier.TEMPLATE: "gpt-4o-mini",  # Balanced (can upgrade to sonnet-3.5)
         ModelTier.RECOVERY: "gpt-4o"  # Powerful for complex cases
     }
-    
+
     # Model cost per 1M tokens (input/output average)
     MODEL_COSTS = {
         "gpt-4o-mini": 0.15,  # $0.15/1M tokens
@@ -72,7 +72,7 @@ class ModelRouter:
         "claude-sonnet-3.5": 3.00,  # $3.00/1M tokens
         "claude-opus": 15.00,  # $15.00/1M tokens
     }
-    
+
     def __init__(
         self,
         router_model: Optional[str] = None,
@@ -82,7 +82,7 @@ class ModelRouter:
     ):
         """
         Initialize model router
-        
+
         Args:
             router_model: Model for routing/classification (default: gpt-4o-mini)
             template_model: Model for template generation (default: gpt-4o-mini)
@@ -94,26 +94,26 @@ class ModelRouter:
             ModelTier.TEMPLATE: template_model or self.DEFAULT_MODELS[ModelTier.TEMPLATE],
             ModelTier.RECOVERY: recovery_model or self.DEFAULT_MODELS[ModelTier.RECOVERY]
         }
-        
+
         self.api_key = api_key
-        
-        logger.info(f" Model Router initialized:")
+
+        logger.info(" Model Router initialized:")
         logger.info(f"   Router: {self.models[ModelTier.ROUTER]}")
         logger.info(f"   Template: {self.models[ModelTier.TEMPLATE]}")
         logger.info(f"   Recovery: {self.models[ModelTier.RECOVERY]}")
-    
+
     def get_model(self, tier: ModelTier) -> str:
         """
         Get model name for tier
-        
+
         Args:
             tier: Model tier
-            
+
         Returns:
             Model name string
         """
         return self.models.get(tier, self.DEFAULT_MODELS[tier])
-    
+
     def get_cost_estimate(
         self,
         tier: ModelTier,
@@ -122,23 +122,23 @@ class ModelRouter:
     ) -> float:
         """
         Estimate cost for model call
-        
+
         Args:
             tier: Model tier
             input_tokens: Input token count
             output_tokens: Output token count (default: 0)
-            
+
         Returns:
             Estimated cost in USD
         """
         model = self.get_model(tier)
         cost_per_million = self.MODEL_COSTS.get(model, 1.0)  # Default $1/1M
-        
+
         total_tokens = input_tokens + output_tokens
         cost = (total_tokens / 1_000_000) * cost_per_million
-        
+
         return cost
-    
+
     def should_use_recovery(
         self,
         attempts: int,
@@ -147,12 +147,12 @@ class ModelRouter:
     ) -> bool:
         """
         Determine if recovery mode should be used
-        
+
         Args:
             attempts: Number of extraction attempts
             last_quality: Quality score from last attempt
             quality_threshold: Minimum quality threshold
-            
+
         Returns:
             True if recovery mode should be used
         """
@@ -161,36 +161,36 @@ class ModelRouter:
         # 2. Quality below threshold
         if attempts >= 2 and last_quality < quality_threshold:
             return True
-        
+
         return False
-    
+
     def get_tier_for_task(self, task_type: str) -> ModelTier:
         """
         Get appropriate tier for task type
-        
+
         Args:
             task_type: Task type ('classification', 'template', 'recovery', etc.)
-            
+
         Returns:
             Model tier
         """
         task_lower = task_type.lower()
-        
+
         if any(keyword in task_lower for keyword in ['classify', 'route', 'check', 'detect']):
             return ModelTier.ROUTER
         elif any(keyword in task_lower for keyword in ['recover', 'fix', 'retry', 'fallback']):
             return ModelTier.RECOVERY
         else:
             return ModelTier.TEMPLATE  # Default to template generation
-    
+
     def upgrade_model(self, tier: ModelTier, new_model: str) -> bool:
         """
         Upgrade model for tier (for testing/optimization)
-        
+
         Args:
             tier: Model tier
             new_model: New model name
-            
+
         Returns:
             True if upgraded successfully
         """

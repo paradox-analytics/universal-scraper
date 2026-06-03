@@ -6,7 +6,6 @@ import logging
 import json
 import re
 from typing import List, Dict, Any, Optional
-from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
@@ -15,17 +14,17 @@ logger = logging.getLogger(__name__)
 class FieldDiscovery:
     """
     Discovers available fields on a webpage using lightweight analysis.
-    
+
     Strategy (fastest to slowest):
     1. JSON source analysis (instant if JSON found)
     2. HTML structure analysis (fast, no LLM)
     3. LLM-based discovery (slower but more accurate)
     """
-    
+
     def __init__(self, api_key: Optional[str] = None, model_name: str = "gpt-4o-mini"):
         self.api_key = api_key
         self.model_name = model_name
-    
+
     async def discover_fields(
         self,
         html: str,
@@ -35,7 +34,7 @@ class FieldDiscovery:
     ) -> Dict[str, Any]:
         """
         Discover available fields from HTML.
-        
+
         Universal approach - works for any website type:
         - E-commerce (products, prices, sellers)
         - Travel (flights, hotels, destinations)
@@ -43,18 +42,18 @@ class FieldDiscovery:
         - Social media (posts, users, engagement)
         - Search results (titles, snippets, URLs)
         - And any other type of content
-        
+
         Args:
             html: HTML content
             url: Source URL
             use_llm: Whether to use LLM for discovery (slower but more accurate)
-            
+
         Returns:
             Dict with 'fields' (list of field names), 'confidence' (0-1), 'source' (json/html/llm)
         """
         json_fields = None
         html_fields = None
-        
+
         # Step 1: Try JSON sources (only if they contain actual content, not config)
         json_fields = self._discover_from_json(html, url)
         if json_fields and len(json_fields.get('fields', [])) >= 3:
@@ -67,25 +66,25 @@ class FieldDiscovery:
             # Otherwise, JSON found config data - continue to other methods
             if not has_content_fields:
                 json_fields = None
-        
+
         # Step 2: HTML structure analysis (fast, universal)
         html_fields = self._discover_from_html_structure(html, url)
         if html_fields and len(html_fields.get('fields', [])) >= 3:
             logger.info(f"✅ Field discovery: Found {len(html_fields['fields'])} fields from HTML structure")
             if not use_llm:
                 return html_fields
-        
+
         # Step 3: LLM-based discovery (most accurate for any website type)
         # Use LLM if:
         # - Explicitly requested
         # - Previous methods found too few fields
         # - We have an API key
         should_use_llm = use_llm or (
-            self.api_key and 
+            self.api_key and
             (not json_fields or len(json_fields.get('fields', [])) < 3) and
             (not html_fields or len(html_fields.get('fields', [])) < 3)
         )
-        
+
         if should_use_llm and self.api_key:
             llm_fields = await self._discover_with_llm(html, url, target=target)
             if llm_fields and len(llm_fields.get('fields', [])) > 0:
@@ -96,16 +95,16 @@ class FieldDiscovery:
                     'source': 'llm',
                     'reasoning': llm_fields.get('reasoning', 'LLM analyzed page content')
                 }
-        
+
         # Return best available result
         if html_fields and len(html_fields.get('fields', [])) > 0:
             return html_fields
         if json_fields and len(json_fields.get('fields', [])) > 0:
             return json_fields
-        
+
         # Fallback: Return generic universal fields
         fallback_fields = ['title', 'description', 'url', 'image', 'date']
-        
+
         url_preview = url.lower()[:50] if url else 'unknown'
         return {
             'fields': fallback_fields,
@@ -113,11 +112,11 @@ class FieldDiscovery:
             'source': 'fallback',
             'reasoning': f'Using generic field suggestions for {url_preview}...'
         }
-    
+
     def _discover_from_json(self, html: str, url: str) -> Optional[Dict[str, Any]]:
         """Discover fields from JSON sources (fastest method)"""
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         # 1. Check JSON-LD (Primary source for Schema.org)
         json_ld_scripts = soup.find_all('script', type='application/ld+json')
         for script in json_ld_scripts:
@@ -132,7 +131,7 @@ class FieldDiscovery:
                         'source': 'json_ld_schema',
                         'reasoning': f"Found rich Schema.org data ({data.get('@type', 'unknown')})"
                     }
-                
+
                 # Fallback to generic JSON extraction
                 fields = self._extract_fields_from_json(data)
                 if fields:
@@ -160,7 +159,7 @@ class FieldDiscovery:
                     }
             except Exception as e:
                 logger.debug(f"Failed to parse __NEXT_DATA__: {e}")
-        
+
         # 3. Check inline JSON in scripts
         for script in soup.find_all('script'):
             if script.string and len(script.string) > 100:
@@ -179,25 +178,25 @@ class FieldDiscovery:
                             }
                     except Exception:
                         continue
-        
+
         return None
 
     def _discover_from_schema_org(self, data: Any) -> Optional[List[str]]:
         """Deeply analyze Schema.org data to discover high-value fields"""
         if not isinstance(data, dict):
             return None
-            
+
         # Handle @graph or list of objects
         if '@graph' in data and isinstance(data['@graph'], list):
             for item in data['@graph']:
                 fields = self._discover_from_schema_org(item)
                 if fields: return fields
             return None
-            
+
         schema_type = data.get('@type')
         if not schema_type:
             return None
-            
+
         # Standard Schema.org types and their high-value fields
         # This allows us to "know" what to look for even if the site uses weird keys
         schema_blueprints = {
@@ -209,17 +208,17 @@ class FieldDiscovery:
             'LocalBusiness': ['name', 'address', 'telephone', 'openingHours', 'priceRange', 'image', 'aggregateRating'],
             'Review': ['itemReviewed', 'reviewRating', 'author', 'reviewBody', 'datePublished']
         }
-        
+
         # If it's a known type, extract fields intelligently
         if schema_type in schema_blueprints:
             fields = set()
             blueprint = schema_blueprints[schema_type]
-            
+
             for field_name in blueprint:
                 # 1. Check if field exists directly
                 if field_name in data:
                     fields.add(self._normalize_field_name(field_name) or field_name)
-                    
+
                     # 2. Handle nested objects (offers, brand, etc.)
                     nested_val = data[field_name]
                     if isinstance(nested_val, dict):
@@ -242,19 +241,19 @@ class FieldDiscovery:
                                 for offer_key in ['price', 'priceCurrency', 'availability']:
                                     if offer_key in first_item:
                                         fields.add(self._normalize_field_name(offer_key) or offer_key)
-            
+
             if fields:
                 return sorted(list(fields))
-                
+
         return None
-    
+
     def _extract_fields_from_json(self, data: Any, max_depth: int = 5) -> List[str]:
         """Extract field names from JSON structure - only from actual content arrays"""
         if max_depth <= 0:
             return []
-        
+
         fields = set()
-        
+
         if isinstance(data, dict):
             # Check for Schema.org @type first
             if '@type' in data:
@@ -264,11 +263,11 @@ class FieldDiscovery:
 
             # ONLY look for actual content arrays (not config objects)
             # These keys typically contain actual page content items
-            content_array_keys = ['itemListElement', 'items', 'products', 'posts', 'articles', 
+            content_array_keys = ['itemListElement', 'items', 'products', 'posts', 'articles',
                                   'results', 'listings', 'offers', 'variants', 'entries',
                                   'flights', 'hotels', 'restaurants', 'reviews', 'comments',
                                   'searchResults', 'pageProps']
-            
+
             for key in content_array_keys:
                 if key in data:
                     value = data[key]
@@ -278,17 +277,17 @@ class FieldDiscovery:
                         if nested_fields:
                             fields.update(nested_fields)
                         continue
-                    
+
                     if isinstance(value, list) and len(value) > 0:
                         # Found a content array - extract fields from items
                         for item in value[:3]:
                             if isinstance(item, dict):
                                 # Only extract if item looks like content (has title/name/price/etc)
-                                content_indicators = ['name', 'title', 'price', 'description', 'image', 
+                                content_indicators = ['name', 'title', 'price', 'description', 'image',
                                                      'url', 'date', 'author', 'rating', 'location', '@type']
                                 item_keys_lower = [k.lower() for k in item.keys()]
                                 has_content = any(ind in ' '.join(item_keys_lower) for ind in content_indicators)
-                                
+
                                 if has_content:
                                     # If item has @type, try schema discovery on it
                                     if '@type' in item:
@@ -303,7 +302,7 @@ class FieldDiscovery:
                                             fields.add(normalized)
                         if fields:
                             return sorted(list(fields))  # Found content, return early
-            
+
             # Check for single-item content structures
             content_object_keys = ['product', 'listing', 'flight', 'hotel', 'article', 'post']
             for key in content_object_keys:
@@ -321,16 +320,16 @@ class FieldDiscovery:
                             fields.add(normalized)
                     if fields:
                         return sorted(list(fields))
-        
+
         elif isinstance(data, list) and len(data) > 0:
             # Only extract if items look like content
             for item in data[:3]:
                 if isinstance(item, dict):
-                    content_indicators = ['name', 'title', 'price', 'description', 'image', 
+                    content_indicators = ['name', 'title', 'price', 'description', 'image',
                                          'url', 'date', 'author', 'rating', 'location', '@type']
                     item_keys_lower = [k.lower() for k in item.keys()]
                     has_content = any(ind in ' '.join(item_keys_lower) for ind in content_indicators)
-                    
+
                     if has_content:
                         if '@type' in item:
                             item_schema = self._discover_from_schema_org(item)
@@ -342,22 +341,22 @@ class FieldDiscovery:
                             normalized = self._normalize_field_name(field_key)
                             if normalized:
                                 fields.add(normalized)
-        
+
         return sorted(list(fields))
-    
+
     def _normalize_field_name(self, name: str) -> Optional[str]:
         """Normalize field names to common formats"""
         if not name or len(name) < 2:
             return None
-        
+
         # Remove common prefixes (product, item, etc.)
         name = re.sub(r'^(product|item|entry|post|article)\s*', '', name, flags=re.I)
-        
+
         # Convert camelCase/snake_case to lowercase with spaces
         name = re.sub(r'([a-z])([A-Z])', r'\1 \2', name)
         name = name.replace('_', ' ').replace('-', ' ')
         name = name.lower().strip()
-        
+
         # Skip ONLY truly internal/structural fields (minimal list to stay universal)
         skip_fields = {
             # Structural/internal only
@@ -367,7 +366,7 @@ class FieldDiscovery:
         }
         if name in skip_fields or name.startswith('_') or name.startswith('$') or name.startswith('@'):
             return None
-        
+
         # Map common variations to standard names
         field_mapping = {
             'name': 'title',
@@ -390,30 +389,30 @@ class FieldDiscovery:
             'price': 'price',
             'cost': 'price',
         }
-        
+
         # Check if name matches any mapped field
         for key, mapped_value in field_mapping.items():
             if key in name or name in key:
                 return mapped_value
-        
+
         return name
-    
+
     def _extract_fields_from_tables(self, soup: BeautifulSoup) -> List[str]:
         """Extract field names from HTML table headers (th elements)"""
         fields = set()
-        
+
         # Find all tables
         tables = soup.find_all('table')
-        
+
         for table in tables:
             # Look for header row (thead > tr > th or tbody > tr:first-child > th)
             header_row = None
-            
+
             # Check thead first
             thead = table.find('thead')
             if thead:
                 header_row = thead.find('tr')
-            
+
             # If no thead, check first row of tbody
             if not header_row:
                 tbody = table.find('tbody')
@@ -422,7 +421,7 @@ class FieldDiscovery:
                 else:
                     # No tbody, check first tr in table
                     header_row = table.find('tr')
-            
+
             if header_row:
                 # Extract th or td elements from header row
                 headers = header_row.find_all(['th', 'td'])
@@ -433,21 +432,21 @@ class FieldDiscovery:
                         normalized = self._normalize_field_name(text)
                         if normalized:
                             # Filter out navigation/header elements
-                            nav_keywords = ['menu', 'home', 'about', 'contact', 'login', 'sign up', 
+                            nav_keywords = ['menu', 'home', 'about', 'contact', 'login', 'sign up',
                                           'search', 'filter', 'sort', 'view', 'download', 'share',
                                           'navigation', 'nav', 'header', 'footer', 'sidebar']
                             if not any(keyword in normalized.lower() for keyword in nav_keywords):
                                 fields.add(normalized)
-        
+
         return list(fields)
-    
+
     def _extract_fields_from_dl(self, soup: BeautifulSoup) -> List[str]:
         """Extract field names from definition lists (dt elements)"""
         fields = set()
-        
+
         # Find all definition lists
         dl_elements = soup.find_all('dl')
-        
+
         for dl in dl_elements:
             # Extract dt (definition term) elements as field names
             dt_elements = dl.find_all('dt')
@@ -463,13 +462,13 @@ class FieldDiscovery:
                                       'navigation', 'nav', 'header', 'footer', 'sidebar']
                         if not any(keyword in normalized.lower() for keyword in nav_keywords):
                             fields.add(normalized)
-        
+
         return list(fields)
-    
+
     def _discover_from_microdata(self, soup: BeautifulSoup) -> Optional[List[str]]:
         """Extract field names from HTML Microdata (itemprop attributes)"""
         fields = set()
-        
+
         # Find elements with itemprop
         props = soup.find_all(attrs={"itemprop": True})
         for prop in props:
@@ -478,13 +477,13 @@ class FieldDiscovery:
                 normalized = self._normalize_field_name(name)
                 if normalized:
                     fields.add(normalized)
-        
+
         return sorted(list(fields)) if fields else None
 
     def _discover_from_rdfa(self, soup: BeautifulSoup) -> Optional[List[str]]:
         """Extract field names from HTML RDFa (property attributes)"""
         fields = set()
-        
+
         # Find elements with property
         props = soup.find_all(attrs={"property": True})
         for prop in props:
@@ -493,17 +492,17 @@ class FieldDiscovery:
                 # RDFa properties often have prefixes like 'og:', 'schema:', etc.
                 if ':' in name:
                     name = name.split(':')[-1]
-                
+
                 normalized = self._normalize_field_name(name)
                 if normalized:
                     fields.add(normalized)
-        
+
         return sorted(list(fields)) if fields else None
 
     def _discover_from_html_structure(self, html: str, url: str) -> Optional[Dict[str, Any]]:
         """Discover fields from HTML structure (fast, no LLM)"""
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         # PRIORITY 0: Check for Microdata/RDFa (Schema-First)
         microdata_fields = self._discover_from_microdata(soup)
         if microdata_fields and len(microdata_fields) >= 3:
@@ -514,7 +513,7 @@ class FieldDiscovery:
                 'source': 'html_microdata',
                 'reasoning': 'Extracted fields from HTML Microdata (itemprop)'
             }
-            
+
         rdfa_fields = self._discover_from_rdfa(soup)
         if rdfa_fields and len(rdfa_fields) >= 3:
             logger.info(f"✅ Found {len(rdfa_fields)} fields from RDFa")
@@ -524,7 +523,7 @@ class FieldDiscovery:
                 'source': 'html_rdfa',
                 'reasoning': 'Extracted fields from HTML RDFa (property)'
             }
-        
+
         # PRIORITY 1: Check for data tables (most reliable for structured data)
         table_fields = self._extract_fields_from_tables(soup)
         if table_fields and len(table_fields) >= 3:
@@ -535,7 +534,7 @@ class FieldDiscovery:
                 'source': 'html_table',
                 'reasoning': 'Extracted fields from data table headers'
             }
-        
+
         # PRIORITY 2: Check for definition lists (common in data pages)
         dl_fields = self._extract_fields_from_dl(soup)
         if dl_fields and len(dl_fields) >= 3:
@@ -546,7 +545,7 @@ class FieldDiscovery:
                 'source': 'html_dl',
                 'reasoning': 'Extracted fields from definition list structure'
             }
-        
+
         # Enhanced field patterns with more specific selectors
         field_patterns = {
             'title': [
@@ -651,16 +650,16 @@ class FieldDiscovery:
                 'table[class*="spec"]', 'dl[class*="spec"]'
             ]
         }
-        
+
         found_fields = []
         confidence_scores = {}
-        
+
         # Check for repeating item containers (list pages)
         item_selectors = [
             'article', '[role="article"]', '[class*="item"]', '[class*="card"]',
             '[class*="product"]', '[class*="post"]', 'li[class*="item"]'
         ]
-        
+
         items_found = 0
         items = []
         for selector in item_selectors:
@@ -668,7 +667,7 @@ class FieldDiscovery:
             if len(items) >= 3:  # At least 3 items suggests a list
                 items_found = len(items)
                 break
-        
+
         # If no repeating items found, check if it's a single-item page (product page)
         is_single_item_page = False
         if items_found == 0:
@@ -689,17 +688,17 @@ class FieldDiscovery:
                     items = [main_content]
                 else:
                     items = [soup]
-        
+
         if not items:
             return None
-        
+
         # Check which fields are present
         search_area = items[0] if is_single_item_page else items[:3]  # Single item or first 3 items
-        
+
         for field_name, patterns in field_patterns.items():
             found_count = 0
             search_items = [search_area] if is_single_item_page else search_area
-            
+
             for item in search_items:
                 for pattern in patterns:
                     try:
@@ -717,14 +716,14 @@ class FieldDiscovery:
                         continue
                 if found_count > 0:
                     break
-            
+
             # For single-item pages, field is present if found at least once
             # For list pages, field is present if found in at least 2/3 items
             threshold = 1 if is_single_item_page else 2
             if found_count >= threshold:
                 found_fields.append(field_name)
                 confidence_scores[field_name] = min(1.0, found_count / max(1, len(search_items)))
-        
+
         if found_fields:
             avg_confidence = sum(confidence_scores.values()) / len(confidence_scores) if confidence_scores else 0.7
             page_type = "single-item page" if is_single_item_page else f"{items_found} items"
@@ -734,36 +733,36 @@ class FieldDiscovery:
                 'source': 'html_structure',
                 'reasoning': f'Found {len(found_fields)} fields in HTML structure from {page_type}'
             }
-        
+
         return None
-    
+
     async def _discover_with_llm(
-        self, 
-        html: str, 
+        self,
+        html: str,
         url: str,
         target: Optional[str] = None  # NEW: Target hint
     ) -> Optional[Dict[str, Any]]:
         """Discover fields using LLM (slower but more accurate)"""
         if not self.api_key:
             return None
-        
+
         try:
             import litellm
-            
+
             # Use a small sample of HTML
             soup = BeautifulSoup(html, 'html.parser')
-            
+
             # Get main content area (universal - no site-specific logic)
             main_content = soup.find('main') or soup.find('article') or soup.find('body')
             if main_content:
                 html_sample = str(main_content)[:10000]  # Get enough content for LLM analysis
             else:
                 html_sample = html[:10000]
-            
+
             # Universal prompt - let LLM analyze content to determine page type and fields
             # No hardcoded site detection - LLM analyzes HTML content intelligently
             target_instruction = f"The user is specifically looking for: {target.upper()}" if target else "Suggest ALL relevant fields that can be extracted."
-            
+
             prompt = f"""Analyze this HTML content and intelligently suggest fields for extraction.
 {target_instruction}
 
@@ -837,10 +836,10 @@ Return ONLY the JSON, no other text."""
                 max_tokens=500,
                 response_format={"type": "json_object"}
             )
-            
+
             content = response.choices[0].message.content
             result = json.loads(content)
-            
+
             fields = result.get('fields', [])
             if fields:
                 # Normalize field names to user-friendly format and deduplicate
@@ -851,7 +850,7 @@ Return ONLY the JSON, no other text."""
                     if normalized and normalized not in seen:
                         normalized_fields.append(normalized)
                         seen.add(normalized)
-                
+
                 if normalized_fields:
                     return {
                         'fields': normalized_fields,
@@ -859,9 +858,9 @@ Return ONLY the JSON, no other text."""
                         'source': 'llm',
                         'reasoning': result.get('reasoning', 'LLM-suggested fields')
                     }
-        
+
         except Exception as e:
             logger.warning(f"LLM field discovery failed: {e}")
-        
+
         return None
 

@@ -96,7 +96,7 @@ class UniversalWorkflow:
         logger.info(f" Mode: {self.config.mode.value}")
         logger.info(f" Browser: {'Camoufox' if use_camoufox else 'Playwright'}")
         if proxy_config:
-            logger.info(f" Proxy: Enabled")
+            logger.info(" Proxy: Enabled")
 
     @property
     def crawler(self) -> UniversalCrawler:
@@ -227,8 +227,8 @@ class UniversalWorkflow:
             logger.info(f" Scraping {i}/{len(urls)}: {url}")
 
             try:
-                print(f" WORKFLOW._execute_scrape_only(): Accessing self.scraper", flush=True)
-                print(f" WORKFLOW._execute_scrape_only(): Calling scraper.scrape()", flush=True)
+                print(" WORKFLOW._execute_scrape_only(): Accessing self.scraper", flush=True)
+                print(" WORKFLOW._execute_scrape_only(): Calling scraper.scrape()", flush=True)
                 result = await self.scraper.scrape(url, fields)
                 print(f" WORKFLOW._execute_scrape_only(): scraper.scrape() returned {len(result.get('data', []))} items", flush=True)
                 all_data.extend(result['data'])

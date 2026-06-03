@@ -41,14 +41,14 @@ class FingerPrintConfig:
 class AntiDetectionManager:
     """
     Maximum robustness anti-detection strategies.
-    
+
     This implementation uses advanced techniques from:
     - puppeteer-extra-plugin-stealth
     - undetected-chromedriver
     - FingerprintJS
     - Academic research on bot detection
     """
-    
+
     # Latest user agents (updated November 2024)
     FINGERPRINTS = {
         'windows_chrome_120': {
@@ -164,7 +164,7 @@ class AntiDetectionManager:
             'max_touch_points': 0,
         },
     }
-    
+
     # Timezone → geolocation mapping (realistic)
     GEOLOCATIONS = {
         'America/New_York': {'latitude': 40.7128, 'longitude': -74.0060, 'accuracy': 100},
@@ -178,9 +178,9 @@ class AntiDetectionManager:
         'Asia/Shanghai': {'latitude': 31.2304, 'longitude': 121.4737, 'accuracy': 100},
         'Australia/Sydney': {'latitude': -33.8688, 'longitude': 151.2093, 'accuracy': 100},
     }
-    
+
     TIMEZONES = list(GEOLOCATIONS.keys())
-    
+
     # Locale → timezone mapping (realistic)
     LOCALE_TO_TIMEZONE = {
         'en-US': ['America/New_York', 'America/Chicago', 'America/Los_Angeles', 'America/Denver'],
@@ -192,9 +192,9 @@ class AntiDetectionManager:
         'zh-CN': ['Asia/Shanghai'],
         'en-AU': ['Australia/Sydney'],
     }
-    
+
     LOCALES = list(LOCALE_TO_TIMEZONE.keys())
-    
+
     def __init__(
         self,
         profile: str = 'random',
@@ -204,7 +204,7 @@ class AntiDetectionManager:
     ):
         """
         Initialize maximum-robustness Anti-Detection Manager
-        
+
         Args:
             profile: Fingerprint profile ('random', 'windows_chrome_120', etc.)
             humanize: Enable advanced human behavior simulation
@@ -215,17 +215,17 @@ class AntiDetectionManager:
         self.humanize = humanize
         self.stealth_mode = stealth_mode
         self.consistency = consistency
-        
+
         # Generate consistent fingerprint
         self.fingerprint = self._generate_fingerprint()
-        
-        logger.info(f"  Anti-Detection Manager initialized (Maximum Robustness)")
+
+        logger.info("  Anti-Detection Manager initialized (Maximum Robustness)")
         logger.info(f"   Profile: {profile}, Humanize: {humanize}, Stealth: {stealth_mode}, Consistency: {consistency}")
-    
+
     def _generate_fingerprint(self) -> FingerPrintConfig:
         """
         Generate a highly realistic and consistent browser fingerprint
-        
+
         Ensures all properties are consistent:
         - UA, viewport, screen, hardware match OS/device
         - Timezone matches locale
@@ -236,27 +236,27 @@ class AntiDetectionManager:
             profile_name = random.choice(list(self.FINGERPRINTS.keys()))
         else:
             profile_name = self.profile if self.profile in self.FINGERPRINTS else 'windows_chrome_120'
-        
+
         profile_data = self.FINGERPRINTS[profile_name]
-        
+
         # Select consistent locale & timezone
         locale = random.choice(self.LOCALES)
         timezone = random.choice(self.LOCALE_TO_TIMEZONE.get(locale, self.TIMEZONES))
-        
+
         # Select consistent hardware
         user_agent = random.choice(profile_data['user_agents'])
         viewport = random.choice(profile_data['viewports'])
         screen = random.choice(profile_data['screen_resolutions'])
         hardware_concurrency = random.choice(profile_data['hardware_concurrency'])
         device_memory = random.choice(profile_data['device_memory'])
-        
+
         # WebGL should match
         webgl_vendor = random.choice(profile_data['webgl_vendors'])
         webgl_renderer = random.choice(profile_data['webgl_renderers'])
-        
+
         # Touch points (desktop = 0, mobile = 5-10)
         max_touch_points = profile_data['max_touch_points']
-        
+
         fingerprint = FingerPrintConfig(
             user_agent=user_agent,
             viewport=viewport,
@@ -270,15 +270,15 @@ class AntiDetectionManager:
             device_memory=device_memory,
             max_touch_points=max_touch_points
         )
-        
+
         logger.debug(f" Generated fingerprint: {profile_name}")
         logger.debug(f"   UA: {user_agent[:60]}...")
         logger.debug(f"   Viewport: {viewport['width']}x{viewport['height']}")
         logger.debug(f"   Hardware: {hardware_concurrency} cores, {device_memory}GB RAM")
         logger.debug(f"   WebGL: {webgl_vendor} / {webgl_renderer[:40]}...")
-        
+
         return fingerprint
-    
+
     def get_camoufox_config(self) -> Dict[str, Any]:
         """
         Get Camoufox-specific configuration with maximum realism
@@ -287,19 +287,19 @@ class AntiDetectionManager:
             'humanize': self.humanize,
             'geoip': True,
         }
-        
+
         # Add stealth options
         if self.stealth_mode:
             # Realistic browser configuration
             os_hint = 'windows' if 'Win' in self.fingerprint.platform else ('macos' if 'Mac' in self.fingerprint.platform else 'linux')
-            
+
             config.update({
                 'os': os_hint,
                 'exclude_addons': [],  # Camoufox handles addons internally
             })
-        
+
         return config
-    
+
     def get_playwright_config(self) -> Dict[str, Any]:
         """
         Get Playwright-specific configuration with maximum realism
@@ -315,11 +315,11 @@ class AntiDetectionManager:
             'device_scale_factor': self._get_device_scale_factor(),
             'has_touch': self.fingerprint.max_touch_points > 0,
         }
-    
+
     def _get_device_scale_factor(self) -> float:
         """Get realistic device scale factor based on screen resolution"""
         screen_width = self.fingerprint.screen_resolution['width']
-        
+
         # Retina/HiDPI displays
         if screen_width >= 2560:
             return 2.0
@@ -327,7 +327,7 @@ class AntiDetectionManager:
             return 1.0
         else:
             return 1.0
-    
+
     async def apply_human_behavior(
         self,
         page: Any,
@@ -336,14 +336,14 @@ class AntiDetectionManager:
     ):
         """
         Apply advanced human-like behavior simulation
-        
+
         Features:
         - Bezier curve mouse movements
         - Natural scroll patterns (easing, variable speed)
         - Mouse jitter/tremor
         - Realistic timing (Gaussian distribution)
         - Viewport-aware movements
-        
+
         Args:
             page: Browser page object
             action: Type of behavior ('initial_load', 'scroll', 'hover', 'navigate')
@@ -351,54 +351,54 @@ class AntiDetectionManager:
         """
         if not self.humanize:
             return
-        
+
         try:
             if action == 'initial_load':
                 # Initial page load: users read, move mouse, maybe scroll
                 await self._human_delay(0.8, 1.8, intensity)
-                
+
                 # Natural mouse movement (Bezier curve)
                 viewport_w = self.fingerprint.viewport['width']
                 viewport_h = self.fingerprint.viewport['height']
-                
+
                 start_x, start_y = random.randint(50, 200), random.randint(50, 200)
                 end_x, end_y = random.randint(200, viewport_w - 200), random.randint(100, viewport_h - 200)
-                
+
                 await self._bezier_mouse_move(page, start_x, start_y, end_x, end_y, duration=random.uniform(0.5, 1.2))
-                
+
                 # Small scroll (users scan content)
                 if random.random() < 0.7:  # 70% chance
                     await self._natural_scroll(page, random.randint(100, 400), duration=random.uniform(0.4, 0.9))
                     await self._human_delay(0.3, 0.7, intensity)
-                
+
             elif action == 'scroll':
                 # Natural scrolling with easing
                 scroll_distance = random.randint(300, 1000)
                 await self._natural_scroll(page, scroll_distance, duration=random.uniform(0.8, 1.8))
                 await self._human_delay(0.5, 1.2, intensity)
-                
+
             elif action == 'hover':
                 # Hover over element with jitter
                 viewport_w = self.fingerprint.viewport['width']
                 viewport_h = self.fingerprint.viewport['height']
-                
+
                 # Random position
                 x, y = random.randint(100, viewport_w - 100), random.randint(100, viewport_h - 100)
-                
+
                 # Move to position with Bezier curve
                 await self._bezier_mouse_move(page, 0, 0, x, y, duration=random.uniform(0.4, 0.8))
-                
+
                 # Add mouse jitter (humans don't hold perfectly still)
                 if random.random() < 0.5:
                     await self._mouse_jitter(page, x, y, intensity=intensity)
-                
+
             elif action == 'navigate':
                 # Longer delay before navigation (user thinks)
                 await self._human_delay(1.5, 3.0, intensity)
-                
+
         except Exception as e:
             logger.debug(f"Human behavior simulation error (non-fatal): {e}")
-    
+
     async def _bezier_mouse_move(
         self,
         page: Any,
@@ -411,13 +411,13 @@ class AntiDetectionManager:
     ):
         """
         Move mouse in a Bezier curve (realistic human movement)
-        
+
         Humans don't move in straight lines!
         """
         try:
             # Generate Bezier curve points
             points = self._generate_bezier_curve(start_x, start_y, end_x, end_y, steps)
-            
+
             # Move along curve
             delay_per_step = duration / steps
             for x, y in points:
@@ -425,7 +425,7 @@ class AntiDetectionManager:
                 await asyncio.sleep(delay_per_step)
         except Exception as e:
             logger.debug(f"Bezier mouse move error: {e}")
-    
+
     def _generate_bezier_curve(
         self,
         start_x: int,
@@ -436,66 +436,66 @@ class AntiDetectionManager:
     ) -> List[Tuple[float, float]]:
         """
         Generate Bezier curve points for realistic mouse movement
-        
+
         Uses cubic Bezier with random control points
         """
         # Random control points (offset from straight line)
         offset_x = random.uniform(-100, 100)
         offset_y = random.uniform(-50, 50)
-        
+
         control1_x = start_x + (end_x - start_x) / 3 + offset_x
         control1_y = start_y + (end_y - start_y) / 3 + offset_y
-        
+
         control2_x = start_x + 2 * (end_x - start_x) / 3 + offset_x
         control2_y = start_y + 2 * (end_y - start_y) / 3 - offset_y
-        
+
         # Generate curve points
         points = []
         for i in range(steps + 1):
             t = i / steps
-            
+
             # Cubic Bezier formula
             x = (1 - t) ** 3 * start_x + \
                 3 * (1 - t) ** 2 * t * control1_x + \
                 3 * (1 - t) * t ** 2 * control2_x + \
                 t ** 3 * end_x
-            
+
             y = (1 - t) ** 3 * start_y + \
                 3 * (1 - t) ** 2 * t * control1_y + \
                 3 * (1 - t) * t ** 2 * control2_y + \
                 t ** 3 * end_y
-            
+
             points.append((x, y))
-        
+
         return points
-    
+
     async def _natural_scroll(self, page: Any, distance: int, duration: float = 1.0):
         """
         Natural scrolling with easing (starts slow, speeds up, slows down)
-        
+
         Mimics real user scrolling behavior
         """
         try:
             steps = 15
             delay_per_step = duration / steps
-            
+
             for i in range(steps):
                 # Easing function (sine wave for natural acceleration/deceleration)
                 t = i / steps
                 easing = (1 - math.cos(t * math.pi)) / 2  # Smooth ease-in-out
-                
+
                 # Calculate scroll amount for this step
                 scroll_amount = int((distance / steps) * (1 + easing * 0.5))
-                
+
                 await page.evaluate(f'window.scrollBy(0, {scroll_amount})')
                 await asyncio.sleep(delay_per_step)
         except Exception as e:
             logger.debug(f"Natural scroll error: {e}")
-    
+
     async def _mouse_jitter(self, page: Any, center_x: int, center_y: int, intensity: float = 1.0):
         """
         Add realistic mouse jitter (humans can't hold perfectly still)
-        
+
         Args:
             intensity: How much jitter (1.0 = normal, 2.0 = more jittery)
         """
@@ -508,23 +508,23 @@ class AntiDetectionManager:
                 await asyncio.sleep(random.uniform(0.05, 0.15))
         except Exception as e:
             logger.debug(f"Mouse jitter error: {e}")
-    
+
     async def _human_delay(self, min_sec: float, max_sec: float, intensity: float = 1.0):
         """
         Human-like delay using Gaussian distribution (more realistic than uniform)
-        
+
         Args:
             intensity: Multiplier for delay (0.5 = faster, 2.0 = slower/more cautious)
         """
         # Gaussian distribution is more realistic than uniform
         mean = (min_sec + max_sec) / 2
         stddev = (max_sec - min_sec) / 6  # 99.7% within range
-        
+
         delay = random.gauss(mean, stddev) * intensity
         delay = max(min_sec, min(max_sec, delay))  # Clamp to range
-        
+
         await asyncio.sleep(delay)
-    
+
     def get_random_delay(self, min_ms: int = 500, max_ms: int = 2000) -> int:
         """
         Get a random delay with Gaussian distribution (more realistic)
@@ -532,17 +532,17 @@ class AntiDetectionManager:
         if self.stealth_mode:
             min_ms *= 1.5
             max_ms *= 1.5
-        
+
         mean = (min_ms + max_ms) / 2
         stddev = (max_ms - min_ms) / 6
-        
+
         delay = random.gauss(mean, stddev)
         return int(max(min_ms, min(max_ms, delay)))
-    
+
     async def add_stealth_scripts(self, page: Any):
         """
         Comprehensive stealth JavaScript injections
-        
+
         Techniques from:
         - puppeteer-extra-plugin-stealth
         - FingerprintJS evasion
@@ -550,17 +550,17 @@ class AntiDetectionManager:
         """
         if not self.stealth_mode:
             return
-        
+
         # Comprehensive stealth script
         stealth_js = f"""
         (function() {{
             'use strict';
-            
+
             // 1. Override navigator.webdriver
             Object.defineProperty(navigator, 'webdriver', {{
                 get: () => undefined
             }});
-            
+
             // 2. Override navigator.plugins (realistic list)
             Object.defineProperty(navigator, 'plugins', {{
                 get: () => {{
@@ -589,12 +589,12 @@ class AntiDetectionManager:
                     return plugins;
                 }}
             }});
-            
+
             // 3. Override navigator.languages
             Object.defineProperty(navigator, 'languages', {{
                 get: () => ['{self.fingerprint.locale}', '{self.fingerprint.locale[:2]}']
             }});
-            
+
             // 4. Override navigator.permissions
             const originalQuery = window.navigator.permissions.query;
             window.navigator.permissions.query = (parameters) => (
@@ -602,7 +602,7 @@ class AntiDetectionManager:
                     Promise.resolve({{ state: 'default' }}) :
                     originalQuery(parameters)
             );
-            
+
             // 5. Override Chrome runtime (Chromium detection)
             if (window.chrome) {{
                 Object.defineProperty(window, 'chrome', {{
@@ -621,7 +621,7 @@ class AntiDetectionManager:
                     }}
                 }});
             }}
-            
+
             // 6. WebGL vendor/renderer (realistic)
             const getParameter = WebGLRenderingContext.prototype.getParameter;
             WebGLRenderingContext.prototype.getParameter = function(parameter) {{
@@ -633,7 +633,7 @@ class AntiDetectionManager:
                 }}
                 return getParameter.apply(this, arguments);
             }};
-            
+
             // 7. Canvas fingerprint noise (subtle randomization)
             const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
             HTMLCanvasElement.prototype.toDataURL = function() {{
@@ -648,7 +648,7 @@ class AntiDetectionManager:
                 }}
                 return originalToDataURL.apply(this, arguments);
             }};
-            
+
             // 8. AudioContext fingerprint noise
             const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
             if (OriginalAudioContext) {{
@@ -664,12 +664,12 @@ class AntiDetectionManager:
                     return oscillator;
                 }};
             }}
-            
+
             // 9. Battery API (privacy concern, often blocked)
             if (navigator.getBattery) {{
                 navigator.getBattery = () => Promise.reject(new Error('Battery status not available'));
             }}
-            
+
             // 10. MediaDevices (realistic but privacy-preserving)
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {{
                 const originalEnumerateDevices = navigator.mediaDevices.enumerateDevices;
@@ -682,43 +682,43 @@ class AntiDetectionManager:
                     }}));
                 }};
             }}
-            
+
             // 11. Hardware concurrency (realistic)
             Object.defineProperty(navigator, 'hardwareConcurrency', {{
                 get: () => {self.fingerprint.hardware_concurrency}
             }});
-            
+
             // 12. Device memory (realistic)
             Object.defineProperty(navigator, 'deviceMemory', {{
                 get: () => {self.fingerprint.device_memory}
             }});
-            
+
             // 13. Max touch points
             Object.defineProperty(navigator, 'maxTouchPoints', {{
                 get: () => {self.fingerprint.max_touch_points}
             }});
-            
+
             // 14. Timing attacks prevention (add noise to Date.now and performance.now)
             const originalDateNow = Date.now;
             const timingNoise = Math.random() * 2;
             Date.now = function() {{
                 return originalDateNow() + timingNoise;
             }};
-            
+
             if (window.performance && window.performance.now) {{
                 const originalPerformanceNow = window.performance.now.bind(window.performance);
                 window.performance.now = function() {{
                     return originalPerformanceNow() + timingNoise;
                 }};
             }}
-            
+
             // 15. WebRTC leak prevention (optional, can break some sites)
             // We'll skip this for now to maintain site functionality
-            
+
             console.log('  Anti-detection initialized');
         }})();
         """
-        
+
         try:
             if hasattr(page, 'add_init_script'):
                 # Playwright
@@ -734,26 +734,26 @@ class AntiDetectionManager:
                 logger.debug(" Stealth scripts injected (direct eval)")
         except Exception as e:
             logger.warning(f"  Failed to inject stealth scripts: {e}")
-    
+
     def should_retry_on_detection(self, response_code: int, html: str, url: str = "") -> bool:
         """
         Comprehensive bot detection check
-        
+
         Returns:
             True if bot detection suspected and should retry
         """
         # HTTP-level detection
         if response_code == 403:
-            logger.warning(f" 403 Forbidden - likely bot detection")
+            logger.warning(" 403 Forbidden - likely bot detection")
             return True
-        
+
         if response_code == 429:
-            logger.warning(f" 429 Rate Limited")
+            logger.warning(" 429 Rate Limited")
             return True
-        
+
         # CAPTCHA detection
         html_lower = html.lower()
-        
+
         captcha_indicators = [
             'recaptcha',
             'captcha',
@@ -775,23 +775,23 @@ class AntiDetectionManager:
             'blocked by cloudflare',
             'ray id:',  # Cloudflare
         ]
-        
+
         for indicator in captcha_indicators:
             if indicator in html_lower:
                 logger.warning(f" Bot detection indicator found: '{indicator}'")
                 return True
-        
+
         # Very small page (likely error page)
         if len(html) < 500 and response_code != 200:
             logger.warning(f" Suspiciously small response ({len(html)} bytes)")
             return True
-        
+
         return False
-    
+
     def regenerate_fingerprint(self):
         """Regenerate fingerprint for retry"""
         old_profile = self.profile
-        
+
         # Try a different profile
         if self.profile == 'random':
             # Still random, will pick new one
@@ -799,61 +799,61 @@ class AntiDetectionManager:
         else:
             # Switch to random
             self.profile = 'random'
-        
+
         self.fingerprint = self._generate_fingerprint()
         logger.info(f" Regenerated fingerprint (was: {old_profile}, now: random selection)")
-    
+
     def get_captcha_detection_info(self, html: str) -> Dict[str, Any]:
         """
         Detect what type of CAPTCHA/anti-bot is being used
-        
+
         Returns:
             Dict with detection info for debugging/reporting
         """
         html_lower = html.lower()
-        
+
         detection_info = {
             'detected': False,
             'type': None,
             'indicators': [],
             'recommendations': []
         }
-        
+
         # Check for specific anti-bot services
         if 'recaptcha' in html_lower or 'google.com/recaptcha' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'reCAPTCHA'
             detection_info['indicators'].append('Google reCAPTCHA detected')
             detection_info['recommendations'].append('May need CAPTCHA solving service')
-        
+
         if 'hcaptcha' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'hCaptcha'
             detection_info['indicators'].append('hCaptcha detected')
             detection_info['recommendations'].append('hCaptcha is stricter than reCAPTCHA')
-        
+
         if 'cloudflare' in html_lower or 'cf-browser-verification' in html_lower or 'ray id:' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'Cloudflare'
             detection_info['indicators'].append('Cloudflare challenge detected')
             detection_info['recommendations'].append('Try rotating user agents/IPs')
-        
+
         if 'perimeterx' in html_lower or 'px-captcha' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'PerimeterX'
             detection_info['indicators'].append('PerimeterX detected (advanced bot detection)')
             detection_info['recommendations'].append('PerimeterX is very strict - may need residential proxies')
-        
+
         if 'datadome' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'DataDome'
             detection_info['indicators'].append('DataDome detected (behavioral analysis)')
             detection_info['recommendations'].append('DataDome analyzes mouse movements - humanize required')
-        
+
         if 'imperva' in html_lower or 'incapsula' in html_lower:
             detection_info['detected'] = True
             detection_info['type'] = 'Imperva/Incapsula'
             detection_info['indicators'].append('Imperva Incapsula detected')
             detection_info['recommendations'].append('Enterprise-grade WAF - may require proxies')
-        
+
         return detection_info

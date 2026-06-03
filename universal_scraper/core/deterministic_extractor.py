@@ -11,7 +11,6 @@ import logging
 import re
 from typing import List, Dict, Any, Optional
 from bs4 import BeautifulSoup, Tag
-from datetime import datetime
 
 from .template_spec import TemplateSpec, FieldSelector, NormalizerType, SelectorType
 
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 class DeterministicExtractor:
     """
     Executes template specs deterministically
-    
+
     Features:
     - Runs selectors (CSS/XPath) deterministically
     - Applies normalizers deterministically
@@ -29,11 +28,11 @@ class DeterministicExtractor:
     - Uses fallback selectors if primary fails
     - No LLM calls during extraction
     """
-    
+
     def __init__(self):
         """Initialize deterministic extractor"""
         pass
-    
+
     def extract(
         self,
         html: str,
@@ -41,42 +40,42 @@ class DeterministicExtractor:
     ) -> List[Dict[str, Any]]:
         """
         Extract data using template spec
-        
+
         Args:
             html: HTML content
             template_spec: Template specification
-            
+
         Returns:
             List of extracted items
         """
         soup = BeautifulSoup(html, 'html.parser')
-        
+
         # Validate template spec
         is_valid, errors = template_spec.validate()
         if not is_valid:
             logger.error(f" Invalid template spec: {', '.join(errors)}")
             return []
-        
+
         # Find repeating container (if specified in fingerprint)
         container_selector = template_spec.page_fingerprint_features.get('repeating_element')
-        
+
         if container_selector:
             # Extract from repeating containers
             containers = soup.select(container_selector)
             logger.debug(f"   Found {len(containers)} repeating containers")
-            
+
             items = []
             for container in containers:
                 item = self._extract_item_from_container(container, template_spec.selectors)
                 if item:
                     items.append(item)
-            
+
             return items
         else:
             # Extract single item (no repeating container)
             item = self._extract_item_from_container(soup, template_spec.selectors)
             return [item] if item else []
-    
+
     def _extract_item_from_container(
         self,
         container: Tag,
@@ -84,18 +83,18 @@ class DeterministicExtractor:
     ) -> Optional[Dict[str, Any]]:
         """Extract item from container using selectors"""
         item = {}
-        
+
         for selector_config in selectors:
             field_name = selector_config.field_name
             value = None
-            
+
             # Try primary selector first
             value = self._extract_with_selector(
                 container,
                 selector_config.primary,
                 selector_config.selector_type
             )
-            
+
             # Try fallbacks if primary failed
             if not value and selector_config.fallbacks:
                 for fallback in selector_config.fallbacks:
@@ -107,18 +106,18 @@ class DeterministicExtractor:
                     if value:
                         logger.debug(f"   Used fallback selector for {field_name}")
                         break
-            
+
             # Apply normalizer if value found
             if value and selector_config.normalizer:
                 value = self._apply_normalizer(value, selector_config.normalizer)
-            
+
             # Validate value
             if value and selector_config.validator:
                 is_valid, error = self._validate_value(value, selector_config.validator)
                 if not is_valid:
                     logger.debug(f"   Validation failed for {field_name}: {error}")
                     value = None
-            
+
             # Use default if no value and required
             if not value:
                 if selector_config.required:
@@ -129,13 +128,13 @@ class DeterministicExtractor:
                 # Optional fields can be None
             else:
                 item[field_name] = value
-        
+
         # Check if item has at least one non-None value
         if any(v is not None for v in item.values()):
             return item
-        
+
         return None
-    
+
     def _extract_with_selector(
         self,
         container: Tag,
@@ -150,7 +149,7 @@ class DeterministicExtractor:
                     # Get text from first element
                     text = elements[0].get_text(strip=True)
                     return text if text else None
-            
+
             elif selector_type == SelectorType.XPATH:
                 # XPath support (requires lxml)
                 try:
@@ -165,7 +164,7 @@ class DeterministicExtractor:
                 except ImportError:
                     logger.warning("  lxml not available, XPath selectors not supported")
                     return None
-            
+
             elif selector_type == SelectorType.ATTRIBUTE:
                 # Extract attribute value
                 if '[' in selector and ']' in selector:
@@ -183,20 +182,20 @@ class DeterministicExtractor:
                                 if attr_val:
                                     return attr_val
                 return None
-            
+
             elif selector_type == SelectorType.TEXT:
                 # Text-based matching (regex or contains)
                 text = container.get_text()
                 if re.search(selector, text, re.IGNORECASE):
                     return text
                 return None
-            
+
         except Exception as e:
             logger.debug(f"   Selector extraction failed: {selector} - {e}")
             return None
-        
+
         return None
-    
+
     def _apply_normalizer(self, value: str, normalizer: NormalizerType) -> Any:
         """Apply normalizer to value"""
         if normalizer == NormalizerType.PARSE_CURRENCY:
@@ -208,7 +207,7 @@ class DeterministicExtractor:
                 except ValueError:
                     return value
             return value
-        
+
         elif normalizer == NormalizerType.PARSE_NUMBER:
             # Extract number
             match = re.search(r'(\d+\.?\d*)', str(value))
@@ -218,46 +217,46 @@ class DeterministicExtractor:
                 except ValueError:
                     return value
             return value
-        
+
         elif normalizer == NormalizerType.PARSE_DATE:
             # Basic date parsing (can be enhanced)
             # For now, return as-is
             return value
-        
+
         elif normalizer == NormalizerType.STRIP_WHITESPACE:
             return str(value).strip()
-        
+
         elif normalizer == NormalizerType.REMOVE_HTML:
             soup = BeautifulSoup(str(value), 'html.parser')
             return soup.get_text(strip=True)
-        
+
         elif normalizer == NormalizerType.EXTRACT_TEXT:
             soup = BeautifulSoup(str(value), 'html.parser')
             return soup.get_text(strip=True)
-        
+
         return value
-    
+
     def _validate_value(self, value: Any, validator: Dict[str, Any]) -> tuple[bool, Optional[str]]:
         """Validate value against validator rules"""
         # Check required
         if validator.get('required', False) and not value:
             return (False, "required field is empty")
-        
+
         # Check min_length
         if 'min_length' in validator:
             if isinstance(value, str) and len(value) < validator['min_length']:
                 return (False, f"value too short (min: {validator['min_length']})")
-        
+
         # Check max_length
         if 'max_length' in validator:
             if isinstance(value, str) and len(value) > validator['max_length']:
                 return (False, f"value too long (max: {validator['max_length']})")
-        
+
         # Check regex
         if 'regex' in validator:
             if isinstance(value, str) and not re.search(validator['regex'], value):
                 return (False, "value doesn't match regex pattern")
-        
+
         # Check min/max (for numbers)
         if 'min' in validator:
             try:
@@ -266,7 +265,7 @@ class DeterministicExtractor:
                     return (False, f"value below minimum ({validator['min']})")
             except (ValueError, TypeError):
                 pass
-        
+
         if 'max' in validator:
             try:
                 num_value = float(value)
@@ -274,7 +273,7 @@ class DeterministicExtractor:
                     return (False, f"value above maximum ({validator['max']})")
             except (ValueError, TypeError):
                 pass
-        
+
         return (True, None)
 
 

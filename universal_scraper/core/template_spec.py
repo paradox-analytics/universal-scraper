@@ -61,7 +61,7 @@ class PaginationConfig:
 class TemplateSpec:
     """
     Template specification for deterministic extraction
-    
+
     This is what the LLM generates (JSON), and the runtime extractor executes.
     """
     template_id: str
@@ -72,7 +72,7 @@ class TemplateSpec:
     why_these_selectors: str = ""  # LLM reasoning (for debugging)
     version: int = 1
     created_at: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary (for JSON serialization)"""
         return {
@@ -98,7 +98,7 @@ class TemplateSpec:
             'version': self.version,
             'created_at': self.created_at
         }
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TemplateSpec':
         """Create from dictionary"""
@@ -116,11 +116,11 @@ class TemplateSpec:
             )
             for s in data.get('selectors', [])
         ]
-        
+
         pagination = None
         if data.get('pagination'):
             pagination = PaginationConfig(**data['pagination'])
-        
+
         return cls(
             template_id=data['template_id'],
             page_fingerprint_features=data.get('page_fingerprint_features', {}),
@@ -131,36 +131,36 @@ class TemplateSpec:
             version=data.get('version', 1),
             created_at=data.get('created_at')
         )
-    
+
     def to_json(self) -> str:
         """Serialize to JSON string"""
         return json.dumps(self.to_dict(), indent=2)
-    
+
     @classmethod
     def from_json(cls, json_str: str) -> 'TemplateSpec':
         """Deserialize from JSON string"""
         data = json.loads(json_str)
         return cls.from_dict(data)
-    
+
     def validate(self) -> tuple[bool, List[str]]:
         """
         Validate template spec
-        
+
         Returns:
             (is_valid, errors)
         """
         errors = []
-        
+
         if not self.template_id:
             errors.append("template_id is required")
-        
+
         if not self.selectors:
             errors.append("at least one selector is required")
-        
+
         for selector in self.selectors:
             if not selector.primary:
                 errors.append(f"selector for {selector.field_name} missing primary selector")
-        
+
         return (len(errors) == 0, errors)
 
 
