@@ -1,0 +1,112 @@
+[
+  {
+    "url": "https://news.ycombinator.com",
+    "fields": [
+      "title",
+      "points",
+      "url"
+    ],
+    "type": "forum",
+    "description": "Hacker News - Forum/List layout",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.amazon.com/s?k=laptop",
+    "fields": [
+      "title",
+      "price",
+      "rating"
+    ],
+    "type": "ecommerce",
+    "description": "Amazon - E-commerce layout",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+    "fields": [
+      "title",
+      "price",
+      "condition"
+    ],
+    "type": "ecommerce",
+    "description": "eBay - E-commerce layout (similar to Amazon)",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://reddit.com/r/python",
+    "fields": [
+      "title",
+      "upvotes",
+      "url"
+    ],
+    "type": "forum",
+    "description": "Reddit - Forum/List layout (similar to HN)",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://github.com/trending",
+    "fields": [
+      "name",
+      "description",
+      "stars"
+    ],
+    "type": "listing",
+    "description": "GitHub - Repository listing",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.producthunt.com",
+    "fields": [
+      "name",
+      "tagline",
+      "upvotes"
+    ],
+    "type": "listing",
+    "description": "Product Hunt - Product listing",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://stackoverflow.com/questions",
+    "fields": [
+      "title",
+      "votes",
+      "answers"
+    ],
+    "type": "forum",
+    "description": "Stack Overflow - Q&A forum (similar to Reddit/HN)",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.etsy.com/search?q=handmade",
+    "fields": [
+      "title",
+      "price",
+      "seller"
+    ],
+    "type": "ecommerce",
+    "description": "Etsy - E-commerce (similar to Amazon/eBay)",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.imdb.com/chart/top",
+    "fields": [
+      "title",
+      "rating",
+      "year"
+    ],
+    "type": "listing",
+    "description": "IMDB - Movie listing",
+    "error": "unhashable type: 'slice'"
+  },
+  {
+    "url": "https://www.yelp.com/search?find_desc=restaurants",
+    "fields": [
+      "name",
+      "rating",
+      "price"
+    ],
+    "type": "listing",
+    "description": "Yelp - Business listing",
+    "error": "unhashable type: 'slice'"
+  }
+]

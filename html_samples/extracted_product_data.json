@@ -1,0 +1,209 @@
+{
+  "json_ld": {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "GE 27 cu. ft. French Door Refrigerator in Fingerprint Resistant Stainless with Internal Dispenser, ENERGY STAR GNE27JYMFS",
+    "image": [
+      "https://images.thdstatic.com/productImages/2b401aec-6a63-4509-9069-1261b321bc3d/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-64_100.jpg",
+      "https://images.thdstatic.com/productImages/f01cb047-d162-419d-a04b-f04d3a3d4718/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-e1_100.jpg",
+      "https://images.thdstatic.com/productImages/d02600db-4ab8-46aa-9fd1-886ed61916b7/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-40_100.jpg",
+      "https://images.thdstatic.com/productImages/36c0924a-f92e-4d61-9eca-da93cd18930f/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-a0_100.jpg",
+      "https://images.thdstatic.com/productImages/9597a089-6b20-41fc-9386-4158008c7185/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-1d_100.jpg",
+      "https://images.thdstatic.com/productImages/ccc76e00-2c86-4c8f-91f8-d8e3640f7225/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-66_100.jpg",
+      "https://images.thdstatic.com/productImages/cef4518c-d2d9-42d6-8b3b-0ec4fab84ddd/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-c3_100.jpg",
+      "https://images.thdstatic.com/productImages/76835fcb-626f-4558-82ea-befc9fc10c14/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-4f_100.jpg",
+      "https://images.thdstatic.com/productImages/a9bba201-9496-425e-9b0c-75ee2be79519/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-1f_100.jpg",
+      "https://images.thdstatic.com/productImages/0674b531-2a4d-4408-8486-15feed80b1d2/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-44_100.jpg",
+      "https://images.thdstatic.com/productImages/406047bf-2f7b-4954-b340-8fda7ad3cc31/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-fa_100.jpg",
+      "https://images.thdstatic.com/productImages/46159f26-f8c0-4087-a3e9-062614f82a9f/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-76_100.jpg",
+      "https://images.thdstatic.com/productImages/ca71dd30-d7f9-4b12-95a6-4be3c1341e2b/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-d4_100.jpg",
+      "https://images.thdstatic.com/productImages/75dddb71-f321-4b1a-83c0-785770dd24d0/svn/fingerprint-resistant-stainless-steel-ge-french-door-refrigerators-gne27jymfs-31_100.jpg"
+    ],
+    "description": "At GE Appliances, we bring good things to life, by designing and building the world's best appliances. Our goal is to help people improve their lives at home by providing quality appliances that were made for real life. Whether it's enjoying the tradition of making meals from scratch or tackling a mountain of muddy jeans and soccer jerseys, GE Appliances are crafted to support any and every task in the home.",
+    "productID": "320243591",
+    "sku": "1007730316",
+    "gtin13": "0084691853800",
+    "model": "GNE27JYMFS",
+    "depth": "33.375 in",
+    "height": "69.875 in",
+    "width": "35.75 in",
+    "color": "Fingerprint Resistant Stainless Steel",
+    "weight": "",
+    "brand": {
+      "@type": "Brand",
+      "name": "GE"
+    },
+    "hasCertification": {
+      "@type": "Certification",
+      "issuedBy": {
+        "@type": "Organization",
+        "name": "Energy Star"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.5",
+      "reviewCount": 13406
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://www.homedepot.com/p/GE-27-cu-ft-French-Door-Refrigerator-in-Fingerprint-Resistant-Stainless-with-Internal-Dispenser-ENERGY-STAR-GNE27JYMFS/320243591",
+      "priceCurrency": "USD",
+      "price": 1499,
+      "priceValidUntil": "01/09/2026",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "priceType": "https://schema.org/StrikethroughPrice",
+        "price": 2599,
+        "priceCurrency": "USD"
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "US",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted"
+      }
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "DIANE"
+        },
+        "headline": null,
+        "reviewBody": "Love this refrigerator! It\u2019s spacious and looks beautiful in our kitchen. The stainless looks great and it truly is fingerprint resistant. The led lights are very bright and makes it easy to see everything inside. Well laid out shelves and drawers that are easy to adjust to your needs. Excellent value for the price (got it on a special buy)."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "HomeDepotCustomer"
+        },
+        "headline": null,
+        "reviewBody": "Best refrigerator I've ever owned, maybe because it is so big! I love having the water inside the door. The ice maker makes a ton of ice. We used to run out all the time with our old frig. It is also very quiet. It is the perfect refrigerator for a big, hungry family"
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 4,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "DLaws1"
+        },
+        "headline": "Mostly good.",
+        "reviewBody": "Pros: Overall look is great. Easy to clean. Plenty of space. Cools well.\nCons: The proximity sensor on the freezer drawer could be more sensitive. It can be open enough for food to thaw and not set off the alarm. The ice maker went out in less than 2 years."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 4,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "HomeDepotCustomer"
+        },
+        "headline": null,
+        "reviewBody": "The fridge doors are slightly uneven"
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "TamN"
+        },
+        "headline": "Storage galore",
+        "reviewBody": "[This review was collected as part of a promotion.] Very spacious in both the fridge and the freezer. I love the simple sleek design. There is more space than I can fill lol"
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Horse Girl 11"
+        },
+        "headline": "So far, so good!",
+        "reviewBody": "[This review was collected as part of a promotion.] Did a lot of research...wanted a refrigerator that was as domestically produced as possible."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 3,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Cher3248"
+        },
+        "headline": "Water dispenser",
+        "reviewBody": "[This review was collected as part of a promotion.] The spout on the water dispenser is, for the lack of a better term, aimed in the wrong direction. I\u2019d expect it to be pointed out, away from the interior wall. \n\nI\u2019ve attempted to spin it around to no avail. And, trying to bend the cold, hard plastic tube seems like it\u2019s simply going to snap off."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Doug8888"
+        },
+        "headline": "A well thought out design",
+        "reviewBody": "[This review was collected as part of a promotion.] This unit makes it easy to store all food you use and to see its location. We are able to keep fresher food as a result. A well thought out design. We have not had to clean this refrigerator yet. However, it looks easy enough."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 5,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Kevbo535"
+        },
+        "headline": "A better model",
+        "reviewBody": "[This review was collected as part of a promotion.] I replaced my GE  27 cft with this. Big difference is ice/water are out side of door. This gives me more refrigerator space and less freezer space.\nI have a refrigerator in the kitchen, and this is in my garage. So ice is replaced with frozen food for me.  A better model, and well thought out.\nI think this is well thought out."
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": 1,
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Dsmith"
+        },
+        "headline": "Have had for one year and it has not worked the entire time!",
+        "reviewBody": "This refrigerator continually freezes my food. I\u2019ve had it one year and have lost hundreds of dollars in produce. Despite frequently speaking to customer support about this and multiple house calls the refrigerator has not been fixed and they seem to be pushing out \u201crepairs\u201d right up to the expiration of the one year warranty that comes with the refrigerator. I wouldn\u2019t recommend this refrigerator nor any GE appliance for that matter. I\u2019m now on a fixed income in retirement so it\u2019s very unfortunate that I will need to consider a whole new set up appliances (the microwave I got also stopped working at the one year mark)."
+      }
+    ]
+  }
+}

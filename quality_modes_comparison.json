@@ -1,0 +1,103 @@
+{
+  "url": "https://www.amazon.com/s?k=laptop",
+  "fields": [
+    "product_title",
+    "price",
+    "rating"
+  ],
+  "results": {
+    "conservative": {
+      "count": 24,
+      "avg_fill_rate": 100.0,
+      "sample_items": [
+        {
+          "product_title": "Apple 2025 MacBook Laptop",
+          "price": 1445.0,
+          "rating": 4.6
+        },
+        {
+          "product_title": "SGIN 15.6 Inch Laptop, 16GB RAM 1024GB SSD, Laptops Computers Celeron N5100, Win 11, Portable Notebook, 7000mAh, WiFi 6, 180\u00b0 Open Angle, USB 3.2, for Business and Students",
+          "price": 329.99,
+          "rating": 4.8
+        },
+        {
+          "product_title": "Lenovo ThinkPad E14 (Up Fingerprint)",
+          "price": 239.99,
+          "rating": 4.4
+        },
+        {
+          "product_title": "Apple 2025 MacBook 13-inch Laptop",
+          "price": 749.0,
+          "rating": 4.8
+        },
+        {
+          "product_title": "Product Title Example",
+          "price": 19.99,
+          "rating": 4.5
+        }
+      ]
+    },
+    "balanced": {
+      "count": 81,
+      "avg_fill_rate": 75.7201646090535,
+      "sample_items": [
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 256GB Storage, Black, Amazon Exclusive",
+          "price": null,
+          "rating": "4.4 out of 5 stars"
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 256GB Storage, Black, Amazon Exclusive",
+          "price": null,
+          "rating": 4.4
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 1TB Storage, Black",
+          "price": null,
+          "rating": "4.5 out of 5 stars"
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 1TB Storage, Black",
+          "price": null,
+          "rating": 4.5
+        },
+        {
+          "product_title": "Microsoft Surface Laptop (2024), Windows 11 Copilot+ PC, 13.8\" Touchscreen Display, Snapdragon X Elite (12 core), 32GB RAM, 1TB SSD Storage, Black",
+          "price": null,
+          "rating": "4.3 out of 5 stars"
+        }
+      ]
+    },
+    "aggressive": {
+      "count": 246,
+      "avg_fill_rate": 48.1029810298103,
+      "sample_items": [
+        {
+          "product_title": "Unplug From The Wall, Longer",
+          "price": null,
+          "rating": null
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 256GB Storage, Black, Amazon Exclusive",
+          "price": null,
+          "rating": "4.4 out of 5 stars"
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 256GB Storage, Black, Amazon Exclusive",
+          "price": null,
+          "rating": 4.4
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 1TB Storage, Black",
+          "price": null,
+          "rating": "4.5 out of 5 stars"
+        },
+        {
+          "product_title": "Microsoft Surface Pro 2-in-1 Laptop/Tablet (2024), Windows 11 Copilot+ PC, 13\" Touchscreen OLED Display, Snapdragon X Elite (12 Core), 16GB RAM, 1TB Storage, Black",
+          "price": null,
+          "rating": 4.5
+        }
+      ]
+    }
+  }
+}

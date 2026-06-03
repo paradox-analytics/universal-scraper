@@ -1,0 +1,2815 @@
+{
+  "garbage_in_raw": [],
+  "garbage_in_cleaned": [],
+  "json_sources": [
+    "json-ld",
+    "inline-json"
+  ],
+  "json_data_sample": [
+    {
+      "_framework": "json-ld",
+      "_data": [
+        [
+          {
+            "@context": "http://schema.org",
+            "@id": "https://www.producthunt.com/#organization",
+            "@type": "Organization",
+            "name": "Product Hunt",
+            "url": "https://www.producthunt.com/",
+            "logo": "https://ph-static.imgix.net/ph-logo-p-only.png?auto=format&auto=compress",
+            "sameAs": [
+              "https://medium.com/@producthunt",
+              "https://angel.co/product-hunt",
+              "https://www.linkedin.com/company/9107952",
+              "https://www.facebook.com/producthunt",
+              "https://www.x.com/ProductHunt"
+            ]
+          },
+          {
+            "@context": "http://schema.org",
+            "@id": "https://www.producthunt.com/#webpage",
+            "@type": "WebPage",
+            "url": "https://www.producthunt.com/",
+            "name": "Product Hunt"
+          },
+          {
+            "@context": "http://schema.org",
+            "@id": "https://www.producthunt.com/#website",
+            "@type": "WebSite",
+            "url": "https://www.producthunt.com/",
+            "name": "Product Hunt",
+            "potentialAction": [
+              {
+                "@type": "SearchAction",
+                "target": "https://www.producthunt.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            ]
+          }
+        ]
+      ],
+      "_paths": []
+    },
+    {
+      "_framework": "inline",
+      "_data": [
+        {
+          "id": "2d3c0806-9519-4459-bb44-d1e1ad270c02",
+          "emoji": null,
+          "duration": 1,
+          "__typename": "VisitStreak"
+        },
+        {
+          "hasNewsletterSubscription": false,
+          "__typename": "ViewerNewsletterSettings"
+        },
+        {
+          "id": "8bac0ef1-9cb2-4eef-b5c9-44630e925f9d",
+          "emoji": null,
+          "duration": 1,
+          "__typename": "VisitStreak"
+        },
+        {
+          "hasNewsletterSubscription": false,
+          "__typename": "ViewerNewsletterSettings"
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"items\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "Post",
+              "id": "1055027",
+              "name": "VibrantSnap",
+              "slug": "vibrantsnap-4",
+              "tagline": "Create & Share Videos That Convert",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "574211",
+                "slug": "vibrantsnap",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "b01bdbe9-1f7b-4c43-af63-1f326da2e0c4.jpeg",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1055027",
+              "dailyRank": "1",
+              "weeklyRank": "21",
+              "monthlyRank": "347",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "44",
+                      "slug": "design-tools",
+                      "name": "Design Tools"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "71",
+                      "slug": "sales",
+                      "name": "Sales"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 255,
+              "launchDayScore": 255,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T15:12:37-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 13
+            },
+            {
+              "__typename": "Post",
+              "id": "1053533",
+              "name": "Tweny",
+              "slug": "tweny",
+              "tagline": "Focus timer that actually cares about your eyes",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1140762",
+                "slug": "tweny-eye-health-focus-timer",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "b261fabc-6b20-4da5-8724-2a799af6f96a.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1053533",
+              "dailyRank": "2",
+              "weeklyRank": "26",
+              "monthlyRank": "344",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "8",
+                      "slug": "ios",
+                      "name": "iOS"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "43",
+                      "slug": "health-fitness",
+                      "name": "Health & Fitness"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 210,
+              "launchDayScore": 209,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T15:03:55-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 11
+            },
+            {
+              "__typename": "Post",
+              "id": "1053802",
+              "name": "HMPL",
+              "slug": "hmpl-3",
+              "tagline": "Lightweight server-oriented template language for JavaScript",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1071609",
+                "slug": "hmpl-js",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "b2cf769e-5a71-46dd-b9ce-97029e5b935f.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1053802",
+              "dailyRank": "3",
+              "weeklyRank": "29",
+              "monthlyRank": "350",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "89",
+                      "slug": "open-source",
+                      "name": "Open Source"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "267",
+                      "slug": "developer-tools",
+                      "name": "Developer Tools"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "272",
+                      "slug": "github",
+                      "name": "GitHub"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 188,
+              "launchDayScore": 188,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:55:49-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 6
+            },
+            {
+              "__typename": "Post",
+              "id": "1054036",
+              "name": "Kardy",
+              "slug": "kardy",
+              "tagline": "The most funnest group card eva (typos included)",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1141200",
+                "slug": "kardy",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "a2bc55b2-7966-484d-83f1-248e11c5af64.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1054036",
+              "dailyRank": "4",
+              "weeklyRank": "35",
+              "monthlyRank": "343",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "60",
+                      "slug": "messaging",
+                      "name": "Messaging"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "570",
+                      "slug": "business",
+                      "name": "Business"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "600",
+                      "slug": "entertainment",
+                      "name": "Entertainment"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 158,
+              "launchDayScore": 158,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:47:31-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 5
+            },
+            {
+              "__typename": "Ad",
+              "id": "32709",
+              "channelKind": "feed_mega",
+              "smallAssetUuid": "e75d98e9-9dbc-460e-b307-242b79f0d353.jpeg",
+              "largeAssetUuid": "fd025b96-99b0-46a7-9878-2fc66904cbd0.jpeg",
+              "subject": "Channel",
+              "post": null,
+              "name": "AWS",
+              "tagline": "TBD",
+              "thumbnailUuid": "6291c442-72cc-485f-9a00-687e3314b217.jpeg",
+              "url": "/r/ad/32709",
+              "variationId": null
+            },
+            {
+              "__typename": "Post",
+              "id": "1055185",
+              "name": "Linkeddit",
+              "slug": "linkeddit-2",
+              "tagline": "Find Your Next Customers on Reddit Who Are Ready To Buy Now",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1012297",
+                "slug": "linkeddit",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "18617b3a-0b92-436a-905e-c9955dd4d3d6.gif",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1055185",
+              "dailyRank": "5",
+              "weeklyRank": "40",
+              "monthlyRank": "4403",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "71",
+                      "slug": "sales",
+                      "name": "Sales"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "164",
+                      "slug": "marketing",
+                      "name": "Marketing"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "283",
+                      "slug": "reddit",
+                      "name": "reddit"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 131,
+              "launchDayScore": 131,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:47:59-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 13
+            },
+            {
+              "__typename": "Post",
+              "id": "1054813",
+              "name": "Meetings Wrapped",
+              "slug": "meetings-wrapped",
+              "tagline": "Meetings that could have been emails analyzed & visualized.",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1141893",
+                "slug": "meetings-wrapped",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "0aed0f16-2f41-43a0-b5b1-4d06be7545da.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1054813",
+              "dailyRank": "6",
+              "weeklyRank": "41",
+              "monthlyRank": "352",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "88",
+                      "slug": "api-1",
+                      "name": "API"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "252",
+                      "slug": "meetings",
+                      "name": "Meetings"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 124,
+              "launchDayScore": 124,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T15:02:07-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 5
+            },
+            {
+              "__typename": "Post",
+              "id": "1055022",
+              "name": "Optivault",
+              "slug": "optivault",
+              "tagline": "AI financial advisor that optimizes your money and budget.",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1142084",
+                "slug": "optivault-ai-financial-advisor-app",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "3bd0208d-3870-4f9a-92e9-81eb27b35262.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1055022",
+              "dailyRank": "7",
+              "weeklyRank": "53",
+              "monthlyRank": "7072",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "94",
+                      "slug": "fintech",
+                      "name": "Fintech"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "792",
+                      "slug": "personal-finance",
+                      "name": "Personal Finance"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 106,
+              "launchDayScore": 106,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:07-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 6
+            },
+            {
+              "__typename": "Post",
+              "id": "1055147",
+              "name": "StandBy Mode Pro",
+              "slug": "standby-mode-pro",
+              "tagline": "Turn your Android into a Smart Display while charging",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1142198",
+                "slug": "standby-mode-pro",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "7a634373-9490-494f-92ec-5f9a101a1e02.png",
+              "featuredAt": "2025-12-28T00:01:00-08:00",
+              "scheduledAt": "2025-12-28T00:01:00-08:00",
+              "createdAt": "2025-12-28T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1055147",
+              "dailyRank": "8",
+              "weeklyRank": "64",
+              "monthlyRank": null,
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "2",
+                      "slug": "android",
+                      "name": "Android"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "352",
+                      "slug": "tech",
+                      "name": "Tech"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 72,
+              "launchDayScore": 72,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:07-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 6
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"items\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "Post",
+              "id": "1054380",
+              "name": "Product Hunt Wrapped 2025",
+              "slug": "product-hunt-wrapped-2025",
+              "tagline": "Your 2025 maker journey, visualized.",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1141496",
+                "slug": "product-hunt-wrapped-2025",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "356e0f01-273c-43ea-b14d-671f15fb8c39.jpeg",
+              "featuredAt": "2025-12-27T00:01:00-08:00",
+              "scheduledAt": "2025-12-27T00:01:00-08:00",
+              "createdAt": "2025-12-27T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1054380",
+              "dailyRank": "1",
+              "weeklyRank": "12",
+              "monthlyRank": "56",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "267",
+                      "slug": "developer-tools",
+                      "name": "Developer Tools"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "276",
+                      "slug": "product-hunt",
+                      "name": "Product Hunt"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "371",
+                      "slug": "maker-tools",
+                      "name": "Maker Tools"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 355,
+              "launchDayScore": 335,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:08-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 31
+            },
+            {
+              "__typename": "Post",
+              "id": "1053528",
+              "name": "Memingo",
+              "slug": "memingo",
+              "tagline": "Let AI Make the Memes for You, Create & Share Instantly",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "886145",
+                "slug": "memingo-make-memes-fast",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "8aa2f23f-091c-48a2-9516-163ec8c684f6.png",
+              "featuredAt": "2025-12-27T00:01:00-08:00",
+              "scheduledAt": "2025-12-27T00:01:00-08:00",
+              "createdAt": "2025-12-27T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1053528",
+              "dailyRank": "2",
+              "weeklyRank": "16",
+              "monthlyRank": "96",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "2",
+                      "slug": "android",
+                      "name": "Android"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "42",
+                      "slug": "funny",
+                      "name": "Funny"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "44",
+                      "slug": "design-tools",
+                      "name": "Design Tools"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 265,
+              "launchDayScore": 248,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:08-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 19
+            },
+            {
+              "__typename": "Post",
+              "id": "1054771",
+              "name": "ZapZipped",
+              "slug": "zapzipped-3",
+              "tagline": "Your WhatsApp groups, wrapped - now with DNA & top moments",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "851997",
+                "slug": "zapzipped",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "ea2959e7-881f-4570-a3b4-80ea287a67e7.png",
+              "featuredAt": "2025-12-27T00:01:00-08:00",
+              "scheduledAt": "2025-12-27T00:01:00-08:00",
+              "createdAt": "2025-12-27T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1054771",
+              "dailyRank": "3",
+              "weeklyRank": "24",
+              "monthlyRank": "111",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "60",
+                      "slug": "messaging",
+                      "name": "Messaging"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "104",
+                      "slug": "social-media",
+                      "name": "Social Media"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "582",
+                      "slug": "data-analytics",
+                      "name": "Data & Analytics"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 218,
+              "launchDayScore": 212,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:09-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 9
+            },
+            {
+              "__typename": "Post",
+              "id": "1053317",
+              "name": "Alpie Core",
+              "slug": "alpie-core",
+              "tagline": "A 4-bit reasoning model with frontier-level performance",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1140579",
+                "slug": "alpie-core",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "888a8810-009b-451e-a25b-5866bee9f596.svg",
+              "featuredAt": "2025-12-27T00:01:00-08:00",
+              "scheduledAt": "2025-12-27T00:01:00-08:00",
+              "createdAt": "2025-12-27T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1053317",
+              "dailyRank": "4",
+              "weeklyRank": "30",
+              "monthlyRank": "143",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "88",
+                      "slug": "api-1",
+                      "name": "API"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "267",
+                      "slug": "developer-tools",
+                      "name": "Developer Tools"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 183,
+              "launchDayScore": 177,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:09-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 9
+            },
+            {
+              "__typename": "Ad",
+              "id": "32182",
+              "channelKind": "feed",
+              "smallAssetUuid": null,
+              "largeAssetUuid": null,
+              "subject": "Channel",
+              "post": null,
+              "name": "Learn with AWS",
+              "tagline": "AWS Builder Center",
+              "thumbnailUuid": "9e59ba13-b679-4cd9-9929-aa7974d3752e.jpeg",
+              "url": "/r/ad/32182",
+              "variationId": null
+            },
+            {
+              "__typename": "Post",
+              "id": "1054968",
+              "name": "Xteink X4",
+              "slug": "xteink-x4",
+              "tagline": "Ultra light, magnetic E-reader that attaches to your phone",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1142031",
+                "slug": "xteink-x4",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "3915bd36-1cd6-4aa1-b5aa-8432d1e1e4f8.jpeg",
+              "featuredAt": "2025-12-27T00:01:00-08:00",
+              "scheduledAt": "2025-12-27T00:01:00-08:00",
+              "createdAt": "2025-12-27T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1054968",
+              "dailyRank": "5",
+              "weeklyRank": "36",
+              "monthlyRank": "175",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "17",
+                      "slug": "ebook-reader",
+                      "name": "eBook Reader"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "125",
+                      "slug": "hardware",
+                      "name": "Hardware"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "354",
+                      "slug": "books",
+                      "name": "Books"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 156,
+              "launchDayScore": 152,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:10-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 4
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"items\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "Post",
+              "id": "1050863",
+              "name": "Loki.Build",
+              "slug": "loki-build-2",
+              "tagline": "Design and ship studio-grade landing pages with AI",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1138365",
+                "slug": "loki-build-2",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "31190e29-2efa-4b81-aea0-dd95b5087344.png",
+              "featuredAt": "2025-12-19T00:01:00-08:00",
+              "scheduledAt": "2025-12-19T00:01:00-08:00",
+              "createdAt": "2025-12-19T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1050863",
+              "dailyRank": "1",
+              "weeklyRank": "1",
+              "monthlyRank": "2",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "243",
+                      "slug": "website-builder",
+                      "name": "Website Builder"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "470",
+                      "slug": "no-code",
+                      "name": "No-Code"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 702,
+              "launchDayScore": 573,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:44:10-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 113
+            },
+            {
+              "__typename": "Post",
+              "id": "1050622",
+              "name": "hq0",
+              "slug": "hq0",
+              "tagline": "Host meetings on your website instead of Zoom or Google Meet",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1138138",
+                "slug": "hq0",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "a2c44981-f351-45b1-a4cc-ebd7605585ba.png",
+              "featuredAt": "2025-12-20T00:01:00-08:00",
+              "scheduledAt": "2025-12-20T00:01:00-08:00",
+              "createdAt": "2025-12-20T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1050622",
+              "dailyRank": "1",
+              "weeklyRank": "2",
+              "monthlyRank": "13",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "34",
+                      "slug": "chrome-extensions",
+                      "name": "Chrome Extensions"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "237",
+                      "slug": "saas",
+                      "name": "SaaS"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 545,
+              "launchDayScore": 421,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:03-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 64
+            },
+            {
+              "__typename": "Post",
+              "id": "1048744",
+              "name": "Unloop",
+              "slug": "unloop-2",
+              "tagline": "Visual pattern mapping for adhd & neurodivergent minds",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1136436",
+                "slug": "unloop-2",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "1525910f-eed0-4577-b544-ac1ed3d30a5b.png",
+              "featuredAt": "2025-12-15T00:01:00-08:00",
+              "scheduledAt": "2025-12-15T00:01:00-08:00",
+              "createdAt": "2025-12-15T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1048744",
+              "dailyRank": "1",
+              "weeklyRank": "3",
+              "monthlyRank": "16",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "43",
+                      "slug": "health-fitness",
+                      "name": "Health & Fitness"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "364",
+                      "slug": "quantified-self",
+                      "name": "Quantified Self"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 516,
+              "launchDayScore": 420,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:04-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 69
+            },
+            {
+              "__typename": "Post",
+              "id": "1051091",
+              "name": "ChatGPT Images",
+              "slug": "chatgpt-images",
+              "tagline": "Powered by GPT Image 1.5: Faster, smarter, precise",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "594550",
+                "slug": "openai",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "f904aec8-e324-4aed-ae3b-ff68795ce44f.png",
+              "featuredAt": "2025-12-17T00:01:00-08:00",
+              "scheduledAt": "2025-12-17T00:01:00-08:00",
+              "createdAt": "2025-12-17T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1051091",
+              "dailyRank": "1",
+              "weeklyRank": "4",
+              "monthlyRank": "21",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "88",
+                      "slug": "api-1",
+                      "name": "API"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "860",
+                      "slug": "photo-editing",
+                      "name": "Photo editing"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 478,
+              "launchDayScore": 416,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:05-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 16
+            },
+            {
+              "__typename": "Ad",
+              "id": "32776",
+              "channelKind": "feed",
+              "smallAssetUuid": null,
+              "largeAssetUuid": null,
+              "subject": "Channel",
+              "post": {
+                "__typename": "Post",
+                "id": "558336",
+                "slug": "universal-2",
+                "name": "Universal 2",
+                "updatedAt": "2025-12-28T14:32:01-08:00",
+                "commentsCount": 12,
+                "topics": {
+                  "__typename": "TopicConnection",
+                  "edges": [
+                    {
+                      "__typename": "TopicEdge",
+                      "node": {
+                        "__typename": "Topic",
+                        "id": "88",
+                        "slug": "api-1",
+                        "name": "API"
+                      }
+                    },
+                    {
+                      "__typename": "TopicEdge",
+                      "node": {
+                        "__typename": "Topic",
+                        "id": "267",
+                        "slug": "developer-tools",
+                        "name": "Developer Tools"
+                      }
+                    },
+                    {
+                      "__typename": "TopicEdge",
+                      "node": {
+                        "__typename": "Topic",
+                        "id": "268",
+                        "slug": "artificial-intelligence",
+                        "name": "Artificial Intelligence"
+                      }
+                    }
+                  ]
+                },
+                "featuredComment": null,
+                "product": {
+                  "__typename": "Product",
+                  "id": "379824",
+                  "slug": "assemblyai",
+                  "isSubscribed": false
+                },
+                "hideVotesCount": false,
+                "featuredAt": "2024-10-31T00:01:00-07:00",
+                "createdAt": "2024-10-31T00:01:00-07:00",
+                "disabledWhenScheduled": true,
+                "embargoPreviewAt": null,
+                "latestScore": 837,
+                "launchDayScore": 794,
+                "hasVoted": false
+              },
+              "name": "AssemblyAI",
+              "tagline": "Build Voice AI Apps With One API",
+              "thumbnailUuid": "fa11ba89-b696-4dd4-bc26-6890ed141441.png",
+              "url": "/r/ad/32776",
+              "variationId": null
+            },
+            {
+              "__typename": "Post",
+              "id": "1051282",
+              "name": "NOIZ AI",
+              "slug": "noiz-ai-3",
+              "tagline": "Use emoji to to voice season's greetings with emotion",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "902548",
+                "slug": "noiz-studio",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "9e2393ae-8f49-438e-8c01-a9f0e0d485e6.jpeg",
+              "featuredAt": "2025-12-20T00:01:00-08:00",
+              "scheduledAt": "2025-12-20T00:01:00-08:00",
+              "createdAt": "2025-12-20T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1051282",
+              "dailyRank": "2",
+              "weeklyRank": "5",
+              "monthlyRank": "33",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "45",
+                      "slug": "emoji",
+                      "name": "Emoji"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "471",
+                      "slug": "audio",
+                      "name": "Audio"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 407,
+              "launchDayScore": 403,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:06-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 75
+            },
+            {
+              "__typename": "Post",
+              "id": "1049998",
+              "name": "NexaSDK for Mobile",
+              "slug": "nexasdk-for-mobile",
+              "tagline": "Easiest solution to deploy multimodal AI to mobile",
+              "hideVotesCount": false,
+              "redirectToProduct": null,
+              "product": {
+                "__typename": "Product",
+                "id": "1137571",
+                "slug": "nexasdk-for-mobile",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "388ba4e2-96d6-4d66-b2e5-fae20b3a7c58.png",
+              "featuredAt": "2025-12-16T00:01:00-08:00",
+              "scheduledAt": "2025-12-16T00:01:00-08:00",
+              "createdAt": "2025-12-16T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1049998",
+              "dailyRank": "1",
+              "weeklyRank": "6",
+              "monthlyRank": "30",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "267",
+                      "slug": "developer-tools",
+                      "name": "Developer Tools"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "778",
+                      "slug": "sdk",
+                      "name": "SDK"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 425,
+              "launchDayScore": 380,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T04:23:32-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 89
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"items\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "Post",
+              "id": "1040214",
+              "name": "Guideflow",
+              "slug": "guideflow",
+              "tagline": "The AI demo automation platform for SaaS",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "1128907",
+                "slug": "guideflow"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "1128907",
+                "slug": "guideflow",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "62088539-989a-4dbd-98f8-8e64cd75bb11.png",
+              "featuredAt": "2025-11-20T00:01:00-08:00",
+              "scheduledAt": "2025-11-20T00:01:00-08:00",
+              "createdAt": "2025-11-20T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1040214",
+              "dailyRank": "1",
+              "weeklyRank": "2",
+              "monthlyRank": "1",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "71",
+                      "slug": "sales",
+                      "name": "Sales"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "164",
+                      "slug": "marketing",
+                      "name": "Marketing"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 1296,
+              "launchDayScore": 624,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:10-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 635
+            },
+            {
+              "__typename": "Post",
+              "id": "1037288",
+              "name": "Welltory",
+              "slug": "welltory-2",
+              "tagline": "Stop energy drain",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "380065",
+                "slug": "welltory"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "380065",
+                "slug": "welltory",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "1779b32e-4db1-44bd-a005-6d56eeec0acd.gif",
+              "featuredAt": "2025-11-17T00:01:00-08:00",
+              "scheduledAt": "2025-11-17T00:01:00-08:00",
+              "createdAt": "2025-11-17T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1037288",
+              "dailyRank": "1",
+              "weeklyRank": "1",
+              "monthlyRank": "2",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "8",
+                      "slug": "ios",
+                      "name": "iOS"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "43",
+                      "slug": "health-fitness",
+                      "name": "Health & Fitness"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 1022,
+              "launchDayScore": 639,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:10-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 578
+            },
+            {
+              "__typename": "Post",
+              "id": "1036220",
+              "name": "Talo",
+              "slug": "talo",
+              "tagline": "All\u2011in\u2011one AI translator: calls, events, streaming & API",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "949083",
+                "slug": "talo"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "949083",
+                "slug": "talo",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "771aa41f-2535-462c-a10c-8910afbc6606.png",
+              "featuredAt": "2025-11-11T00:01:00-08:00",
+              "scheduledAt": "2025-11-11T00:01:00-08:00",
+              "createdAt": "2025-11-11T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1036220",
+              "dailyRank": "1",
+              "weeklyRank": "1",
+              "monthlyRank": "3",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "237",
+                      "slug": "saas",
+                      "name": "SaaS"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 866,
+              "launchDayScore": 624,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:12-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 215
+            },
+            {
+              "__typename": "Post",
+              "id": "1039710",
+              "name": "Gemini 3",
+              "slug": "gemini-3-4",
+              "tagline": "Bring any idea to life with multimodal capabilities",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "563119",
+                "slug": "gemini-6"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "563119",
+                "slug": "gemini-6",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "71fbd16d-35ec-4f8a-9ba9-2879bda3b0e0.png",
+              "featuredAt": "2025-11-19T00:01:00-08:00",
+              "scheduledAt": "2025-11-19T00:01:00-08:00",
+              "createdAt": "2025-11-19T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1039710",
+              "dailyRank": "1",
+              "weeklyRank": "3",
+              "monthlyRank": "4",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 951,
+              "launchDayScore": 608,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:32:13-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 18
+            },
+            {
+              "__typename": "Ad",
+              "id": "32182",
+              "channelKind": "feed",
+              "smallAssetUuid": null,
+              "largeAssetUuid": null,
+              "subject": "Channel",
+              "post": null,
+              "name": "Learn with AWS",
+              "tagline": "AWS Builder Center",
+              "thumbnailUuid": "9e59ba13-b679-4cd9-9929-aa7974d3752e.jpeg",
+              "url": "/r/ad/32182",
+              "variationId": null
+            },
+            {
+              "__typename": "Post",
+              "id": "1035185",
+              "name": "TrustMRR",
+              "slug": "trustmrr",
+              "tagline": "The database of verified startup revenues",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "1124489",
+                "slug": "trustmrr"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "1124489",
+                "slug": "trustmrr",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "f8ccb003-3da9-4106-8d0a-569195320b21.png",
+              "featuredAt": "2025-11-11T00:01:00-08:00",
+              "scheduledAt": "2025-11-11T00:01:00-08:00",
+              "createdAt": "2025-11-11T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1035185",
+              "dailyRank": "2",
+              "weeklyRank": "2",
+              "monthlyRank": "5",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "164",
+                      "slug": "marketing",
+                      "name": "Marketing"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "237",
+                      "slug": "saas",
+                      "name": "SaaS"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 842,
+              "launchDayScore": 599,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T14:43:33-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 68
+            },
+            {
+              "__typename": "Post",
+              "id": "1035709",
+              "name": "Oskar by Skarbe",
+              "slug": "oskar-by-skarbe",
+              "tagline": "AI agent in your inbox that follows up automatically.",
+              "hideVotesCount": false,
+              "redirectToProduct": {
+                "__typename": "Product",
+                "id": "1043462",
+                "slug": "skarbe"
+              },
+              "product": {
+                "__typename": "Product",
+                "id": "1043462",
+                "slug": "skarbe",
+                "isSubscribed": false
+              },
+              "featuredComment": null,
+              "thumbnailImageUuid": "931470ac-a055-45f3-bbb8-d0597a80f822.gif",
+              "featuredAt": "2025-11-10T00:01:00-08:00",
+              "scheduledAt": "2025-11-10T00:01:00-08:00",
+              "createdAt": "2025-11-10T00:01:00-08:00",
+              "isSubscribed": false,
+              "shortenedUrl": "/r/p/1035709",
+              "dailyRank": "1",
+              "weeklyRank": "3",
+              "monthlyRank": "6",
+              "friendVoters": {
+                "__typename": "UserConnection",
+                "edges": [],
+                "totalCount": 0
+              },
+              "topics": {
+                "__typename": "TopicConnection",
+                "edges": [
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "46",
+                      "slug": "productivity",
+                      "name": "Productivity"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "71",
+                      "slug": "sales",
+                      "name": "Sales"
+                    }
+                  },
+                  {
+                    "__typename": "TopicEdge",
+                    "node": {
+                      "__typename": "Topic",
+                      "id": "268",
+                      "slug": "artificial-intelligence",
+                      "name": "Artificial Intelligence"
+                    }
+                  }
+                ]
+              },
+              "productState": "default",
+              "hasVoted": false,
+              "latestScore": 746,
+              "launchDayScore": 629,
+              "disabledWhenScheduled": true,
+              "updatedAt": "2025-12-28T07:06:29-08:00",
+              "embargoPreviewAt": null,
+              "commentsCount": 198
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "44",
+                "slug": "design-tools",
+                "name": "Design Tools"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "71",
+                "slug": "sales",
+                "name": "Sales"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "8",
+                "slug": "ios",
+                "name": "iOS"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "43",
+                "slug": "health-fitness",
+                "name": "Health & Fitness"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "89",
+                "slug": "open-source",
+                "name": "Open Source"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "267",
+                "slug": "developer-tools",
+                "name": "Developer Tools"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "272",
+                "slug": "github",
+                "name": "GitHub"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "60",
+                "slug": "messaging",
+                "name": "Messaging"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "570",
+                "slug": "business",
+                "name": "Business"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "600",
+                "slug": "entertainment",
+                "name": "Entertainment"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "71",
+                "slug": "sales",
+                "name": "Sales"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "164",
+                "slug": "marketing",
+                "name": "Marketing"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "283",
+                "slug": "reddit",
+                "name": "reddit"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "88",
+                "slug": "api-1",
+                "name": "API"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "252",
+                "slug": "meetings",
+                "name": "Meetings"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "94",
+                "slug": "fintech",
+                "name": "Fintech"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "792",
+                "slug": "personal-finance",
+                "name": "Personal Finance"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "2",
+                "slug": "android",
+                "name": "Android"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "352",
+                "slug": "tech",
+                "name": "Tech"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "DiscussionThreadEdge",
+              "node": {
+                "__typename": "DiscussionThread",
+                "id": "789129",
+                "slug": "best-ai-automation-tools-nominate-your-favorites-for-the-product-hunt-orbit-awards",
+                "title": "\ud83d\udd25 Best AI Automation Tools: Nominate Your Favorites for the Product Hunt Orbit Awards",
+                "commentsCount": 35,
+                "discussionForums": {
+                  "__typename": "DiscussionForumTypeConnection",
+                  "nodes": [
+                    {
+                      "__typename": "DiscussionForumType",
+                      "id": "48762",
+                      "slug": "producthunt",
+                      "subject": {
+                        "__typename": "Product",
+                        "id": "112572",
+                        "name": "Product Hunt",
+                        "logoUuid": "d618ea86-70ae-4d12-8ec2-0ed78c723ddf.png",
+                        "isNoLongerOnline": false
+                      }
+                    }
+                  ]
+                },
+                "hasVoted": false,
+                "votesCount": 263
+              }
+            },
+            {
+              "__typename": "DiscussionThreadEdge",
+              "node": {
+                "__typename": "DiscussionThread",
+                "id": "797688",
+                "slug": "new-year-sale-40-off-savvyshot",
+                "title": "\ud83c\udf89 New Year Sale - 40% OFF Savvyshot",
+                "commentsCount": 0,
+                "discussionForums": {
+                  "__typename": "DiscussionForumTypeConnection",
+                  "nodes": [
+                    {
+                      "__typename": "DiscussionForumType",
+                      "id": "65351",
+                      "slug": "savvyshot",
+                      "subject": {
+                        "__typename": "Product",
+                        "id": "603710",
+                        "name": "Savvyshot",
+                        "logoUuid": "21257c5f-c289-4972-91f4-5870ba21c686.png",
+                        "isNoLongerOnline": false
+                      }
+                    }
+                  ]
+                },
+                "hasVoted": false,
+                "votesCount": 2
+              }
+            },
+            {
+              "__typename": "DiscussionThreadEdge",
+              "node": {
+                "__typename": "DiscussionThread",
+                "id": "797575",
+                "slug": "1-product-of-the-day-2025-wrapped-what-s-next",
+                "title": "#1 Product of the Day! \ud83c\udfc6 2025 Wrapped & What\u2019s Next",
+                "commentsCount": 2,
+                "discussionForums": {
+                  "__typename": "DiscussionForumTypeConnection",
+                  "nodes": [
+                    {
+                      "__typename": "DiscussionForumType",
+                      "id": "562326",
+                      "slug": "product-hunt-wrapped-2025",
+                      "subject": {
+                        "__typename": "Product",
+                        "id": "1141496",
+                        "name": "Product Hunt Wrapped 2025",
+                        "logoUuid": "356e0f01-273c-43ea-b14d-671f15fb8c39.jpeg",
+                        "isNoLongerOnline": false
+                      }
+                    }
+                  ]
+                },
+                "hasVoted": false,
+                "votesCount": 8
+              }
+            },
+            {
+              "__typename": "DiscussionThreadEdge",
+              "node": {
+                "__typename": "DiscussionThread",
+                "id": "797586",
+                "slug": "the-friday-merge-a-ghost-story-and-how-ai-exorcised-it",
+                "title": "The Friday Merge: A Ghost Story (And How AI Exorcised It)",
+                "commentsCount": 0,
+                "discussionForums": {
+                  "__typename": "DiscussionForumTypeConnection",
+                  "nodes": [
+                    {
+                      "__typename": "DiscussionForumType",
+                      "id": "518669",
+                      "slug": "graphbit",
+                      "subject": {
+                        "__typename": "Product",
+                        "id": "1097839",
+                        "name": "GraphBit",
+                        "logoUuid": "6acebaf6-3f90-4254-bf20-4cb4c54daa3a.png",
+                        "isNoLongerOnline": false
+                      }
+                    }
+                  ]
+                },
+                "hasVoted": false,
+                "votesCount": 9
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "267",
+                "slug": "developer-tools",
+                "name": "Developer Tools"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "276",
+                "slug": "product-hunt",
+                "name": "Product Hunt"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "371",
+                "slug": "maker-tools",
+                "name": "Maker Tools"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "2",
+                "slug": "android",
+                "name": "Android"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "42",
+                "slug": "funny",
+                "name": "Funny"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "44",
+                "slug": "design-tools",
+                "name": "Design Tools"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "60",
+                "slug": "messaging",
+                "name": "Messaging"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "104",
+                "slug": "social-media",
+                "name": "Social Media"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "582",
+                "slug": "data-analytics",
+                "name": "Data & Analytics"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "88",
+                "slug": "api-1",
+                "name": "API"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "267",
+                "slug": "developer-tools",
+                "name": "Developer Tools"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "17",
+                "slug": "ebook-reader",
+                "name": "eBook Reader"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "125",
+                "slug": "hardware",
+                "name": "Hardware"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "354",
+                "slug": "books",
+                "name": "Books"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "243",
+                "slug": "website-builder",
+                "name": "Website Builder"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "470",
+                "slug": "no-code",
+                "name": "No-Code"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "34",
+                "slug": "chrome-extensions",
+                "name": "Chrome Extensions"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "237",
+                "slug": "saas",
+                "name": "SaaS"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "43",
+                "slug": "health-fitness",
+                "name": "Health & Fitness"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "364",
+                "slug": "quantified-self",
+                "name": "Quantified Self"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "88",
+                "slug": "api-1",
+                "name": "API"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "860",
+                "slug": "photo-editing",
+                "name": "Photo editing"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "45",
+                "slug": "emoji",
+                "name": "Emoji"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "471",
+                "slug": "audio",
+                "name": "Audio"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "267",
+                "slug": "developer-tools",
+                "name": "Developer Tools"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "778",
+                "slug": "sdk",
+                "name": "SDK"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "71",
+                "slug": "sales",
+                "name": "Sales"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "164",
+                "slug": "marketing",
+                "name": "Marketing"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "237",
+                "slug": "saas",
+                "name": "SaaS"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "164",
+                "slug": "marketing",
+                "name": "Marketing"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "237",
+                "slug": "saas",
+                "name": "SaaS"
+              }
+            }
+          ]
+        },
+        {
+          "_source": "inline_json",
+          "_pattern": "\"edges\":\\s*\\[\\s*\\{",
+          "data": [
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "46",
+                "slug": "productivity",
+                "name": "Productivity"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "71",
+                "slug": "sales",
+                "name": "Sales"
+              }
+            },
+            {
+              "__typename": "TopicEdge",
+              "node": {
+                "__typename": "Topic",
+                "id": "268",
+                "slug": "artificial-intelligence",
+                "name": "Artificial Intelligence"
+              }
+            }
+          ]
+        }
+      ],
+      "_paths": []
+    }
+  ]
+}

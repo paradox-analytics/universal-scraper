@@ -1,0 +1,162 @@
+{
+  "results": [
+    {
+      "url": "https://www.etsy.com/search?q=handmade",
+      "name": "Etsy Search",
+      "category": "ecommerce",
+      "fields": [
+        "title",
+        "price",
+        "seller"
+      ],
+      "success": true,
+      "items_count": 1,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 6.710654973983765,
+      "data": [
+        {
+          "title": "Please enable JS and disable any ad blocker",
+          "price": null,
+          "seller": null
+        }
+      ]
+    },
+    {
+      "url": "https://www.theverge.com",
+      "name": "The Verge",
+      "category": "news",
+      "fields": [
+        "title",
+        "author",
+        "date"
+      ],
+      "success": true,
+      "items_count": 1,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 7.525557994842529,
+      "data": [
+        {
+          "title": "Top Stories",
+          "author": "We told our customers there’s an “AI that’ll join a meeting.” In reality it was just me and my co-founder calling in to the meeting sitting there silently and taking notes by hand.",
+          "date": "2025-11-16T15:46:28+00:00"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.python.org/3/library/",
+      "name": "Python Docs",
+      "category": "documentation",
+      "fields": [
+        "title",
+        "description"
+      ],
+      "success": true,
+      "items_count": 1,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 4.160842180252075,
+      "data": [
+        {
+          "title": "The Python Standard LibraryÂ¶",
+          "description": null
+        }
+      ]
+    },
+    {
+      "url": "https://lobste.rs",
+      "name": "Lobsters (HN-like)",
+      "category": "forum",
+      "fields": [
+        "title",
+        "url",
+        "points"
+      ],
+      "success": true,
+      "items_count": 20,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 6.190214157104492,
+      "data": [
+        {
+          "title": null,
+          "url": null,
+          "points": "36"
+        },
+        {
+          "title": null,
+          "url": null,
+          "points": "17"
+        },
+        {
+          "title": null,
+          "url": null,
+          "points": "58"
+        },
+        {
+          "title": null,
+          "url": null,
+          "points": "39"
+        },
+        {
+          "title": null,
+          "url": null,
+          "points": "14"
+        }
+      ]
+    },
+    {
+      "url": "https://news.ycombinator.com/jobs",
+      "name": "HN Jobs",
+      "category": "job_listing",
+      "fields": [
+        "title",
+        "company"
+      ],
+      "success": true,
+      "items_count": 20,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 4.2760329246521,
+      "data": [
+        {
+          "title": "Trellis AI (YC W24) Is Hiring: Streamline access to life-saving therapies",
+          "company": "Trellis AI (YC W24) Is Hiring: Streamline access to life-saving therapies"
+        },
+        {
+          "title": "Activeloop (YC S18) Is Hiring MTS (Back End) and AI Search Engineer",
+          "company": "Activeloop (YC S18) Is Hiring MTS (Back End) and AI Search Engineer"
+        },
+        {
+          "title": "Mentra (YC W25) Is Hiring: Head of Growth to Make Smart Glasses Mainstream",
+          "company": "Mentra (YC W25) Is Hiring: Head of Growth to Make Smart Glasses Mainstream"
+        },
+        {
+          "title": "RetailReady (YC W24) Is Hiring",
+          "company": "RetailReady (YC W24) Is Hiring"
+        },
+        {
+          "title": "Piramidal (YC W24) Hiring: Front End Engineer",
+          "company": "Piramidal (YC W24) Hiring: Front End Engineer"
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "total_requests": 5,
+    "cache_hits": 0,
+    "cache_misses": 5,
+    "llm_calls": 5,
+    "fallback_uses": 0,
+    "total_cost": 0.1,
+    "total_time": 28.86330223083496,
+    "items_extracted": 43,
+    "errors": 0
+  }
+}
