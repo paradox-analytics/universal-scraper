@@ -1,27 +1,5 @@
 # ==============================================================================
-# STRICT WHITELIST APPROACH
-# ==============================================================================
-
-# 1. Ignore EVERYTHING by default
-/*
-!/
-
-# 2. Whitelist Core Directories (Everything inside these is tracked unless ignored below)
-!/api/
-!/frontend/
-!/universal_scraper/
-
-# 3. Whitelist Essential Documentation & Config
-!/.gitignore
-!/README.md
-!/LICENSE
-!/CONTRIBUTING.md
-!/CHANGELOG.md
-!/requirements.txt
-!/setup.py
-
-# ==============================================================================
-# STANDARD IGNORES (Apply to content within whitelisted directories)
+# Standard Blacklist .gitignore
 # ==============================================================================
 
 # Python
@@ -36,25 +14,47 @@ venv/
 .pytest_cache/
 .coverage
 htmlcov/
-*.log
+*.egg-info/
+dist/
+build/
 
 # Node / Frontend
 node_modules/
-frontend/node_modules/
 frontend/dist/
 frontend/.env
 frontend/.env.local
+
+# Logs
+*.log
+
+# OS
 .DS_Store
+Thumbs.db
 
 # IDEs
 .vscode/
 .idea/
 *.swp
+*.swo
 
-# Temporary / Debug Files
+# Temporary / Debug artifacts
 *.tmp
 *.bak
-test_*.json
-test_output_*.txt
-debug_*.json
-debug_*.html
+
+# Firebase local
+.firebase/
+firebase-debug.log
+
+# Apify local storage
+apify_storage_local/
+
+# Local caches (runtime artifacts, not source)
+cache/
+local_cache/
+test_cache/
+output/
+debug_output/
+
+# Firestore backup/temp
+firestore.rules.backup
+firestore.rules.temp
