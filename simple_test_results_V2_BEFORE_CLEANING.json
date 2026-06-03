@@ -1,0 +1,130 @@
+{
+  "test_date": "2025-11-24T00:53:55.767199",
+  "total_sites": 6,
+  "successful": 6,
+  "total_items": 221,
+  "total_time": 737.5723395347595,
+  "avg_completeness": 78.99821770126933,
+  "results": [
+    {
+      "name": "Books to Scrape",
+      "success": true,
+      "items": 20,
+      "time": 91.86403489112854,
+      "completeness": 66.66666666666666,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "A Light in the ...",
+          "price": 51.77,
+          "rating": null
+        },
+        {
+          "title": "Tipping the Velvet",
+          "price": 53.74,
+          "rating": null
+        }
+      ]
+    },
+    {
+      "name": "Quotes to Scrape",
+      "success": true,
+      "items": 10,
+      "time": 14.410245895385742,
+      "completeness": 100.0,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "text": "The world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.",
+          "author": "Albert Einstein",
+          "tags": "changedeep-thoughtsthinkingworld"
+        },
+        {
+          "text": "It is our choices, Harry, that show what we truly are, far more than our abilities.",
+          "author": "J.K. Rowling",
+          "tags": "abilitieschoices"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "success": true,
+      "items": 16,
+      "time": 78.07481074333191,
+      "completeness": 87.5,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "Fran Sans \u2013 font inspired by San Francisco light rail displays (emilysneddon.com)",
+          "points": null,
+          "author": null
+        },
+        {
+          "title": "The Cloudflare outage was a good thing (gist.github.com)",
+          "points": 84,
+          "author": "radeeyate"
+        }
+      ]
+    },
+    {
+      "name": "GitHub Trending",
+      "success": true,
+      "items": 23,
+      "time": 65.78207302093506,
+      "completeness": 100.0,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "repository": "example-repo-1",
+          "description": "This is a sample repository for demonstration purposes.",
+          "stars": 150
+        },
+        {
+          "repository": "example-repo-2",
+          "description": "Another example repository showcasing web scraping techniques.",
+          "stars": 200
+        }
+      ]
+    },
+    {
+      "name": "Stack Overflow",
+      "success": true,
+      "items": 71,
+      "time": 247.35442900657654,
+      "completeness": 60.56338028169014,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "title": "Item 1",
+          "votes": 150,
+          "answers": "10"
+        },
+        {
+          "title": "Item 2",
+          "votes": 200,
+          "answers": "15"
+        }
+      ]
+    },
+    {
+      "name": "Product Hunt",
+      "success": true,
+      "items": 81,
+      "time": 240.08674597740173,
+      "completeness": 59.25925925925925,
+      "source": "direct_llm",
+      "sample_data": [
+        {
+          "name": "Google Nano Banana Pro",
+          "tagline": "Gemini 3 Pro Image Generator based on Google Nano Banana",
+          "votes": null
+        },
+        {
+          "name": "Dim Notes",
+          "tagline": "Auto-tags your thoughts",
+          "votes": 434
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "embeddings": {
+    "https://news.ycombinator.com": {
+      "type": "forum"
+    },
+    "https://reddit.com/r/python": {
+      "type": "forum"
+    },
+    "https://stackoverflow.com/questions": {
+      "type": "forum"
+    },
+    "https://www.amazon.com/s?k=laptop": {
+      "type": "ecommerce"
+    },
+    "https://www.ebay.com/sch/i.html?_nkw=laptop": {
+      "type": "ecommerce"
+    },
+    "https://github.com/trending": {
+      "type": "listing"
+    },
+    "https://www.imdb.com/chart/top": {
+      "type": "listing"
+    }
+  },
+  "similarity_matrix": {
+    "https://news.ycombinator.com <-> https://reddit.com/r/python": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://reddit.com/r/python",
+      "type1": "forum",
+      "type2": "forum",
+      "similarity": 0.1366698294878006,
+      "same_type": true
+    },
+    "https://news.ycombinator.com <-> https://stackoverflow.com/questions": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://stackoverflow.com/questions",
+      "type1": "forum",
+      "type2": "forum",
+      "similarity": 0.08542712032794952,
+      "same_type": true
+    },
+    "https://news.ycombinator.com <-> https://www.amazon.com/s?k=laptop": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://www.amazon.com/s?k=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.02249985560774803,
+      "same_type": false
+    },
+    "https://news.ycombinator.com <-> https://www.ebay.com/sch/i.html?_nkw=laptop": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.39920228719711304,
+      "same_type": false
+    },
+    "https://news.ycombinator.com <-> https://github.com/trending": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://github.com/trending",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.043309926986694336,
+      "same_type": false
+    },
+    "https://news.ycombinator.com <-> https://www.imdb.com/chart/top": {
+      "url1": "https://news.ycombinator.com",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.013979455456137657,
+      "same_type": false
+    },
+    "https://reddit.com/r/python <-> https://stackoverflow.com/questions": {
+      "url1": "https://reddit.com/r/python",
+      "url2": "https://stackoverflow.com/questions",
+      "type1": "forum",
+      "type2": "forum",
+      "similarity": 0.012510847300291061,
+      "same_type": true
+    },
+    "https://reddit.com/r/python <-> https://www.amazon.com/s?k=laptop": {
+      "url1": "https://reddit.com/r/python",
+      "url2": "https://www.amazon.com/s?k=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.0033494888339191675,
+      "same_type": false
+    },
+    "https://reddit.com/r/python <-> https://www.ebay.com/sch/i.html?_nkw=laptop": {
+      "url1": "https://reddit.com/r/python",
+      "url2": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.06215649098157883,
+      "same_type": false
+    },
+    "https://reddit.com/r/python <-> https://github.com/trending": {
+      "url1": "https://reddit.com/r/python",
+      "url2": "https://github.com/trending",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.006394502241164446,
+      "same_type": false
+    },
+    "https://reddit.com/r/python <-> https://www.imdb.com/chart/top": {
+      "url1": "https://reddit.com/r/python",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.0020323162898421288,
+      "same_type": false
+    },
+    "https://stackoverflow.com/questions <-> https://www.amazon.com/s?k=laptop": {
+      "url1": "https://stackoverflow.com/questions",
+      "url2": "https://www.amazon.com/s?k=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.9919685125350952,
+      "same_type": false
+    },
+    "https://stackoverflow.com/questions <-> https://www.ebay.com/sch/i.html?_nkw=laptop": {
+      "url1": "https://stackoverflow.com/questions",
+      "url2": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "type1": "forum",
+      "type2": "ecommerce",
+      "similarity": 0.1017289012670517,
+      "same_type": false
+    },
+    "https://stackoverflow.com/questions <-> https://github.com/trending": {
+      "url1": "https://stackoverflow.com/questions",
+      "url2": "https://github.com/trending",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.996878445148468,
+      "same_type": false
+    },
+    "https://stackoverflow.com/questions <-> https://www.imdb.com/chart/top": {
+      "url1": "https://stackoverflow.com/questions",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "forum",
+      "type2": "listing",
+      "similarity": 0.9889876246452332,
+      "same_type": false
+    },
+    "https://www.amazon.com/s?k=laptop <-> https://www.ebay.com/sch/i.html?_nkw=laptop": {
+      "url1": "https://www.amazon.com/s?k=laptop",
+      "url2": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "type1": "ecommerce",
+      "type2": "ecommerce",
+      "similarity": 0.02732069045305252,
+      "same_type": true
+    },
+    "https://www.amazon.com/s?k=laptop <-> https://github.com/trending": {
+      "url1": "https://www.amazon.com/s?k=laptop",
+      "url2": "https://github.com/trending",
+      "type1": "ecommerce",
+      "type2": "listing",
+      "similarity": 0.9985074400901794,
+      "same_type": false
+    },
+    "https://www.amazon.com/s?k=laptop <-> https://www.imdb.com/chart/top": {
+      "url1": "https://www.amazon.com/s?k=laptop",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "ecommerce",
+      "type2": "listing",
+      "similarity": 0.9996988773345947,
+      "same_type": false
+    },
+    "https://www.ebay.com/sch/i.html?_nkw=laptop <-> https://github.com/trending": {
+      "url1": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "url2": "https://github.com/trending",
+      "type1": "ecommerce",
+      "type2": "listing",
+      "similarity": 0.05200818181037903,
+      "same_type": false
+    },
+    "https://www.ebay.com/sch/i.html?_nkw=laptop <-> https://www.imdb.com/chart/top": {
+      "url1": "https://www.ebay.com/sch/i.html?_nkw=laptop",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "ecommerce",
+      "type2": "listing",
+      "similarity": 0.016439564526081085,
+      "same_type": false
+    },
+    "https://github.com/trending <-> https://www.imdb.com/chart/top": {
+      "url1": "https://github.com/trending",
+      "url2": "https://www.imdb.com/chart/top",
+      "type1": "listing",
+      "type2": "listing",
+      "similarity": 0.9969437718391418,
+      "same_type": true
+    }
+  },
+  "stats": {
+    "same_type_avg": 0.25177446007728577,
+    "diff_type_avg": 0.3561963438987732,
+    "separation": -0.10442188382148743
+  }
+}

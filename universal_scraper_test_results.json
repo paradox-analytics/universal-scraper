@@ -1,0 +1,496 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "passed_tests": 3,
+    "failed_tests": 7,
+    "total_execution_time": 772.21631775,
+    "timestamp": "2025-12-03T21:01:04.452234"
+  },
+  "results": [
+    {
+      "test_case": {
+        "name": "Real Estate (Auction.com)",
+        "url": "https://www.auction.com/residential/TX/Dallas_ct/active_lt/auction_date_order,resi_sort_v2_st/y_nbs/100_nsr",
+        "fields": [
+          "est. market value",
+          "bedrooms",
+          "bathrooms",
+          "square footage",
+          "property url"
+        ],
+        "domain_type": "real_estate",
+        "expected_min_items": 5,
+        "expected_fields": [
+          "est. market value",
+          "bedrooms",
+          "bathrooms"
+        ]
+      },
+      "success": true,
+      "items_extracted": 9,
+      "execution_time": 109.078601792,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "est. market value": 8,
+        "bedrooms": 9,
+        "bathrooms": 9,
+        "square footage": 9,
+        "property url": 8
+      },
+      "quality_score": 100.0,
+      "issues": [],
+      "error": null,
+      "timestamp": "2025-12-03T20:48:11.936863",
+      "sample_item": {
+        "est. market value": "60000",
+        "bedrooms": "3",
+        "bathrooms": "1",
+        "square footage": "1020",
+        "property url": "/details/5728-margewood-dr-dallas-tx-1900895"
+      }
+    },
+    {
+      "test_case": {
+        "name": "E-commerce (Chewy.com)",
+        "url": "https://www.chewy.com/b/wet-food-389",
+        "fields": [
+          "title",
+          "price",
+          "rating",
+          "review count",
+          "product url"
+        ],
+        "domain_type": "ecommerce",
+        "expected_min_items": 10,
+        "expected_fields": [
+          "title",
+          "price"
+        ]
+      },
+      "success": false,
+      "items_extracted": 3,
+      "execution_time": 45.654305792,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "title": 3,
+        "price": 3,
+        "rating": 3,
+        "review count": 3,
+        "product url": 3
+      },
+      "quality_score": 100.0,
+      "issues": [
+        "\u26a0\ufe0f Low item count: Expected \u226510, got 3"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:50:01.049945",
+      "sample_item": {
+        "title": "Fancy Feast Gems Mousse Salmon, Tuna, Chicken & Beef Halo of Savory Gravy Variety Pack Pate Wet Cat Food",
+        "price": 29.99,
+        "rating": 4.5,
+        "review count": 2391,
+        "product url": "https://www.chewy.com/dp/12345"
+      }
+    },
+    {
+      "test_case": {
+        "name": "E-commerce with Variants (Baggu.com)",
+        "url": "https://baggu.com/collections/crescent-bags",
+        "fields": [
+          "title",
+          "price",
+          "color",
+          "product detail url"
+        ],
+        "domain_type": "ecommerce_variants",
+        "expected_min_items": 5,
+        "expected_fields": [
+          "title",
+          "price",
+          "color"
+        ]
+      },
+      "success": false,
+      "items_extracted": 56,
+      "execution_time": 29.089304457999987,
+      "extraction_source": "json",
+      "field_coverage": {
+        "title": 56,
+        "price": 56,
+        "color": 56,
+        "product detail url": 56
+      },
+      "quality_score": 0.0,
+      "issues": [
+        "\u26a0\ufe0f Low quality score: 0.0%"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:50:46.730765",
+      "sample_item": {
+        "title": "medium-nylon-crescent-bag-navy-8-hokh",
+        "price": 5200,
+        "color": {
+          "_id": "sanity-colorway-navy",
+          "colorName": "Navy"
+        },
+        "product detail url": 7368519155809
+      }
+    },
+    {
+      "test_case": {
+        "name": "Job Listings (Indeed.com)",
+        "url": "https://www.indeed.com/jobs?q=software+engineer&l=San+Francisco%2C+CA",
+        "fields": [
+          "job title",
+          "company",
+          "location",
+          "salary",
+          "job url"
+        ],
+        "domain_type": "job_listings",
+        "expected_min_items": 5,
+        "expected_fields": [
+          "job title",
+          "company"
+        ]
+      },
+      "success": false,
+      "items_extracted": 1,
+      "execution_time": 139.003817417,
+      "extraction_source": "semantic_patterns",
+      "field_coverage": {
+        "job title": 1,
+        "company": 1,
+        "location": 1,
+        "salary": 1,
+        "job url": 1
+      },
+      "quality_score": 0.0,
+      "issues": [
+        "\u26a0\ufe0f Low item count: Expected \u22655, got 1",
+        "\u26a0\ufe0f Low quality score: 0.0%",
+        "\u26a0\ufe0f Slow execution: 139.0s (> 2 minutes)"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:51:15.858623",
+      "sample_item": {
+        "job title": "Additional Verification Required",
+        "company": "Just a moment...",
+        "location": "Just a moment...",
+        "salary": "Just a moment...",
+        "job url": "https://www.indeed.com/"
+      }
+    },
+    {
+      "test_case": {
+        "name": "News/Articles (Hacker News)",
+        "url": "https://news.ycombinator.com/",
+        "fields": [
+          "title",
+          "url",
+          "score",
+          "author",
+          "comments"
+        ],
+        "domain_type": "news",
+        "expected_min_items": 20,
+        "expected_fields": [
+          "title",
+          "url"
+        ]
+      },
+      "success": false,
+      "items_extracted": 17,
+      "execution_time": 93.63453475,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "title": 17,
+        "url": 16,
+        "score": 16,
+        "author": 16,
+        "comments": 15
+      },
+      "quality_score": 94.11764705882352,
+      "issues": [
+        "\u26a0\ufe0f Low item count: Expected \u226520, got 17"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:53:34.883677",
+      "sample_item": {
+        "title": "Average DRAM price in USD over last 18 months",
+        "url": "https://pcpartpicker.com/trends/price/memory/",
+        "score": 51,
+        "author": "zekrioca",
+        "comments": 12
+      }
+    },
+    {
+      "test_case": {
+        "name": "Product Reviews (Metacritic)",
+        "url": "https://www.metacritic.com/pictures/november-2025-movie-preview-wicked-hamnet-running-man/",
+        "fields": [
+          "title",
+          "metascore",
+          "director",
+          "release date",
+          "description"
+        ],
+        "domain_type": "reviews",
+        "expected_min_items": 1,
+        "expected_fields": [
+          "title"
+        ]
+      },
+      "success": true,
+      "items_extracted": 24,
+      "execution_time": 55.243059416999984,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "title": 24,
+        "metascore": 24,
+        "director": 24,
+        "release date": 24,
+        "description": 24
+      },
+      "quality_score": 100.0,
+      "issues": [],
+      "error": null,
+      "timestamp": "2025-12-03T20:55:08.562250",
+      "sample_item": {
+        "title": "Arco",
+        "metascore": 75,
+        "director": "Ugo Bienvenu",
+        "release date": "November 14",
+        "description": "French illustrator Ugo Bienvenu's debut animated feature, co-written with F\u00e9lix de Givry, follows Arco, a 10-year-old boy (voiced by Oscar Tresanini) from the future as he time travels back to 2075 where he meets Iris (Margot Ringard Oldra). With the help of Iris' robot caretaker, Mikki, they set out to get Arco home, discovering that their bond could hold meaning for Earth's future. Fans of Studio Ghibli's work should seek this one out."
+      }
+    },
+    {
+      "test_case": {
+        "name": "Social Media (Reddit)",
+        "url": "https://www.reddit.com/r/github/",
+        "fields": [
+          "title",
+          "author",
+          "score",
+          "comments",
+          "url"
+        ],
+        "domain_type": "social_media",
+        "expected_min_items": 10,
+        "expected_fields": [
+          "title",
+          "score"
+        ]
+      },
+      "success": false,
+      "items_extracted": 45,
+      "execution_time": 100.80421812500003,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "title": 45,
+        "author": 40,
+        "score": 4,
+        "comments": 5,
+        "url": 44
+      },
+      "quality_score": 61.33333333333333,
+      "issues": [
+        "\u26a0\ufe0f Empty/null values in sample: author"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:56:03.833180",
+      "sample_item": {
+        "title": "Promote your projects here \u2013 Self-Promotion Megathread",
+        "author": null,
+        "score": 64,
+        "comments": 474,
+        "url": "/r/github/comments/1jy8rea/promote_your_projects_here_selfpromotion/"
+      }
+    },
+    {
+      "test_case": {
+        "name": "Dispensary Menu (Leafly)",
+        "url": "https://www.leafly.com/dispensary-info/mammoth-holistics/menu",
+        "fields": [
+          "product name",
+          "price",
+          "strain type",
+          "thc",
+          "product url"
+        ],
+        "domain_type": "cannabis_menu",
+        "expected_min_items": 5,
+        "expected_fields": [
+          "product name",
+          "price"
+        ]
+      },
+      "success": false,
+      "items_extracted": 18,
+      "execution_time": 24.069914958000027,
+      "extraction_source": "json",
+      "field_coverage": {
+        "product name": 18,
+        "price": 18,
+        "strain type": 11,
+        "thc": 17,
+        "product url": 18
+      },
+      "quality_score": 0.0,
+      "issues": [
+        "\u26a0\ufe0f Low quality score: 0.0%",
+        "\u26a0\ufe0f Empty/null values in sample: thc"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:57:44.661535",
+      "sample_item": {
+        "product name": "0mg",
+        "price": 30,
+        "thc": 0,
+        "product url": 643342313
+      }
+    },
+    {
+      "test_case": {
+        "name": "Restaurant Menu (Yelp - example)",
+        "url": "https://www.yelp.com/biz/tonys-little-star-pizza-san-francisco",
+        "fields": [
+          "dish name",
+          "price",
+          "description",
+          "category"
+        ],
+        "domain_type": "restaurant_menu",
+        "expected_min_items": 3,
+        "expected_fields": [
+          "dish name"
+        ]
+      },
+      "success": true,
+      "items_extracted": 8,
+      "execution_time": 31.91169766600001,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "dish name": 8,
+        "price": 8,
+        "description": 8,
+        "category": 8
+      },
+      "quality_score": 100.0,
+      "issues": [],
+      "error": null,
+      "timestamp": "2025-12-03T20:58:08.756723",
+      "sample_item": {
+        "dish name": "Spaghetti Carbonara",
+        "price": 12.99,
+        "description": "Classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
+        "category": "Pasta"
+      }
+    },
+    {
+      "test_case": {
+        "name": "Classifieds (Craigslist - example)",
+        "url": "https://sfbay.craigslist.org/search/sss?query=laptop",
+        "fields": [
+          "title",
+          "price",
+          "location",
+          "posting date",
+          "url"
+        ],
+        "domain_type": "classifieds",
+        "expected_min_items": 5,
+        "expected_fields": [
+          "title",
+          "price"
+        ]
+      },
+      "success": false,
+      "items_extracted": 209,
+      "execution_time": 143.726863375,
+      "extraction_source": "direct_llm",
+      "field_coverage": {
+        "title": 209,
+        "price": 198,
+        "location": 207,
+        "posting date": 204,
+        "url": 209
+      },
+      "quality_score": 98.27751196172248,
+      "issues": [
+        "\u26a0\ufe0f Slow execution: 143.7s (> 2 minutes)"
+      ],
+      "error": null,
+      "timestamp": "2025-12-03T20:58:40.693659",
+      "sample_item": {
+        "title": "Dell Latitude 7480 14\" Laptop i7-6600U@2.60Ghz 12GB RAM 256GB SSD",
+        "price": 150,
+        "location": "san leandro",
+        "posting date": "8 mins ago",
+        "url": "https://sfbay.craigslist.org/eby/sys/d/san-leandro-dell-latitude-laptop-i7/7896584990.html"
+      }
+    }
+  ],
+  "domain_stats": {
+    "real_estate": {
+      "total": 1,
+      "passed": 1,
+      "avg_items": 9,
+      "avg_time": 109.078601792
+    },
+    "ecommerce": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 3,
+      "avg_time": 45.654305792
+    },
+    "ecommerce_variants": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 56,
+      "avg_time": 29.089304457999987
+    },
+    "job_listings": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 1,
+      "avg_time": 139.003817417
+    },
+    "news": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 17,
+      "avg_time": 93.63453475
+    },
+    "reviews": {
+      "total": 1,
+      "passed": 1,
+      "avg_items": 24,
+      "avg_time": 55.243059416999984
+    },
+    "social_media": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 45,
+      "avg_time": 100.80421812500003
+    },
+    "cannabis_menu": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 18,
+      "avg_time": 24.069914958000027
+    },
+    "restaurant_menu": {
+      "total": 1,
+      "passed": 1,
+      "avg_items": 8,
+      "avg_time": 31.91169766600001
+    },
+    "classifieds": {
+      "total": 1,
+      "passed": 0,
+      "avg_items": 209,
+      "avg_time": 143.726863375
+    }
+  }
+}

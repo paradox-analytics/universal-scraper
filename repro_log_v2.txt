@@ -1,0 +1,14 @@
+Fetching https://www.producthunt.com/categories/vibe-coding...
+Fetched 574556 bytes of HTML
+Traceback (most recent call last):
+  File "/Users/jevon_williams/Dev/universal-scraper/reproduce_corruption.py", line 68, in <module>
+    asyncio.run(reproduce())
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Users/jevon_williams/Dev/universal-scraper/reproduce_corruption.py", line 36, in reproduce
+    extracted = extractor.extract(html, url=url)
+  File "/Users/jevon_williams/Dev/universal-scraper/universal_scraper/core/hybrid_extractor.py", line 289, in extract
+    markdown = self._clean_text(markdown)
+AttributeError: 'HybridMarkdownExtractor' object has no attribute '_clean_text'

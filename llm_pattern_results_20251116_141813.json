@@ -1,0 +1,161 @@
+{
+  "results": [
+    {
+      "url": "https://news.ycombinator.com",
+      "name": "Hacker News",
+      "category": "forum",
+      "fields": [
+        "title",
+        "url"
+      ],
+      "success": true,
+      "items_count": 1,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 5.35112190246582,
+      "data": [
+        {
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com"
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/trending",
+      "name": "GitHub Trending",
+      "category": "listing",
+      "fields": [
+        "name",
+        "description",
+        "stars"
+      ],
+      "success": true,
+      "items_count": 18,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 9.810970067977905,
+      "data": [
+        {
+          "name": "sansan0 /TrendRadar",
+          "description": "TrendRadar",
+          "stars": "0"
+        },
+        {
+          "name": "google /adk-go",
+          "description": "An open-source, code-first Go toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.",
+          "stars": "3"
+        },
+        {
+          "name": "TapXWorld /ChinaTextbook",
+          "description": "TapXWorld /",
+          "stars": "56"
+        },
+        {
+          "name": "yeongpin /cursor-free-vip",
+          "description": "yeongpin /",
+          "stars": "0"
+        },
+        {
+          "name": "nvm-sh /nvm",
+          "description": "Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions",
+          "stars": "89"
+        },
+        {
+          "name": "traefik /traefik",
+          "description": "The Cloud Native Application Proxy",
+          "stars": "58"
+        },
+        {
+          "name": "HKUDS /LightRAG",
+          "description": "[EMNLP2025] \"LightRAG: Simple and Fast Retrieval-Augmented Generation\"",
+          "stars": "2025"
+        },
+        {
+          "name": "bobeff /open-source-games",
+          "description": "open-source-games",
+          "stars": "5"
+        },
+        {
+          "name": "volcengine /verl",
+          "description": "volcengine /",
+          "stars": "15"
+        },
+        {
+          "name": "GibsonAI /Memori",
+          "description": "GibsonAI /",
+          "stars": "4"
+        }
+      ]
+    },
+    {
+      "url": "https://stackoverflow.com/questions",
+      "name": "Stack Overflow",
+      "category": "forum",
+      "fields": [
+        "title",
+        "votes"
+      ],
+      "success": true,
+      "items_count": 20,
+      "used_cache": false,
+      "used_llm": true,
+      "cost": 0.02,
+      "time": 5.826678037643433,
+      "data": [
+        {
+          "title": "How to set translateX based on the <html>'s dir attribute?",
+          "votes": "0"
+        },
+        {
+          "title": null,
+          "votes": "0"
+        },
+        {
+          "title": null,
+          "votes": "0"
+        },
+        {
+          "title": null,
+          "votes": "0"
+        },
+        {
+          "title": null,
+          "votes": "14"
+        },
+        {
+          "title": "How to set translateX based on the <html>'s dir attribute?",
+          "votes": "380"
+        },
+        {
+          "title": "I made a sidebar that collapses/opens with animation. The site can either be RTL or LTR.\n.sidebar {\n    max-width: 380px;\n    width: 85%;\n    height: 100%;\n    position: fixed;\n    z-index: 100;\n    ...",
+          "votes": "380"
+        },
+        {
+          "title": "css",
+          "votes": "3"
+        },
+        {
+          "title": "css",
+          "votes": "css"
+        },
+        {
+          "title": "Using TkAgg in Jupyter embedded?",
+          "votes": "0"
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "total_requests": 3,
+    "cache_hits": 0,
+    "cache_misses": 3,
+    "llm_calls": 3,
+    "fallback_uses": 0,
+    "total_cost": 0.06,
+    "total_time": 20.988770008087158,
+    "items_extracted": 39,
+    "errors": 0
+  }
+}

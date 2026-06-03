@@ -1,0 +1,1652 @@
+2025-11-26 09:48:12,260 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-26 09:48:12,271 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:48:12,271 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:48:12,271 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:48:12,271 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:48:12,271 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:48:12,271 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:48:12,283 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:48:12,283 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:48:12,284 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:48:12,284 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:48:12,284 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:48:12,284 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:48:12,284 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:48:12,284 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:48:12,284 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:48:12,284 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:48:12,285 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://books.toscrape.com/
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO - 📋 Fields: title, price, rating
+2025-11-26 09:48:12,285 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:48:12,285 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://books.toscrape.com/
+2025-11-26 09:48:12,285 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:48:12,285 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:48:12,285 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: books.toscrape.com
+2025-11-26 09:48:13,653 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-26 09:48:13,653 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://books.toscrape.com/
+2025-11-26 09:48:13,707 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (51294 bytes)
+2025-11-26 09:48:13,728 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Found 2161 chars of structured content, static HTML sufficient
+2025-11-26 09:48:13,728 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-26 09:48:13,728 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:48:13,749 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:13,749 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://books.toscrape.com/
+/Users/jevon_williams/Library/Python/3.9/lib/python/site-packages/soupsieve/css_parser.py:876: FutureWarning: The pseudo class ':contains' is deprecated, ':-soup-contains' should be used moving forward.
+  warnings.warn(  # noqa: B028
+2025-11-26 09:48:13,777 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-26 09:48:13,777 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-26 09:48:13,781 - universal_scraper.core.pagination_detector - INFO - ✅ Final max_page from all strategies: 50
+2025-11-26 09:48:13,781 - universal_scraper.core.pagination_detector - INFO - ✅ Detected link-based pagination
+2025-11-26 09:48:13,781 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: link_based (confidence: medium)
+2025-11-26 09:48:13,781 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found "Next" link in pagination
+2025-11-26 09:48:13,781 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:48:13,798 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:13,798 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:48:13,798 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:48:13,798 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (51,294 bytes)
+2025-11-26 09:48:13,858 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 16,775 bytes (67.3% reduction)
+2025-11-26 09:48:13,858 - universal_scraper.core.scraper - INFO -    HTML reduced: 67.3%
+2025-11-26 09:48:13,858 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 16,775 bytes (quality=balanced)
+2025-11-26 09:48:13,859 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Large page - split into 2 chunks (with 33% overlap)
+2025-11-26 09:48:13,859 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/2 (with context from 0 previous items)...
+2025-11-26 09:48:13,866 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,844 bytes)
+2025-11-26 09:48:13,881 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 CSS class data types (ratings/votes/scores)
+2025-11-26 09:48:13,890 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (4,265 chars)
+[92m09:48:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:13,896 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:27,610 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 1/2: 19 items
+2025-11-26 09:48:27,611 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/2 (with context from 19 previous items)...
+2025-11-26 09:48:27,616 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (6,264 bytes)
+2025-11-26 09:48:27,623 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 CSS class data types (ratings/votes/scores)
+2025-11-26 09:48:27,628 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,756 chars)
+[92m09:48:27 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:27,630 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:33,354 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 2/2: 8 items
+2025-11-26 09:48:33,354 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 20 items
+2025-11-26 09:48:33,354 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 75.0% field completeness
+2025-11-26 09:48:33,354 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 20 items
+2025-11-26 09:48:33,354 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 20 items
+2025-11-26 09:48:33,354 - universal_scraper.core.scraper - INFO -    Quality: 75.0% field completeness
+2025-11-26 09:48:33,354 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (75.0% >= 40.0%)
+2025-11-26 09:48:33,354 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-26 09:48:33,355 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 20 items in 21.07s
+2025-11-26 09:48:33,357 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:48:33,357 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-26 09:48:33,357 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-26 09:48:35,375 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-26 09:48:35,394 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:48:35,394 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:48:35,394 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:48:35,394 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:48:35,394 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:48:35,394 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:48:35,408 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:48:35,408 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:48:35,408 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:48:35,408 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:48:35,408 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:48:35,408 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:48:35,409 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:48:35,409 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:48:35,409 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:48:35,409 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:48:35,409 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://quotes.toscrape.com/
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 📋 Fields: text, author, tags
+2025-11-26 09:48:35,409 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:48:35,409 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://quotes.toscrape.com/
+2025-11-26 09:48:35,409 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:48:35,409 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:48:35,409 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: quotes.toscrape.com
+2025-11-26 09:48:35,632 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-26 09:48:35,632 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://quotes.toscrape.com/
+2025-11-26 09:48:35,686 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (11021 bytes)
+2025-11-26 09:48:35,695 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML appears sufficient (no JS indicators, good content)
+2025-11-26 09:48:35,695 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-26 09:48:35,695 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:48:35,703 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:35,703 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://quotes.toscrape.com/
+2025-11-26 09:48:35,710 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-26 09:48:35,710 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-26 09:48:35,711 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-26 09:48:35,711 - universal_scraper.core.pagination_detector - INFO - ✅ Detected path-based pagination
+2025-11-26 09:48:35,712 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: path_based (confidence: high)
+2025-11-26 09:48:35,712 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found path-based pagination pattern
+2025-11-26 09:48:35,712 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:48:35,719 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:35,719 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:48:35,720 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:48:35,720 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (11,021 bytes)
+2025-11-26 09:48:35,729 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 7,708 bytes (30.1% reduction)
+2025-11-26 09:48:35,729 - universal_scraper.core.scraper - INFO -    HTML reduced: 30.1%
+2025-11-26 09:48:35,729 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 7,708 bytes (quality=balanced)
+2025-11-26 09:48:35,729 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Small page (7,708 bytes) - processing without chunking
+2025-11-26 09:48:35,730 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (7,708 bytes)
+2025-11-26 09:48:35,747 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,763 chars)
+[92m09:48:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:35,752 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:45,587 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 100.0% field completeness
+2025-11-26 09:48:45,587 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 10 items
+2025-11-26 09:48:45,588 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 10 items
+2025-11-26 09:48:45,588 - universal_scraper.core.scraper - INFO -    Quality: 100.0% field completeness
+2025-11-26 09:48:45,588 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (100.0% >= 40.0%)
+2025-11-26 09:48:45,588 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-26 09:48:45,588 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 10 items in 10.18s
+2025-11-26 09:48:45,590 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:48:45,590 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-26 09:48:45,590 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-26 09:48:47,611 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-26 09:48:47,628 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:48:47,628 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:48:47,628 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:48:47,628 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:48:47,628 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:48:47,628 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:48:47,646 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:48:47,646 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:48:47,646 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:48:47,646 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:48:47,646 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:48:47,646 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:48:47,646 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:48:47,646 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:48:47,646 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:48:47,646 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:48:47,646 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:48:47,647 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:48:47,647 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:48:47,647 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://news.ycombinator.com/
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 📋 Fields: title, points, author
+2025-11-26 09:48:47,647 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:48:47,647 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://news.ycombinator.com/
+2025-11-26 09:48:47,647 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:48:47,647 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:48:47,647 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: news.ycombinator.com
+2025-11-26 09:48:47,926 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-26 09:48:47,927 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://news.ycombinator.com/
+2025-11-26 09:48:47,972 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (34834 bytes)
+2025-11-26 09:48:47,999 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Found 7260 chars of structured content, static HTML sufficient
+2025-11-26 09:48:47,999 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-26 09:48:47,999 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:48:48,022 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:48,022 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://news.ycombinator.com/
+2025-11-26 09:48:48,038 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-26 09:48:48,038 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-26 09:48:48,042 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-26 09:48:48,042 - universal_scraper.core.pagination_detector - INFO - ✅ Detected URL parameter pagination: p
+2025-11-26 09:48:48,042 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: url_param (confidence: high)
+2025-11-26 09:48:48,042 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found p parameter in URL or pagination links
+2025-11-26 09:48:48,042 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:48:48,062 - universal_scraper.core.json_detector - INFO - ❌ No JSON sources detected, will use HTML parsing
+2025-11-26 09:48:48,062 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:48:48,062 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:48:48,062 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (34,834 bytes)
+2025-11-26 09:48:48,090 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 34,375 bytes (1.3% reduction)
+2025-11-26 09:48:48,090 - universal_scraper.core.scraper - INFO -    HTML reduced: 1.3%
+2025-11-26 09:48:48,090 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 34,375 bytes (quality=balanced)
+2025-11-26 09:48:48,090 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Large page - split into 4 chunks (with 33% overlap)
+2025-11-26 09:48:48,090 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/4 (with context from 0 previous items)...
+2025-11-26 09:48:48,099 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,777 bytes)
+2025-11-26 09:48:48,116 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 2 tables
+2025-11-26 09:48:48,116 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 2 labeled number types (votes/answers/views)
+2025-11-26 09:48:48,126 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (4,696 chars)
+[92m09:48:48 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:48,127 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:58,868 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 7 low-quality items (5 kept, mode=balanced)
+2025-11-26 09:48:58,868 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 1/4: 5 items
+2025-11-26 09:48:58,868 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/4 (with context from 5 previous items)...
+2025-11-26 09:48:58,886 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,985 bytes)
+2025-11-26 09:48:58,908 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 2 labeled number types (votes/answers/views)
+2025-11-26 09:48:58,921 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (5,089 chars)
+[92m09:48:58 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:48:58,922 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:11,301 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 5 low-quality items (7 kept, mode=balanced)
+2025-11-26 09:49:11,301 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 2/4: 7 items
+2025-11-26 09:49:11,301 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 3/4 (with context from 12 previous items)...
+2025-11-26 09:49:11,316 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,279 bytes)
+2025-11-26 09:49:11,339 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 2 labeled number types (votes/answers/views)
+2025-11-26 09:49:11,353 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (5,025 chars)
+[92m09:49:11 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:11,355 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:25,417 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 11 low-quality items (4 kept, mode=balanced)
+2025-11-26 09:49:25,417 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 3/4: 4 items
+2025-11-26 09:49:25,417 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 4/4 (with context from 16 previous items)...
+2025-11-26 09:49:25,427 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (4,612 bytes)
+2025-11-26 09:49:25,434 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 2 labeled number types (votes/answers/views)
+2025-11-26 09:49:25,442 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,526 chars)
+[92m09:49:25 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:25,444 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:29,077 - universal_scraper.core.direct_llm_extractor - INFO -    🧹 Filtered 3 low-quality items (1 kept, mode=balanced)
+2025-11-26 09:49:29,077 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 4/4: 1 items
+2025-11-26 09:49:29,077 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 10 items
+2025-11-26 09:49:29,077 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 100.0% field completeness
+2025-11-26 09:49:29,077 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 10 items
+2025-11-26 09:49:29,077 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 10 items
+2025-11-26 09:49:29,077 - universal_scraper.core.scraper - INFO -    Quality: 100.0% field completeness
+2025-11-26 09:49:29,077 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (100.0% >= 40.0%)
+2025-11-26 09:49:29,077 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-26 09:49:29,077 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 10 items in 41.43s
+2025-11-26 09:49:29,081 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:49:29,081 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-26 09:49:29,081 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-26 09:49:31,099 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/...
+2025-11-26 09:49:31,120 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:49:31,120 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:49:31,120 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:49:31,120 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:49:31,120 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:49:31,120 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:49:31,127 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:49:31,127 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:49:31,127 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:49:31,127 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:49:31,127 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:49:31,128 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:49:31,128 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:49:31,128 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:49:31,128 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:49:31,128 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:49:31,128 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://github.com/trending
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 📋 Fields: repository, description, stars
+2025-11-26 09:49:31,128 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:49:31,128 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://github.com/trending
+2025-11-26 09:49:31,128 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:49:31,186 - universal_scraper.core.api_cache - INFO - ✅ Found 5 cached APIs for github.com
+2025-11-26 09:49:31,186 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 5 cached APIs for github.com
+2025-11-26 09:49:31,186 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:49:31,187 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: github.com
+2025-11-26 09:49:31,543 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-26 09:49:31,544 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://github.com/trending
+2025-11-26 09:49:32,898 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (624477 bytes)
+2025-11-26 09:49:33,151 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Found 13620 chars of structured content, static HTML sufficient
+2025-11-26 09:49:33,151 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Static HTML sufficient
+2025-11-26 09:49:33,151 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:49:33,276 - universal_scraper.core.json_detector - INFO - ✅ Found 5 GraphQL endpoint(s)
+2025-11-26 09:49:33,299 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://github.com/trending
+2025-11-26 09:49:33,451 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-26 09:49:33,451 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-26 09:49:33,473 - universal_scraper.core.pagination_detector - WARNING - ❌ Could not determine max_page from any strategy
+2025-11-26 09:49:33,473 - universal_scraper.core.pagination_detector - INFO - ✅ Detected link-based pagination
+2025-11-26 09:49:33,473 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: link_based (confidence: medium)
+2025-11-26 09:49:33,473 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found "Next" link in pagination
+2025-11-26 09:49:33,473 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:49:33,658 - universal_scraper.core.json_detector - INFO - ✅ Found 5 GraphQL endpoint(s)
+2025-11-26 09:49:33,682 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:49:33,682 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:49:33,682 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (624,477 bytes)
+2025-11-26 09:49:33,849 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 373,818 bytes (40.1% reduction)
+2025-11-26 09:49:33,849 - universal_scraper.core.scraper - INFO -    HTML reduced: 40.1%
+2025-11-26 09:49:33,849 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 373,818 bytes (quality=balanced)
+2025-11-26 09:49:33,850 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Large page - split into 37 chunks (with 33% overlap)
+2025-11-26 09:49:33,850 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/37 (establishing patterns)...
+2025-11-26 09:49:33,854 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,343 bytes)
+2025-11-26 09:49:33,860 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:49:33,864 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (396 chars)
+[92m09:49:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:33,864 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:34,337 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 1/37: 0 items
+2025-11-26 09:49:34,337 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/37 (establishing patterns)...
+2025-11-26 09:49:34,345 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:49:34,358 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:49:34,365 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,332 chars)
+[92m09:49:34 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:34,366 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,015 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 2/37: 0 items
+2025-11-26 09:49:35,015 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 1/9 (chunks 3-6)...
+2025-11-26 09:49:35,020 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:49:35,028 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,034 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,008 chars)
+2025-11-26 09:49:35,039 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,045 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,049 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,056 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,008 chars)
+2025-11-26 09:49:35,061 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,067 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,070 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,077 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,008 chars)
+2025-11-26 09:49:35,081 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,088 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,090 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,096 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,815 chars)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,096 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,703 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 3/37: 0 items
+2025-11-26 09:49:35,703 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 4/37: 0 items
+2025-11-26 09:49:35,703 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 5/37: 0 items
+2025-11-26 09:49:35,703 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 6/37: 0 items
+2025-11-26 09:49:35,703 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 2/9 (chunks 7-10)...
+2025-11-26 09:49:35,714 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:49:35,727 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,735 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,686 chars)
+2025-11-26 09:49:35,741 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,748 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,751 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,758 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,690 chars)
+2025-11-26 09:49:35,763 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,765 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,770 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,777 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,790 chars)
+2025-11-26 09:49:35,781 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,787 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,788 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:35,794 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+[92m09:49:35 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:35,794 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,403 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 7/37: 0 items
+2025-11-26 09:49:36,403 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 8/37: 0 items
+2025-11-26 09:49:36,403 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 9/37: 0 items
+2025-11-26 09:49:36,403 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 10/37: 0 items
+2025-11-26 09:49:36,403 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 3/9 (chunks 11-14)...
+2025-11-26 09:49:36,412 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:49:36,421 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:36,429 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,820 chars)
+2025-11-26 09:49:36,435 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,442 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,443 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:36,449 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,801 chars)
+2025-11-26 09:49:36,454 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,461 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,462 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:36,468 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,792 chars)
+2025-11-26 09:49:36,472 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:49:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,479 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,480 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:49:36,485 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+[92m09:49:36 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:49:36,486 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,467 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 11/37: 60 items
+2025-11-26 09:50:04,468 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 12/37: 0 items
+2025-11-26 09:50:04,468 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 13/37: 62 items
+2025-11-26 09:50:04,468 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 14/37: 0 items
+2025-11-26 09:50:04,468 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 4/9 (chunks 15-18)...
+2025-11-26 09:50:04,477 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:50:04,485 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:04,490 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,831 chars)
+2025-11-26 09:50:04,496 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:50:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,503 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,506 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:04,511 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,790 chars)
+[92m09:50:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,512 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,516 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:50:04,524 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:04,532 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,790 chars)
+2025-11-26 09:50:04,536 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:50:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,545 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:04,542 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,550 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+[92m09:50:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:04,551 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,045 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 15/37: 0 items
+2025-11-26 09:50:39,045 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 16/37: 0 items
+2025-11-26 09:50:39,045 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 17/37: 0 items
+2025-11-26 09:50:39,045 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 18/37: 59 items
+2025-11-26 09:50:39,045 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 5/9 (chunks 19-22)...
+2025-11-26 09:50:39,055 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:50:39,066 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:39,073 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+2025-11-26 09:50:39,079 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:50:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,086 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,090 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:39,096 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,702 chars)
+2025-11-26 09:50:39,101 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:50:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,103 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,109 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:39,115 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,702 chars)
+2025-11-26 09:50:39,120 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:50:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,126 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,127 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:50:39,133 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+[92m09:50:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:50:39,134 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,667 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 19/37: 0 items
+2025-11-26 09:51:13,667 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 20/37: 0 items
+2025-11-26 09:51:13,667 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 21/37: 0 items
+2025-11-26 09:51:13,667 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 22/37: 61 items
+2025-11-26 09:51:13,667 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 6/9 (chunks 23-26)...
+2025-11-26 09:51:13,676 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:51:13,687 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:51:13,694 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,821 chars)
+2025-11-26 09:51:13,700 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:51:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,708 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,714 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:51:13,720 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,920 chars)
+2025-11-26 09:51:13,725 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+[92m09:51:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,731 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,732 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:51:13,737 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,909 chars)
+2025-11-26 09:51:13,741 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (13,216 bytes)
+[92m09:51:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,747 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,748 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:13,748 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:13,752 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,881 chars)
+[92m09:51:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:13,764 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,412 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 23/37: 0 items
+2025-11-26 09:51:18,412 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 24/37: 0 items
+2025-11-26 09:51:18,412 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 25/37: 0 items
+2025-11-26 09:51:18,412 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 26/37: 1 items
+2025-11-26 09:51:18,412 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 7/9 (chunks 27-30)...
+2025-11-26 09:51:18,417 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,481 bytes)
+2025-11-26 09:51:18,425 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:18,425 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:18,429 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,407 chars)
+2025-11-26 09:51:18,433 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:51:18,439 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:18,439 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+[92m09:51:18 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,444 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,483 chars)
+2025-11-26 09:51:18,440 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:51:18 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,447 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (13,301 bytes)
+2025-11-26 09:51:18,448 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,452 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:18,453 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:18,456 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (839 chars)
+2025-11-26 09:51:18,459 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,745 bytes)
+[92m09:51:18 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,463 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,464 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:18,464 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:18,467 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,374 chars)
+[92m09:51:18 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:18,468 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,318 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 27/37: 3 items
+2025-11-26 09:51:24,318 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 28/37: 3 items
+2025-11-26 09:51:24,318 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 29/37: 3 items
+2025-11-26 09:51:24,318 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 30/37: 2 items
+2025-11-26 09:51:24,319 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 8/9 (chunks 31-34)...
+2025-11-26 09:51:24,326 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,824 bytes)
+2025-11-26 09:51:24,337 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:24,337 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:24,343 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,276 chars)
+2025-11-26 09:51:24,347 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,758 bytes)
+[92m09:51:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,354 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,355 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:24,355 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:24,360 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,575 chars)
+2025-11-26 09:51:24,363 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (16,000 bytes)
+2025-11-26 09:51:24,369 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:24,369 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:24,373 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,574 chars)
+2025-11-26 09:51:24,377 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (13,124 bytes)
+2025-11-26 09:51:24,381 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:24,381 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:24,384 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,143 chars)
+[92m09:51:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,385 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:51:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,386 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:51:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:24,386 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:28,902 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 31/37: 3 items
+2025-11-26 09:51:28,902 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 32/37: 3 items
+2025-11-26 09:51:28,902 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 33/37: 3 items
+2025-11-26 09:51:28,902 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 34/37: 3 items
+2025-11-26 09:51:28,902 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 9/9 (chunks 35-37)...
+2025-11-26 09:51:28,908 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,322 bytes)
+2025-11-26 09:51:28,916 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 7 data attribute types
+2025-11-26 09:51:28,916 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:28,920 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (907 chars)
+2025-11-26 09:51:28,925 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (13,359 bytes)
+[92m09:51:28 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:28,931 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:28,932 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 11 data attribute types
+2025-11-26 09:51:28,932 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:28,935 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (906 chars)
+2025-11-26 09:51:28,937 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (2,692 bytes)
+2025-11-26 09:51:28,938 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:51:28,938 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 labeled number types (votes/answers/views)
+2025-11-26 09:51:28,939 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (598 chars)
+[92m09:51:28 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:28,940 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:51:28 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:28,942 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:32,696 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 35/37: 3 items
+2025-11-26 09:51:32,696 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 36/37: 2 items
+2025-11-26 09:51:32,696 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 37/37: 1 items
+2025-11-26 09:51:32,697 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 262 items
+2025-11-26 09:51:32,697 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 38.5% field completeness
+2025-11-26 09:51:32,701 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 262 items
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 262 items
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - INFO -    Quality: 38.5% field completeness
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - WARNING -    ⚠️ Direct LLM quality too low (38.5% < 40.0%)
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - INFO -    Falling back to pattern-based extraction...
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - INFO - 🧹 Step 3: Cleaning HTML for pattern-based extraction...
+2025-11-26 09:51:32,702 - universal_scraper.core.scraper - INFO -    Reduction: 40.1%
+2025-11-26 09:51:32,703 - universal_scraper.core.scraper - INFO - 🔑 Step 4: Generating structural hash...
+2025-11-26 09:51:32,954 - universal_scraper.core.structural_hash - INFO - 🔑 Generated hash: 0377ced8a4af1c30...
+2025-11-26 09:51:32,976 - universal_scraper.core.scraper - INFO - 💾 Step 5: Checking code cache...
+2025-11-26 09:51:32,976 - universal_scraper.core.scraper - INFO - 🔍 Step 5.5: Analyzing HTML structure...
+2025-11-26 09:51:32,976 - universal_scraper.core.html_structure_analyzer - INFO - 🔍 Analyzing HTML structure for github.com...
+2025-11-26 09:51:32,976 - universal_scraper.core.html_structure_analyzer - INFO -    Phase 1: DOM pattern detection (no LLM)...
+2025-11-26 09:51:33,019 - universal_scraper.core.dom_pattern_detector - INFO - 🔍 Starting DOM pattern detection...
+2025-11-26 09:51:33,029 - universal_scraper.core.dom_pattern_detector - INFO -    Found 40 repeating element signatures
+2025-11-26 09:51:33,035 - universal_scraper.core.dom_pattern_detector - INFO -    Found 15 repeating tree structures
+2025-11-26 09:51:33,239 - universal_scraper.core.dom_pattern_detector - INFO -    Found 9 elements with data-* attributes
+2025-11-26 09:51:33,246 - universal_scraper.core.dom_pattern_detector - INFO -    🎯 Found 7 custom web components!
+2025-11-26 09:51:33,531 - universal_scraper.core.dom_pattern_detector - INFO -    ✅ Best pattern: article.Box-row (36 instances, score=11.10, confidence=0.84)
+2025-11-26 09:51:33,537 - universal_scraper.core.dom_pattern_detector - INFO -    📦 Context block: parent_context_block
+2025-11-26 09:51:33,537 - universal_scraper.core.dom_pattern_detector - INFO -    📦 Found 1 consistent siblings
+2025-11-26 09:51:33,537 - universal_scraper.core.html_structure_analyzer - INFO -    Phase 2: LLM analysis (DOM confidence=0.84, need LLM)
+2025-11-26 09:51:33,613 - universal_scraper.core.smart_html_sampler - INFO - 📊 Smart sample created: 12,038 chars (from 373,818)
+[92m09:51:33 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:51:33,613 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:04 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:04,235 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:04,247 - universal_scraper.core.html_structure_analyzer - WARNING - ⚠️ HTML structure analysis failed: Unterminated string starting at: line 19 column 21 (char 769)
+2025-11-26 09:52:04,248 - universal_scraper.core.scraper - INFO - 🗺️  Step 5.7: Mapping fields semantically...
+2025-11-26 09:52:04,248 - universal_scraper.core.smart_sampler - INFO -    📏 Fixed sample: 10,000 bytes (fallback strategy)
+2025-11-26 09:52:04,248 - universal_scraper.core.field_mapper - INFO - 🗺️  Mapping 3 fields for github.com...
+2025-11-26 09:52:04,249 - universal_scraper.core.field_mapper - INFO -    Domain type: tech_platform (repositories)
+2025-11-26 09:52:04,251 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'repository': Repository name or full user/repo path...
+2025-11-26 09:52:04,251 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'description': A brief description of the repository's purpose or...
+2025-11-26 09:52:04,251 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'stars': The number of stars the repository has received fr...
+2025-11-26 09:52:04,251 - universal_scraper.core.scraper - INFO -    ✅ Mapped 3 fields with semantic understanding
+2025-11-26 09:52:04,251 - universal_scraper.core.scraper - INFO - 🤖 Step 6: Generating extraction code with AI...
+2025-11-26 09:52:04,251 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:52:04,252 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: unknown
+2025-11-26 09:52:04,252 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:52:04,252 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:52:04,252 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:04,252 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:04,278 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 373818, First 100 chars: <!DOCTYPE html><html data-a11y-animated-images="system" data-a11y-link-underlines="true" data-color-
+2025-11-26 09:52:04,279 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: filter-input, details-menu, clipboard-copy, ghcc-consent, tool-tip
+2025-11-26 09:52:04,279 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:04 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:04,281 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:11 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:11,769 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:11,926 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 3 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:11,926 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:52:11,926 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:11,926 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:11,937 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 373818, First 100 chars: <!DOCTYPE html><html data-a11y-animated-images="system" data-a11y-link-underlines="true" data-color-
+2025-11-26 09:52:11,937 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: filter-input, details-menu, clipboard-copy, ghcc-consent, tool-tip
+2025-11-26 09:52:11,938 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:11 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:11,938 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:17 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:17,362 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:19,135 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 3 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:19,135 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:52:19,135 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:19,135 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:19,146 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 373818, First 100 chars: <!DOCTYPE html><html data-a11y-animated-images="system" data-a11y-link-underlines="true" data-color-
+2025-11-26 09:52:19,146 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: filter-input, details-menu, clipboard-copy, ghcc-consent, tool-tip
+2025-11-26 09:52:19,146 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:19 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:19,147 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:26 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:26,237 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:26,850 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 3 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:26,850 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:52:26,850 - universal_scraper.core.scraper - INFO - ⚡ Step 7: Executing extraction code with adaptive iteration...
+2025-11-26 09:52:26,852 - universal_scraper.core.scraper - INFO - 📝 Code length: 1322 chars
+2025-11-26 09:52:27,599 - universal_scraper.core.scraper - INFO -    ✅ Pass 1: Extracted 11 items
+2025-11-26 09:52:27,599 - universal_scraper.core.scraper - INFO -    📊 Pass 1 quality: 33.3%
+2025-11-26 09:52:27,599 - universal_scraper.core.scraper - INFO -    ✅ New best result: 11 items, 33.3% quality
+2025-11-26 09:52:27,599 - universal_scraper.core.scraper - WARNING - ⚠️ Pass 1 quality too low (33.3% < 70%) - triggering next pass
+2025-11-26 09:52:27,599 - universal_scraper.core.scraper - INFO - 🔄 Pass 2: Retrying with improved selectors...
+2025-11-26 09:52:27,599 - universal_scraper.core.adaptive_dom_detector - INFO - 🔍 Pass 2: LLM-guided nested structure analysis
+[92m09:52:27 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:27,741 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:30 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:30,788 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:30,789 - universal_scraper.core.adaptive_dom_detector - INFO -    ✅ LLM suggested: div.HeaderMenu-dropdown-link (confidence: 0.8)
+2025-11-26 09:52:30,789 - universal_scraper.core.adaptive_dom_detector - INFO -    💡 Reasoning: The selector targets elements that are part of a dropdown menu structure which repeats for different
+2025-11-26 09:52:30,789 - universal_scraper.core.adaptive_dom_detector - ERROR -    ❌ LLM analysis failed: invalid literal for int() with base 10: '10-50'
+2025-11-26 09:52:30,789 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:52:30,789 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: unknown
+2025-11-26 09:52:30,789 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:52:30,789 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:52:30,790 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:30,790 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:30,827 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:52:30,827 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:52:30,827 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:30 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:30,828 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:37 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:37,534 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:39,319 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:39,319 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:52:39,319 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:39,319 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:39,339 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:52:39,340 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:52:39,340 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:39 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:39,341 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:45 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:45,868 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:46,543 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:46,543 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:52:46,543 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:46,543 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:46,563 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:52:46,563 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:52:46,563 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:46 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:46,564 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:52 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:52,555 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:52,834 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:52:52,834 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:52:52,835 - universal_scraper.core.scraper - INFO - 📝 Code length: 1281 chars
+2025-11-26 09:52:53,050 - universal_scraper.core.scraper - INFO -    ✅ Pass 2: Extracted 11 items
+2025-11-26 09:52:53,051 - universal_scraper.core.scraper - INFO -    📊 Pass 2 quality: 33.3%
+2025-11-26 09:52:53,051 - universal_scraper.core.scraper - WARNING - ⚠️ Pass 2 quality too low (33.3% < 70%) - triggering next pass
+2025-11-26 09:52:53,051 - universal_scraper.core.scraper - INFO - 🔄 Pass 3: Retrying with improved selectors...
+2025-11-26 09:52:53,051 - universal_scraper.core.adaptive_dom_detector - INFO - 🧠 Pass 3: Deep context analysis with error feedback
+[92m09:52:53 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:53,145 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:52:59 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:59,020 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:52:59,022 - universal_scraper.core.adaptive_dom_detector - INFO -    🎯 LLM DEEP analysis: .Box .col-12 .h3 a (confidence: 0.75)
+2025-11-26 09:52:59,022 - universal_scraper.core.adaptive_dom_detector - INFO -    📋 Strategy: nested_elements
+2025-11-26 09:52:59,022 - universal_scraper.core.adaptive_dom_detector - INFO -    💡 Reasoning: The `.Box` class suggests that this is a container for trending repositories, which is where we expect to find repository links. The `.col-12` class i
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: None
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:52:59,022 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:52:59,058 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:52:59,059 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:52:59,059 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:52:59 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:52:59,060 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:53:07 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:07,253 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:09,391 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:53:09,391 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:53:09,391 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:53:09,391 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:53:09,410 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:53:09,410 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:53:09,410 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:53:09 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:53:09,411 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:53:17 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:17,421 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:17,610 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:53:17,610 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:53:17,610 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:53:17,610 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (custom elements detected)
+2025-11-26 09:53:17,628 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 624477, First 100 chars: 
+
+<!DOCTYPE html>
+<html
+  lang="en"
+  
+  data-color-mode="auto" data-light-theme="light" data-dark-t
+2025-11-26 09:53:17,629 - universal_scraper.core.ai_generator - WARNING - 🚨 DETECTED CUSTOM WEB COMPONENTS: qbsearch-input, filter-input, modal-dialog, details-menu, clipboard-copy
+2025-11-26 09:53:17,629 - universal_scraper.core.ai_generator - WARNING -    → USING ATTRIBUTE-FIRST EXTRACTION STRATEGY
+[92m09:53:17 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:53:17,630 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:53:23 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:23,288 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:24,035 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 11 items but 2/3 fields (67%) are NULL
+   Null fields: repository, stars
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (repository) should NEVER be null!
+2025-11-26 09:53:24,035 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:53:24,037 - universal_scraper.core.scraper - INFO - 📝 Code length: 1283 chars
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - INFO -    ✅ Pass 3: Extracted 11 items
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - INFO -    📊 Pass 3 quality: 33.3%
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - WARNING - ⚠️ All 3 passes complete - returning best attempt (33.3% quality)
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - INFO -    ✅ Final result: 11 items from 3 pass(es)
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - WARNING - ⚠️ HTML code generation has low quality (33.3%)
+2025-11-26 09:53:24,791 - universal_scraper.core.scraper - INFO - 🎨 Trying Phase 2.5: Semantic Pattern Extraction...
+2025-11-26 09:53:24,795 - universal_scraper.core.scraper - INFO -    Generating semantic pattern...
+2025-11-26 09:53:24,795 - universal_scraper.core.ai_generator - INFO - 🎨 Generating semantic pattern for 3 fields...
+2025-11-26 09:53:24,796 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: unknown
+2025-11-26 09:53:24,796 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+[92m09:53:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:53:24,796 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:53:32 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:32,476 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:53:32,489 - universal_scraper.core.ai_generator - INFO -    ✅ Generated semantic pattern (3 fields)
+2025-11-26 09:53:32,489 - universal_scraper.core.scraper - INFO -    ✅ Semantic pattern generated: The patterns for extracting repository names, descriptions, and star counts are designed to be resil...
+2025-11-26 09:53:32,603 - universal_scraper.core.semantic_extractor - INFO - 🎨 Semantic Extractor initialized
+2025-11-26 09:53:32,697 - universal_scraper.core.semantic_extractor - INFO - 🎨 Extracting from 1 container(s) using semantic patterns
+2025-11-26 09:53:32,699 - universal_scraper.core.semantic_extractor - INFO - ✅ Extracted 1 items using semantic patterns
+2025-11-26 09:53:32,699 - universal_scraper.core.scraper - INFO -    ✅ Semantic extraction: 1 items, 100.0% quality
+2025-11-26 09:53:32,699 - universal_scraper.core.scraper - INFO -    🎉 Semantic patterns outperformed code generation (100.0% > 33.3%)
+2025-11-26 09:53:32,699 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 1 items in 241.57s
+2025-11-26 09:53:32,702 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:53:32,702 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 1, 'browser_fallback': 0, 'apis_discovered': 0}
+2025-11-26 09:53:32,702 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-26 09:53:34,729 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-26 09:53:34,747 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:53:34,747 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:53:34,747 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:53:34,747 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:53:34,748 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:53:34,748 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:53:34,756 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:53:34,756 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:53:34,756 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:53:34,757 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:53:34,757 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:53:34,757 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:53:34,757 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:53:34,757 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:53:34,757 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:53:34,757 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://stackoverflow.com/questions
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 📋 Fields: title, votes, answers
+2025-11-26 09:53:34,757 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:53:34,757 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://stackoverflow.com/questions
+2025-11-26 09:53:34,757 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:53:34,818 - universal_scraper.core.api_cache - INFO - ✅ Found 5 cached APIs for stackoverflow.com
+2025-11-26 09:53:34,818 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 5 cached APIs for stackoverflow.com
+2025-11-26 09:53:34,818 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:53:34,818 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: stackoverflow.com
+2025-11-26 09:53:36,186 - universal_scraper.core.html_fetcher - INFO - ✅ Session warmed: 200
+2025-11-26 09:53:36,186 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://stackoverflow.com/questions
+2025-11-26 09:53:37,320 - universal_scraper.core.html_fetcher - INFO - ✅ Success: 200 (239311 bytes)
+2025-11-26 09:53:37,385 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Loading indicators found
+2025-11-26 09:53:37,385 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 JavaScript required, using browser...
+2025-11-26 09:53:37,869 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 Camoufox fetcher loaded
+2025-11-26 09:53:37,869 - universal_scraper.core.camoufox_fetcher - INFO - 🦊 Camoufox Fetcher initialized
+2025-11-26 09:53:37,869 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 60000ms
+2025-11-26 09:53:37,869 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2025-11-26 09:53:37,869 - universal_scraper.core.camoufox_fetcher - INFO - 🌐 Fetching with Camoufox: https://stackoverflow.com/questions
+2025-11-26 09:53:37,869 - universal_scraper.core.anti_detection - INFO - 🛡️  Anti-Detection Manager initialized (Maximum Robustness)
+2025-11-26 09:53:37,869 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2025-11-26 09:54:01,974 - universal_scraper.core.camoufox_fetcher - INFO - ✅ Camoufox fetch complete: 383791 bytes
+2025-11-26 09:54:01,974 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Captured 6 API requests
+2025-11-26 09:54:01,974 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Extracted 4 JSON blobs
+2025-11-26 09:54:01,974 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:54:02,117 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-26 09:54:02,138 - universal_scraper.core.json_detector - INFO - ✅ Found 2 GraphQL endpoint(s)
+2025-11-26 09:54:02,153 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://stackoverflow.com/questions
+2025-11-26 09:54:02,210 - universal_scraper.core.pagination_detector - INFO - 🔍 Checking for Next.js data: script tag found = False
+2025-11-26 09:54:02,210 - universal_scraper.core.pagination_detector - INFO - ⚠️ No max_page found in Next.js data, trying HTML pagination widgets...
+2025-11-26 09:54:02,229 - universal_scraper.core.pagination_detector - INFO - ✅ Final max_page from all strategies: 1612669
+2025-11-26 09:54:02,229 - universal_scraper.core.pagination_detector - INFO - ✅ Detected URL parameter pagination: page
+2025-11-26 09:54:02,229 - universal_scraper.core.scraper - INFO - ⚡ Fast detection: url_param (confidence: high)
+2025-11-26 09:54:02,229 - universal_scraper.core.scraper - INFO - 💭 Reasoning: Found page parameter in URL or pagination links
+2025-11-26 09:54:02,229 - universal_scraper.core.scraper - INFO - 📄 Generating URLs for 1612669 pages...
+2025-11-26 09:54:02,463 - universal_scraper.core.scraper - INFO - ✅ Generated 1612669 URLs for parallel scraping
+2025-11-26 09:54:02,463 - universal_scraper.core.scraper - INFO - ⚠️ Auto-pagination disabled: returning single page only (detected 1612669 total pages)
+2025-11-26 09:54:02,463 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:54:02,551 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-26 09:54:02,569 - universal_scraper.core.json_detector - INFO - ✅ Found 2 GraphQL endpoint(s)
+2025-11-26 09:54:02,583 - universal_scraper.core.scraper - INFO - 📦 Found 2 JSON source(s)
+2025-11-26 09:54:02,583 - universal_scraper.core.json_detector - INFO - ⚠️  Found 1 arrays, but BEST has negative score: 'root' (score=-58.0)
+2025-11-26 09:54:02,583 - universal_scraper.core.json_detector - INFO -    🚫 Rejecting all arrays - likely breadcrumbs/navigation
+2025-11-26 09:54:02,583 - universal_scraper.core.json_detector - INFO - ❌ No items extracted from JSON
+2025-11-26 09:54:02,583 - universal_scraper.core.scraper - INFO - ⚠️ JSON sources insufficient, falling back to HTML...
+2025-11-26 09:54:02,583 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:54:02,583 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:54:02,583 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (383,791 bytes)
+2025-11-26 09:54:02,681 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 84,486 bytes (78.0% reduction)
+2025-11-26 09:54:02,681 - universal_scraper.core.scraper - INFO -    HTML reduced: 78.0%
+2025-11-26 09:54:02,681 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 84,486 bytes (quality=balanced)
+2025-11-26 09:54:02,681 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Large page - split into 9 chunks (with 33% overlap)
+2025-11-26 09:54:02,681 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/9 (establishing patterns)...
+2025-11-26 09:54:02,686 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,591 bytes)
+2025-11-26 09:54:02,774 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 11 data attribute types
+2025-11-26 09:54:02,774 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:02,779 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,707 chars)
+[92m09:54:02 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:02,779 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:05,411 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 1/9: 2 items
+2025-11-26 09:54:05,411 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/9 (establishing patterns)...
+2025-11-26 09:54:05,420 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,975 bytes)
+2025-11-26 09:54:05,432 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:54:05,432 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:05,440 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,717 chars)
+[92m09:54:05 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:05,442 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,396 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 2/9: 4 items
+2025-11-26 09:54:08,396 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 1/2 (chunks 3-6)...
+2025-11-26 09:54:08,408 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,872 bytes)
+2025-11-26 09:54:08,425 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 4 data attribute types
+2025-11-26 09:54:08,425 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:08,434 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,065 chars)
+2025-11-26 09:54:08,441 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,778 bytes)
+[92m09:54:08 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,448 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,454 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:54:08,454 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:08,460 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,872 chars)
+2025-11-26 09:54:08,466 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,967 bytes)
+[92m09:54:08 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,476 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 5 data attribute types
+2025-11-26 09:54:08,472 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,476 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:08,482 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,022 chars)
+2025-11-26 09:54:08,487 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,860 bytes)
+[92m09:54:08 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,494 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,497 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 6 data attribute types
+2025-11-26 09:54:08,497 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:08,502 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,018 chars)
+[92m09:54:08 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:08,503 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:13,497 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 3/9: 4 items
+2025-11-26 09:54:13,497 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 4/9: 4 items
+2025-11-26 09:54:13,497 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 5/9: 4 items
+2025-11-26 09:54:13,497 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 6/9: 4 items
+2025-11-26 09:54:13,497 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 2/2 (chunks 7-9)...
+2025-11-26 09:54:13,507 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,563 bytes)
+2025-11-26 09:54:13,520 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 6 data attribute types
+2025-11-26 09:54:13,520 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 3 labeled number types (votes/answers/views)
+2025-11-26 09:54:13,528 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (3,855 chars)
+2025-11-26 09:54:13,532 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (12,211 bytes)
+[92m09:54:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:13,538 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:13,540 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:54:13,544 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (4,619 chars)
+2025-11-26 09:54:13,545 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (1,544 bytes)
+2025-11-26 09:54:13,546 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:54:13,547 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (394 chars)
+[92m09:54:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:13,548 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:54:13 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:13,548 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:30,826 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 7/9: 2 items
+2025-11-26 09:54:30,827 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 8/9: 23 items
+2025-11-26 09:54:30,827 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 9/9: 4 items
+2025-11-26 09:54:30,827 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 38 items
+2025-11-26 09:54:30,827 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 59.6% field completeness
+2025-11-26 09:54:30,827 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 38 items
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 38 items
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO -    Quality: 38.6% field completeness
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - WARNING -    ⚠️ Direct LLM quality too low (38.6% < 40.0%)
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO -    Falling back to pattern-based extraction...
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO - 🧹 Step 3: Cleaning HTML for pattern-based extraction...
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO -    Reduction: 78.0%
+2025-11-26 09:54:30,828 - universal_scraper.core.scraper - INFO - 🔑 Step 4: Generating structural hash...
+2025-11-26 09:54:30,864 - universal_scraper.core.structural_hash - INFO - 🔑 Generated hash: a50e4f1d7cba30c9...
+2025-11-26 09:54:30,873 - universal_scraper.core.scraper - INFO - 💾 Step 5: Checking code cache...
+2025-11-26 09:54:30,874 - universal_scraper.core.scraper - INFO - 🔍 Step 5.5: Analyzing HTML structure...
+2025-11-26 09:54:30,874 - universal_scraper.core.html_structure_analyzer - INFO - 🔍 Analyzing HTML structure for stackoverflow.com...
+2025-11-26 09:54:30,874 - universal_scraper.core.html_structure_analyzer - INFO -    Phase 1: DOM pattern detection (no LLM)...
+2025-11-26 09:54:30,895 - universal_scraper.core.dom_pattern_detector - INFO - 🔍 Starting DOM pattern detection...
+2025-11-26 09:54:30,901 - universal_scraper.core.dom_pattern_detector - INFO -    Found 52 repeating element signatures
+2025-11-26 09:54:30,905 - universal_scraper.core.dom_pattern_detector - INFO -    Found 15 repeating tree structures
+2025-11-26 09:54:30,914 - universal_scraper.core.dom_pattern_detector - INFO -    Found 6 elements with data-* attributes
+2025-11-26 09:54:31,015 - universal_scraper.core.dom_pattern_detector - INFO -    ✅ Best pattern: div.s-post-summary.js-post-summary (15 instances, score=16.40, confidence=0.95)
+2025-11-26 09:54:31,018 - universal_scraper.core.dom_pattern_detector - INFO -    📦 Context block: parent_context_block
+2025-11-26 09:54:31,018 - universal_scraper.core.dom_pattern_detector - INFO -    📦 Found 1 consistent siblings
+2025-11-26 09:54:31,018 - universal_scraper.core.html_structure_analyzer - INFO -    ✅ High-confidence DOM pattern detected (confidence=0.95)
+2025-11-26 09:54:31,018 - universal_scraper.core.html_structure_analyzer - INFO -    ⚡ Skipping LLM call (saving time & cost)
+2025-11-26 09:54:31,018 - universal_scraper.core.scraper - INFO - 🗺️  Step 5.7: Mapping fields semantically...
+2025-11-26 09:54:31,018 - universal_scraper.core.smart_sampler - INFO -    📏 Fixed sample: 10,000 bytes (fallback strategy)
+2025-11-26 09:54:31,018 - universal_scraper.core.field_mapper - INFO - 🗺️  Mapping 3 fields for stackoverflow.com...
+2025-11-26 09:54:31,021 - universal_scraper.core.field_mapper - INFO -    Domain type: forum (posts)
+2025-11-26 09:54:31,022 - universal_scraper.core.field_mapper - INFO -    🤖 Inferring field semantics (LLM call, ~$0.02)...
+[92m09:54:31 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:31,023 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:54:37 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:37,223 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:37,227 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'title': The main question or topic of the post....
+2025-11-26 09:54:37,227 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'votes': The number of votes the post has received....
+2025-11-26 09:54:37,227 - universal_scraper.core.field_mapper - INFO -    ✅ Mapped 'answers': The number of answers provided for the question....
+2025-11-26 09:54:37,228 - universal_scraper.core.scraper - INFO -    ✅ Mapped 3 fields with semantic understanding
+2025-11-26 09:54:37,228 - universal_scraper.core.scraper - INFO - 🤖 Step 6: Generating extraction code with AI...
+2025-11-26 09:54:37,228 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:54:37,228 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: div.s-post-summary.js-post-summary
+2025-11-26 09:54:37,228 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:54:37,228 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:54:37,228 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:54:37,234 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 84486, First 100 chars: <!DOCTYPE html><html class="html__responsive" itemscope="" itemtype="https://schema.org/CollectionPa
+2025-11-26 09:54:37,234 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:54:37 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:37,235 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:54:42 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:42,947 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:42,985 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 15 items but Key fields are NULL: title
+   Null fields: title
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+   - CRITICAL: Key fields (title) should NEVER be null!
+2025-11-26 09:54:42,986 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:54:42,986 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:54:42,989 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 84486, First 100 chars: <!DOCTYPE html><html class="html__responsive" itemscope="" itemtype="https://schema.org/CollectionPa
+2025-11-26 09:54:42,990 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:54:42 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:42,990 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:54:54 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:54,944 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:54:54,979 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 15 items but Key fields are NULL: title
+   Null fields: title
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+   - CRITICAL: Key fields (title) should NEVER be null!
+2025-11-26 09:54:54,979 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:54:54,980 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:54:54,983 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 84486, First 100 chars: <!DOCTYPE html><html class="html__responsive" itemscope="" itemtype="https://schema.org/CollectionPa
+2025-11-26 09:54:54,983 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:54:54 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:54:54,984 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:01 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:01,155 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:01,199 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 15 items but Key fields are NULL: title
+   Null fields: title
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+   - CRITICAL: Key fields (title) should NEVER be null!
+2025-11-26 09:55:01,199 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:55:01,199 - universal_scraper.core.scraper - INFO - ⚡ Step 7: Executing extraction code with adaptive iteration...
+2025-11-26 09:55:01,201 - universal_scraper.core.scraper - INFO - 📝 Code length: 1139 chars
+2025-11-26 09:55:01,313 - universal_scraper.core.scraper - INFO -    ✅ Pass 1: Extracted 15 items
+2025-11-26 09:55:01,313 - universal_scraper.core.scraper - INFO -    📊 Pass 1 quality: 66.7%
+2025-11-26 09:55:01,313 - universal_scraper.core.scraper - INFO -    ✅ New best result: 15 items, 66.7% quality
+2025-11-26 09:55:01,313 - universal_scraper.core.scraper - WARNING - ⚠️ Pass 1 quality too low (66.7% < 70%) - triggering next pass
+2025-11-26 09:55:01,313 - universal_scraper.core.scraper - INFO - 🔄 Pass 2: Retrying with improved selectors...
+2025-11-26 09:55:01,313 - universal_scraper.core.adaptive_dom_detector - INFO - 🔍 Pass 2: LLM-guided nested structure analysis
+[92m09:55:01 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:01,407 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:03 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:03,918 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:03,923 - universal_scraper.core.adaptive_dom_detector - INFO -    ✅ LLM suggested: div.question-summary (confidence: 0.9)
+2025-11-26 09:55:03,924 - universal_scraper.core.adaptive_dom_detector - INFO -    💡 Reasoning: The selector targets 'div.question-summary', which appears to be the primary container for each ques
+2025-11-26 09:55:03,924 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:55:03,924 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: None
+2025-11-26 09:55:03,924 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:55:03,924 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:55:03,924 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:03,964 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:03,964 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:03 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:03,968 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:09 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:09,889 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:10,814 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code executed but returned 0 items
+2025-11-26 09:55:10,814 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:55:10,814 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:10,826 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:10,827 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:10 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:10,827 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:16 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:16,551 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:17,227 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code executed but returned 0 items
+2025-11-26 09:55:17,227 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:55:17,227 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:17,240 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:17,240 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:17 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:17,240 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:24 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:24,242 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:24,351 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code executed but returned 0 items
+2025-11-26 09:55:24,352 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:55:24,353 - universal_scraper.core.scraper - INFO - 📝 Code length: 1339 chars
+2025-11-26 09:55:24,462 - universal_scraper.core.scraper - INFO -    ✅ Pass 2: Extracted 0 items
+2025-11-26 09:55:24,462 - universal_scraper.core.scraper - INFO -    📊 Pass 2 quality: 0.0%
+2025-11-26 09:55:24,462 - universal_scraper.core.scraper - WARNING - ⚠️ Pass 2 quality too low (0.0% < 70%) - triggering next pass
+2025-11-26 09:55:24,462 - universal_scraper.core.scraper - INFO - 🔄 Pass 3: Retrying with improved selectors...
+2025-11-26 09:55:24,462 - universal_scraper.core.adaptive_dom_detector - INFO - 🧠 Pass 3: Deep context analysis with error feedback
+[92m09:55:24 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:24,531 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:45 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:45,822 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:45,825 - universal_scraper.core.adaptive_dom_detector - INFO -    🎯 LLM DEEP analysis: .question-summary (confidence: 0.90)
+2025-11-26 09:55:45,825 - universal_scraper.core.adaptive_dom_detector - INFO -    📋 Strategy: nested_elements
+2025-11-26 09:55:45,825 - universal_scraper.core.adaptive_dom_detector - INFO -    💡 Reasoning: The chosen selector '.question-summary' corresponds to the container holding data for each question entry. Each question summary likely consists of el
+2025-11-26 09:55:45,826 - universal_scraper.core.ai_generator - INFO - 🤖 Generating extraction code for 3 fields...
+2025-11-26 09:55:45,826 - universal_scraper.core.ai_generator - INFO -    Using structure analysis: None
+2025-11-26 09:55:45,828 - universal_scraper.core.ai_generator - INFO -    Using semantic field mappings for 3 fields
+2025-11-26 09:55:45,828 - universal_scraper.core.ai_generator - INFO -    Iteration 1/3
+2025-11-26 09:55:45,830 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:45,851 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:45,852 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:45 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:45,853 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:51 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:51,648 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:51,953 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code returned 15 items but 2/3 fields (67%) are NULL
+   Null fields: title, answers
+   This usually means:
+   - CSS selectors are wrong (check class names, hierarchy)
+   - Data is in HTML attributes instead of text (use .get('attribute'))
+   - Data is in a different element (check parent/sibling elements)
+
+   🎯 HIGH NULL RATIO DETECTED - TRY ATTRIBUTE EXTRACTION:
+   - Check data-* attributes: elem.get('data-author'), elem.get('data-score')
+   - Check aria-* attributes: elem.get('aria-label'), elem.get('aria-valuetext')
+   - Check itemprop attributes: elem.get('itemprop'), elem['content']
+   - Check custom attributes: elem.get('score'), elem.get('count')
+   - For custom elements like <shreddit-post>, data is usually in attributes!
+
+   📋 EXAMPLE FOR CUSTOM ELEMENTS:
+   author = elem.get('author') or elem.get('data-author')
+   score = elem.get('score') or elem.get('data-score')
+   - CRITICAL: Key fields (title) should NEVER be null!
+2025-11-26 09:55:51,953 - universal_scraper.core.ai_generator - INFO -    Iteration 2/3
+2025-11-26 09:55:51,953 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:51,967 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:51,967 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:51 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:51,968 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:55:58 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:58,014 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:55:58,123 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code executed but returned 0 items
+2025-11-26 09:55:58,123 - universal_scraper.core.ai_generator - INFO -    Iteration 3/3
+2025-11-26 09:55:58,123 - universal_scraper.core.ai_generator - INFO -    ✓ Keeping HTML format (required for CSS selectors)
+2025-11-26 09:55:58,136 - universal_scraper.core.ai_generator - INFO -    Content format: HTML, Length: 383791, First 100 chars: <!DOCTYPE html><html itemscope="" itemtype="https://schema.org/CollectionPage" class="html__responsi
+2025-11-26 09:55:58,136 - universal_scraper.core.ai_generator - INFO - ℹ️  No custom elements detected (HTML checked), using nested element strategy
+[92m09:55:58 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:55:58,136 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+[92m09:56:04 - LiteLLM:INFO[0m: utils.py:1302 - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:56:04,275 - LiteLLM - INFO - Wrapper: Completed Call, calling success_handler
+2025-11-26 09:56:04,423 - universal_scraper.core.ai_generator - WARNING -    ⚠️ Code executed but returned 0 items
+2025-11-26 09:56:04,423 - universal_scraper.core.ai_generator - WARNING - ⚠️ All iterations failed, returning best attempt
+2025-11-26 09:56:04,425 - universal_scraper.core.scraper - INFO - 📝 Code length: 1339 chars
+2025-11-26 09:56:04,591 - universal_scraper.core.scraper - INFO -    ✅ Pass 3: Extracted 0 items
+2025-11-26 09:56:04,591 - universal_scraper.core.scraper - INFO -    📊 Pass 3 quality: 0.0%
+2025-11-26 09:56:04,591 - universal_scraper.core.scraper - WARNING - ⚠️ All 3 passes complete - returning best attempt (66.7% quality)
+2025-11-26 09:56:04,591 - universal_scraper.core.scraper - INFO -    ✅ Final result: 15 items from 3 pass(es)
+2025-11-26 09:56:04,591 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 15 items in 149.83s
+2025-11-26 09:56:04,685 - universal_scraper.core.camoufox_fetcher - INFO - 👋 Camoufox fetcher closed
+2025-11-26 09:56:04,685 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:56:04,685 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 0, 'browser_fallback': 1, 'apis_discovered': 0}
+2025-11-26 09:56:04,685 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed
+2025-11-26 09:56:06,717 - universal_scraper.core.html_fetcher - INFO - 🎭 Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2025-11-26 09:56:06,734 - universal_scraper.core.api_cache - INFO - 💾 Loaded 7 cached APIs
+2025-11-26 09:56:06,734 - universal_scraper.core.api_cache - INFO - 📡 API Cache initialized: cache/apis
+2025-11-26 09:56:06,734 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2025-11-26 09:56:06,734 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: Auto-detect
+2025-11-26 09:56:06,734 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2025-11-26 09:56:06,735 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2025-11-26 09:56:06,750 - universal_scraper.core.code_cache - INFO - 💾 Cache initialized: cache
+2025-11-26 09:56:06,750 - universal_scraper.core.ai_generator - INFO - 🤖 AI Generator initialized: gpt-4o-mini
+2025-11-26 09:56:06,753 - universal_scraper.core.direct_llm_extractor - INFO - 🔀 Hybrid extraction enabled (captures data attributes, forms, etc.)
+2025-11-26 09:56:06,754 - universal_scraper.core.direct_llm_extractor - INFO - 🤖 DirectLLMExtractor initialized (model=gpt-4o-mini, quality=balanced)
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - 🤖 Direct LLM Extractor enabled (quality=balanced)
+2025-11-26 09:56:06,754 - universal_scraper.core.pagination_analyzer - INFO - ✅ LLM Pagination Analyzer initialized
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - ✅ Hybrid Pagination Detection enabled (fast patterns + LLM fallback)
+2025-11-26 09:56:06,754 - universal_scraper.core.json_analyzer - INFO - ✅ JSON Analyzer initialized with gpt-4o-mini
+2025-11-26 09:56:06,754 - universal_scraper.core.data_validator - INFO - ✅ Data Validator initialized with gpt-4o-mini
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - ✅ Context-driven validation enabled (JSON ranking + data validation)
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - ✅ HTML Structure Analyzer enabled (improves code generation)
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - ✅ Adaptive DOM Detector enabled (reinforcement-style iteration)
+2025-11-26 09:56:06,754 - universal_scraper.core.field_mapper - INFO - 🗺️  Universal Field Mapper initialized with gpt-4o-mini
+2025-11-26 09:56:06,754 - universal_scraper.core.field_mapper - INFO -    Cache directory: ./cache/field_mappings
+2025-11-26 09:56:06,754 - universal_scraper.core.scraper - INFO - 🗺️  Universal Field Mapper enabled (semantic field understanding)
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 📏 Smart HTML Sampler enabled (dynamic sizing per website)
+2025-11-26 09:56:06,755 - universal_scraper.core.embedding_cache - INFO - 🎯 Embedding cache initialized: 0 sites cached
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 🎯 Embedding Cache enabled (0 sites learned)
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 🚀 Universal Scraper initialized
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    Fetch Mode: hybrid
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    AI Model: gpt-4o-mini
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    Cache: Enabled
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    Proxy: Disabled
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    Browser:  Headless (if needed)
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    LLM Pagination: Enabled
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO -    Context Validation: Enabled
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 🎯 Scraping: https://www.producthunt.com/
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 📋 Fields: name, tagline, votes
+2025-11-26 09:56:06,755 - universal_scraper.core.scraper - INFO - 📥 Step 1: Fetching HTML...
+2025-11-26 09:56:06,756 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://www.producthunt.com/
+2025-11-26 09:56:06,756 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: auto
+2025-11-26 09:56:06,815 - universal_scraper.core.api_cache - INFO - ✅ Found 9 cached APIs for www.producthunt.com
+2025-11-26 09:56:06,815 - universal_scraper.core.hybrid_fetcher - INFO - 💾 Found 9 cached APIs for www.producthunt.com
+2025-11-26 09:56:06,815 - universal_scraper.core.hybrid_fetcher - INFO - ⚡ Trying static HTML fetch...
+2025-11-26 09:56:06,815 - universal_scraper.core.html_fetcher - INFO - 🔥 Warming session for: www.producthunt.com
+2025-11-26 09:56:07,024 - universal_scraper.core.html_fetcher - WARNING - ⚠️ Warm-up returned: 403
+2025-11-26 09:56:07,024 - universal_scraper.core.html_fetcher - INFO - 🌐 Fetching: https://www.producthunt.com/
+2025-11-26 09:56:07,128 - universal_scraper.core.html_fetcher - WARNING - ⚠️ Response: 403
+2025-11-26 09:56:07,130 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Body has minimal content (< 500 chars), likely JS-rendered
+2025-11-26 09:56:07,130 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 JavaScript required, using browser...
+2025-11-26 09:56:07,130 - universal_scraper.core.camoufox_fetcher - INFO - 🦊 Camoufox Fetcher initialized
+2025-11-26 09:56:07,130 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 60000ms
+2025-11-26 09:56:07,130 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2025-11-26 09:56:07,130 - universal_scraper.core.camoufox_fetcher - INFO - 🌐 Fetching with Camoufox: https://www.producthunt.com/
+2025-11-26 09:56:07,130 - universal_scraper.core.anti_detection - INFO - 🛡️  Anti-Detection Manager initialized (Maximum Robustness)
+2025-11-26 09:56:07,130 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2025-11-26 09:56:31,164 - universal_scraper.core.camoufox_fetcher - INFO - ✅ Camoufox fetch complete: 613743 bytes
+2025-11-26 09:56:31,164 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Captured 7 API requests
+2025-11-26 09:56:31,164 - universal_scraper.core.camoufox_fetcher - INFO - 📦 Extracted 6 JSON blobs
+2025-11-26 09:56:31,164 - universal_scraper.core.scraper - INFO - 🔍 Step 1.5: Detecting pagination pattern...
+2025-11-26 09:56:31,303 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-26 09:56:31,358 - universal_scraper.core.pagination_detector - INFO - 🔍 Fast pagination detection for: https://www.producthunt.com/
+/Users/jevon_williams/Library/Python/3.9/lib/python/site-packages/soupsieve/css_parser.py:876: FutureWarning: The pseudo class ':contains' is deprecated, ':-soup-contains' should be used moving forward.
+  warnings.warn(  # noqa: B028
+2025-11-26 09:56:31,503 - universal_scraper.core.pagination_detector - INFO - ℹ️  No standard pagination pattern detected, may need LLM analysis
+2025-11-26 09:56:31,503 - universal_scraper.core.scraper - INFO - 🤖 Fast detection failed, trying LLM analysis...
+2025-11-26 09:56:31,505 - universal_scraper.core.pagination_analyzer - INFO - 📋 Using cached pagination strategy for www.producthunt.com
+2025-11-26 09:56:31,505 - universal_scraper.core.pagination_executor - INFO - 🎯 Executing preloaded_json pagination strategy
+2025-11-26 09:56:31,505 - universal_scraper.core.pagination_executor - INFO - 📦 Extracting from preloaded JSON...
+2025-11-26 09:56:31,562 - universal_scraper.core.pagination_executor - WARNING - ⚠️ No JSON data found in HTML
+2025-11-26 09:56:31,562 - universal_scraper.core.scraper - INFO - 🔍 Step 2: Detecting JSON sources...
+2025-11-26 09:56:31,596 - universal_scraper.core.json_detector - INFO - ✅ Found 1 JSON-LD objects
+2025-11-26 09:56:31,653 - universal_scraper.core.scraper - INFO - 📦 Found 1 JSON source(s)
+2025-11-26 09:56:31,653 - universal_scraper.core.json_detector - INFO - ❌ No items extracted from JSON
+2025-11-26 09:56:31,653 - universal_scraper.core.scraper - INFO - ⚠️ JSON sources insufficient, falling back to HTML...
+2025-11-26 09:56:31,653 - universal_scraper.core.scraper - INFO - 🤖 Step 2.5: Trying Direct LLM Extraction...
+2025-11-26 09:56:31,653 - universal_scraper.core.scraper - INFO -    (Like ScrapeGraphAI - no pattern generation)
+2025-11-26 09:56:31,653 - universal_scraper.core.html_cleaner - INFO - 🧹 Cleaning HTML (613,743 bytes)
+2025-11-26 09:56:31,704 - universal_scraper.core.html_cleaner - INFO - ✅ Cleaned: 86,434 bytes (85.9% reduction)
+2025-11-26 09:56:31,704 - universal_scraper.core.scraper - INFO -    HTML reduced: 85.9%
+2025-11-26 09:56:31,704 - universal_scraper.core.direct_llm_extractor - INFO - 🔍 Direct LLM extraction: 3 fields from 86,434 bytes (quality=balanced)
+2025-11-26 09:56:31,705 - universal_scraper.core.direct_llm_extractor - INFO -    📄 Large page - split into 9 chunks (with 33% overlap)
+2025-11-26 09:56:31,705 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 1/9 (establishing patterns)...
+2025-11-26 09:56:31,708 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,960 bytes)
+2025-11-26 09:56:31,713 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:31,717 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (822 chars)
+[92m09:56:31 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:31,717 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:34,894 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 1/9: 4 items
+2025-11-26 09:56:34,894 - universal_scraper.core.direct_llm_extractor - INFO -    Processing chunk 2/9 (establishing patterns)...
+2025-11-26 09:56:34,903 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,274 bytes)
+2025-11-26 09:56:34,914 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:34,920 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,463 chars)
+[92m09:56:34 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:34,921 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,521 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 2/9: 7 items
+2025-11-26 09:56:40,521 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 1/2 (chunks 3-6)...
+2025-11-26 09:56:40,530 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,524 bytes)
+2025-11-26 09:56:40,543 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:40,549 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,396 chars)
+2025-11-26 09:56:40,555 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (14,528 bytes)
+[92m09:56:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,562 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,564 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:40,569 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,509 chars)
+2025-11-26 09:56:40,574 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,693 bytes)
+[92m09:56:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,577 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,583 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:40,588 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,604 chars)
+2025-11-26 09:56:40,592 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,315 bytes)
+[92m09:56:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,598 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,599 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:40,604 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,988 chars)
+[92m09:56:40 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:40,604 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,095 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 3/9: 8 items
+2025-11-26 09:56:49,095 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 4/9: 7 items
+2025-11-26 09:56:49,095 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 5/9: 8 items
+2025-11-26 09:56:49,095 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 6/9: 9 items
+2025-11-26 09:56:49,095 - universal_scraper.core.direct_llm_extractor - INFO -    Processing batch 2/2 (chunks 7-9)...
+2025-11-26 09:56:49,105 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,734 bytes)
+2025-11-26 09:56:49,118 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:49,124 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (1,665 chars)
+[92m09:56:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,131 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,134 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (15,137 bytes)
+2025-11-26 09:56:49,147 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Extracted 1 data attribute types
+2025-11-26 09:56:49,155 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (5,217 chars)
+2025-11-26 09:56:49,159 - universal_scraper.core.hybrid_extractor - INFO - 🔀 Hybrid extraction starting (6,933 bytes)
+[92m09:56:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,166 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,169 - universal_scraper.core.hybrid_extractor - INFO -    ✅ Converted to markdown (2,644 chars)
+[92m09:56:49 - LiteLLM:INFO[0m: utils.py:3421 - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:49,169 - LiteLLM - INFO - 
+LiteLLM completion() model= gpt-4o-mini; provider = openai
+2025-11-26 09:56:58,422 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 7/9: 8 items
+2025-11-26 09:56:58,422 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 8/9: 5 items
+2025-11-26 09:56:58,422 - universal_scraper.core.direct_llm_extractor - INFO -       ✓ Chunk 9/9: 16 items
+2025-11-26 09:56:58,422 - universal_scraper.core.direct_llm_extractor - INFO -    After deduplication: 42 items
+2025-11-26 09:56:58,422 - universal_scraper.core.direct_llm_extractor - INFO -    Quality: 57.1% field completeness
+2025-11-26 09:56:58,423 - universal_scraper.core.direct_llm_extractor - INFO - ✅ Total extracted: 42 items
+2025-11-26 09:56:58,423 - universal_scraper.core.scraper - INFO - ✅ Direct LLM extracted 42 items
+2025-11-26 09:56:58,423 - universal_scraper.core.scraper - INFO -    Quality: 57.1% field completeness
+2025-11-26 09:56:58,423 - universal_scraper.core.scraper - INFO - ✅ Direct LLM quality acceptable (57.1% >= 40.0%)
+2025-11-26 09:56:58,423 - universal_scraper.core.scraper - INFO -    Skipping pattern-based extraction (Direct LLM succeeded)
+2025-11-26 09:56:58,423 - universal_scraper.core.scraper - INFO - ✅ Extraction complete: 42 items in 51.67s
+2025-11-26 09:56:58,426 - universal_scraper.core.camoufox_fetcher - INFO - 👋 Camoufox fetcher closed
+2025-11-26 09:56:58,426 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2025-11-26 09:56:58,426 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 1, 'static_html_success': 0, 'browser_fallback': 1, 'apis_discovered': 0}
+2025-11-26 09:56:58,426 - universal_scraper.core.scraper - INFO - 👋 Universal Scraper closed

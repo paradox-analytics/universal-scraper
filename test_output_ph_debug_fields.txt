@@ -1,0 +1,216 @@
+2026-01-04 15:04:52,868 - universal_scraper.core.html_fetcher - INFO -  Using user agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...
+2026-01-04 15:04:52,886 - universal_scraper.core.api_cache - INFO -  Loaded 9 cached APIs
+2026-01-04 15:04:52,886 - universal_scraper.core.api_cache - INFO -  API Cache initialized: cache/apis
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO - 🔀 Hybrid Fetcher initialized
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO -    Mode: browser
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO -    Browser: 🦊 Camoufox
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO -    API Cache: Enabled
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO -    Web Unblocker: Disabled
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO - 🎯 Fetching: https://www.producthunt.com/
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO - 🔍 Detection mode: browser
+2026-01-04 15:04:52,886 - universal_scraper.core.hybrid_fetcher - INFO - 🌐 Browser mode: Using BrowserFetcher for JavaScript rendering (no fallback)
+2026-01-04 15:04:53,239 - universal_scraper.core.hybrid_fetcher - INFO - 🦊 Camoufox fetcher loaded
+2026-01-04 15:04:53,239 - universal_scraper.core.camoufox_fetcher - INFO -  Camoufox Fetcher initialized
+2026-01-04 15:04:53,239 - universal_scraper.core.camoufox_fetcher - INFO -    Headless: True, Timeout: 120000ms
+2026-01-04 15:04:53,239 - universal_scraper.core.camoufox_fetcher - INFO -    Anti-Detection: Profile=random, Humanize=True, Stealth=True
+2026-01-04 15:04:53,239 - universal_scraper.core.hybrid_fetcher - INFO - ✅ Browser launched successfully
+2026-01-04 15:04:53,239 - universal_scraper.core.camoufox_fetcher - INFO -  Fetching with Camoufox: https://www.producthunt.com/
+2026-01-04 15:04:53,239 - universal_scraper.core.camoufox_fetcher - WARNING -  No proxy configured for this request!
+2026-01-04 15:04:53,240 - universal_scraper.core.anti_detection - INFO -   Anti-Detection Manager initialized (Maximum Robustness)
+2026-01-04 15:04:53,240 - universal_scraper.core.anti_detection - INFO -    Profile: random, Humanize: True, Stealth: True, Consistency: high
+2026-01-04 15:05:14,952 - universal_scraper.core.camoufox_fetcher - INFO -  Camoufox fetch complete: 513977 bytes
+2026-01-04 15:05:14,952 - universal_scraper.core.camoufox_fetcher - INFO -  Captured 4 API requests
+2026-01-04 15:05:14,952 - universal_scraper.core.camoufox_fetcher - INFO -  Extracted 3 JSON blobs
+2026-01-04 15:05:14,952 - universal_scraper.core.hybrid_fetcher - INFO - 📦 Captured 3 JSON API responses from browser
+2026-01-04 15:05:14,952 - universal_scraper.core.json_detector - INFO -  Detecting JSON in HTML (len=513977) and captured_json (len=0)
+2026-01-04 15:05:14,979 - universal_scraper.core.json_detector - INFO -  Found 1 JSON-LD objects
+2026-01-04 15:05:14,983 - universal_scraper.core.inline_json_extractor - INFO -  Extracted 4 items from Next.js RSC payload
+2026-01-04 15:05:14,999 - universal_scraper.core.inline_json_extractor - INFO -  Extracted 25 containers from inline JSON scan
+2026-01-04 15:05:15,019 - universal_scraper.core.inline_json_extractor - INFO -  Extracted 63 items from Apollo SSR payload
+2026-01-04 15:05:15,019 - universal_scraper.core.json_detector - INFO -  InlineJSONExtractor found 27 items
+2026-01-04 15:05:15,019 - universal_scraper.core.json_detector - INFO -  Found 27 inline JSON sources (Next.js 13+ / RSC)
+2026-01-04 15:05:15,061 - universal_scraper.core.json_detector - INFO -  Analyzing json-ld data structure
+2026-01-04 15:05:15,061 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,061 - universal_scraper.core.json_detector - INFO -  Analyzing nextjs-rsc data structure
+2026-01-04 15:05:15,061 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=26.1, 4 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'nextjs-rsc': 4 items, score=70.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=72.1, 4 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 4 items, score=1700.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=192.8, 7 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 7 items, score=1795.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=192.8, 7 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 7 items, score=1795.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=192.8, 7 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 7 items, score=1795.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,062 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 2 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=115.0, 2 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 2 items, score=1250.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 4 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=120.1, 4 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 4 items, score=1400.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 2 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=115.0, 2 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 2 items, score=1250.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,063 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 2 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=115.0, 2 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 2 items, score=1250.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing inline_json data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  GraphQL: Unwrapped 3 items from 'edges[].node' pattern
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=117.9, 3 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'inline_json': 3 items, score=1255.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Analyzing apollo-ssr data structure
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Searching entire JSON structure for items...
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Found 1 arrays, selected BEST: 'root' (score=153.6, 63 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -     Source 'apollo-ssr': 63 items, score=1875.0
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Selected BEST source: 'apollo-ssr' (score=1875.0, 63 items)
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -  Semantic extraction starting: 63 items, 5 fields requested
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -    Fields: ['name', 'tagline', 'votesCount', 'commentsCount', 'slug']
+2026-01-04 15:05:15,064 - universal_scraper.core.json_detector - INFO -    Sample item keys: ['__typename', 'parent', 'id', 'name', 'slug', 'path']
+2026-01-04 15:05:15,067 - universal_scraper.core.json_detector - INFO -  Semantic JSON extraction: 63/63 items extracted
+2026-01-04 15:05:15,067 - universal_scraper.core.json_detector - INFO -    Sample extracted item: ['name', 'slug']
+2026-01-04 15:05:15,067 - universal_scraper.core.camoufox_fetcher - INFO -  Camoufox fetcher closed
+2026-01-04 15:05:15,067 - universal_scraper.core.hybrid_fetcher - INFO - 👋 Hybrid Fetcher closed
+2026-01-04 15:05:15,067 - universal_scraper.core.hybrid_fetcher - INFO - 📊 Session stats: {'api_cache_hits': 0, 'static_html_success': 0, 'browser_fallback': 0, 'apis_discovered': 0}
+================================================================================
+🧪 TEST: Product Hunt Universal Extraction
+================================================================================
+
+1️⃣  Fetching Product Hunt...
+✅ Fetched 513,977 bytes
+
+2️⃣  Detecting JSON...
+📊 Detection Results:
+   JSON Found: True
+   Sources: ['json-ld', 'inline-json']
+   Data Objects: 28
+✅ SUCCESS: Detected inline JSON / RSC payload
+
+3️⃣  Extracting Products...
+📦 Extracted 63 items
+
+🎯 Sample Items:
+
+1. Vibe Coding Tools
+   Tagline: N/A
+   Votes: N/A
+   Slug: vibe-coding
+
+2. AI Coding Agents
+   Tagline: N/A
+   Votes: N/A
+   Slug: ai-coding-agents
+
+3. AI Chatbots
+   Tagline: N/A
+   Votes: N/A
+   Slug: ai-chatbots
+
+4. AI Infrastructure Tools
+   Tagline: N/A
+   Votes: N/A
+   Slug: ai-infrastructure
+
+5. AI notetakers
+   Tagline: N/A
+   Votes: N/A
+   Slug: ai-meeting-notetakers
+
+✅ TEST PASSED: Successfully extracted products from Product Hunt!

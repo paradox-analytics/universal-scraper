@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "url": "https://news.ycombinator.com",
+      "fields": [
+        "title",
+        "url"
+      ],
+      "category": "forum",
+      "name": "Hacker News",
+      "success": false,
+      "error": "unhashable type: 'slice'"
+    },
+    {
+      "url": "https://github.com/trending",
+      "fields": [
+        "name",
+        "description",
+        "stars"
+      ],
+      "category": "listing",
+      "name": "GitHub Trending",
+      "success": false,
+      "error": "unhashable type: 'slice'"
+    },
+    {
+      "url": "https://stackoverflow.com/questions",
+      "fields": [
+        "title",
+        "votes"
+      ],
+      "category": "forum",
+      "name": "Stack Overflow",
+      "success": false,
+      "error": "unhashable type: 'slice'"
+    }
+  ],
+  "metrics": {
+    "total_requests": 3,
+    "cache_hits": 0,
+    "cache_misses": 3,
+    "total_cost": 0.0,
+    "total_time": 0.0,
+    "items_extracted": 0
+  }
+}
