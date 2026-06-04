@@ -16,7 +16,7 @@ import {
   ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import type { ProxyConfiguration, PaginationConfiguration, CachedPattern } from '../../types';
-import { API_BASE_URL } from '../../config/api';
+import { API_BASE_URL, getApiKey } from '../../config/api';
 import { getAuthToken } from '../../services/auth';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -188,7 +188,7 @@ export default function BrowserWorkspace({
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const apiKey = localStorage.getItem('api_key');
+      const apiKey = getApiKey();
       if (apiKey) {
         headers['X-API-Key'] = apiKey;
       }
@@ -217,6 +217,7 @@ export default function BrowserWorkspace({
 
       // Step 1: Load preview (rendered page with JS)
       addAgentLog('info', '🌐 Fetching page...', 'Loading page content');
+      console.log('[DEBUG] Fetching preview:', `${API_BASE_URL}/api/v1/preview`, 'Headers:', JSON.stringify(headers));
       const previewResponse = await fetch(`${API_BASE_URL}/api/v1/preview`, {
         method: 'POST',
         headers,
@@ -339,7 +340,7 @@ export default function BrowserWorkspace({
       }
 
     } catch (err: any) {
-      console.error('Navigation failed:', err);
+      console.error('[DEBUG] Navigation failed:', err, err?.stack);
       const errorMsg = err.message || err.toString() || 'Failed to load page';
       setError(errorMsg);
     } finally {
@@ -451,7 +452,8 @@ export default function BrowserWorkspace({
   // Remove field
   // Suggest fields from prompt (before navigation)
   const suggestFieldsFromPrompt = async () => {
-    if (!url) {
+    const targetUrl = normalizeUrl(url || currentUrl);
+    if (!targetUrl) {
       addAgentLog('warning', 'Please enter a URL first');
       return;
     }
@@ -460,7 +462,7 @@ export default function BrowserWorkspace({
     addAgentLog('info', extractionTarget ? `💡 Analyzing page for ${extractionTarget}...` : '💡 Analyzing page structure for field suggestions...');
 
     try {
-      const apiKey = localStorage.getItem('api_key');
+      const apiKey = getApiKey();
       const token = await getAuthToken();
 
       const headers: HeadersInit = {
@@ -473,7 +475,7 @@ export default function BrowserWorkspace({
         method: 'POST',
         headers,
         body: JSON.stringify({
-          url,
+          url: targetUrl,
           target: extractionTarget || undefined,
           use_llm: true,
           proxy_config: proxyConfig.provider !== 'none' ? proxyConfig : undefined
@@ -528,7 +530,7 @@ export default function BrowserWorkspace({
 
     try {
       const token = await getAuthToken();
-      const apiKey = localStorage.getItem('api_key');
+      const apiKey = getApiKey();
 
       const headers: HeadersInit = {
         'Content-Type': 'application/json',

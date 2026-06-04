@@ -156,7 +156,7 @@ export default function Cache() {
         `${import.meta.env.VITE_API_BASE_URL || 'https://universal-scraper-api-968720932091.us-central1.run.app'}/api/v1/cache/export${selectedDomain ? `?domain=${encodeURIComponent(selectedDomain)}` : ''}`,
         {
           headers: {
-            'X-API-Key': localStorage.getItem('api_key') || '',
+            'X-API-Key': (await import('../config/api')).getApiKey(),
           },
         }
       );

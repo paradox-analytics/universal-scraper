@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth, DEV_MODE } from '../config/firebase';
 import { getUserSettings, getUserProfile, getAuthToken } from '../services/auth';
 import { setTokenGetter } from '../services/api';
 import type { UserSettings, UserProfile } from '../services/auth';
@@ -24,20 +24,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set token getter for API interceptor
+    if (DEV_MODE) {
+      setUser({ uid: 'dev-user', email: 'dev@localhost' } as unknown as User);
+      setLoading(false);
+      return;
+    }
+
     setTokenGetter(getAuthToken);
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      
+
       if (currentUser) {
-        // Load user profile and settings
         try {
           const [profile, settings] = await Promise.all([
             getUserProfile(currentUser.uid),
             getUserSettings(currentUser.uid),
           ]);
-          
+
           setUserProfile(profile);
           setUserSettings(settings);
         } catch (error) {
@@ -47,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserProfile(null);
         setUserSettings(null);
       }
-      
+
       setLoading(false);
     });
 

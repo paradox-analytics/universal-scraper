@@ -9,16 +9,16 @@ export const API_ENDPOINTS = {
   crawl: `${API_BASE_URL}/crawl`,
 } as const;
 
-// API Key - should be stored securely (consider using Firebase Auth or environment variables)
 export const getApiKey = (): string => {
-  // Check localStorage first, then environment variable
   if (typeof window !== 'undefined') {
     const storedKey = localStorage.getItem('api_key');
     if (storedKey) {
       return storedKey;
     }
   }
-  // Fallback to environment variable
+  if (import.meta.env.VITE_DEV_MODE === 'true') {
+    return 'dev-local-key';
+  }
   return import.meta.env.VITE_API_KEY || '';
 };
 

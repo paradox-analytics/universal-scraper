@@ -4,15 +4,15 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, Analytics } from 'firebase/analytics';
 
-// Firebase configuration
-// Values from Firebase Console > Project Settings > General > Your apps
+export const DEV_MODE = import.meta.env.VITE_DEV_MODE === 'true';
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "dev-placeholder",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "localhost",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "dev-project",
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "0",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:0:web:dev",
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
@@ -29,8 +29,7 @@ if (getApps().length === 0) {
   auth = getAuth(app);
   storage = getStorage(app);
 
-  // Initialize Analytics only in browser environment
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && !DEV_MODE) {
     try {
       analytics = getAnalytics(app);
     } catch (error) {
@@ -43,8 +42,7 @@ if (getApps().length === 0) {
   auth = getAuth(app);
   storage = getStorage(app);
 
-  // Initialize Analytics only in browser environment
-  if (typeof window !== 'undefined' && !analytics) {
+  if (typeof window !== 'undefined' && !analytics && !DEV_MODE) {
     try {
       analytics = getAnalytics(app);
     } catch (error) {

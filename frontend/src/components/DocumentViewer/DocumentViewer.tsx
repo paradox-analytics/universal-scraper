@@ -257,7 +257,8 @@ export default function DocumentViewer({
     
     try {
       const token = localStorage.getItem('firebase_token');
-      const apiKey = localStorage.getItem('api_key');
+      const { getApiKey } = await import('../../config/api');
+      const apiKey = getApiKey();
       
       const formData = new FormData();
       formData.append('file', file);
