@@ -24,12 +24,16 @@ class TestAPIScrape:
             "url": "https://example.com",
             "fields": ["title"],
         })
-        assert response.status_code in [401, 403, 422]
+        assert response.status_code == 401
 
-    def test_scrape_rejects_invalid_payload(self, client):
+    def test_scrape_rejects_invalid_payload_without_auth(self, client):
+        response = client.post("/scrape", json={})
+        assert response.status_code == 401
+
+    def test_scrape_rejects_invalid_payload_with_auth(self, client):
         response = client.post(
             "/scrape",
             json={},
-            headers={"X-Tenant-ID": "test-tenant"},
+            headers={"X-API-Key": "test-key-for-validation"},
         )
-        assert response.status_code in [400, 422]
+        assert response.status_code == 422

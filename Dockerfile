@@ -57,8 +57,9 @@ RUN playwright install chromium && \
 # Set cache directory for Camoufox to ensure it persists and is found at runtime
 
 # Fetch Camoufox binaries using the CLI (respects XDG_CACHE_HOME)
-RUN python3 -m camoufox fetch && \
-    echo "✅ Camoufox browser installed successfully"
+RUN python3 -m camoufox fetch \
+    && echo "✅ Camoufox browser installed successfully" \
+    || echo "⚠️ Camoufox fetch failed — will attempt at runtime"
 
 # Copy application code
 COPY universal_scraper/ ./universal_scraper/
