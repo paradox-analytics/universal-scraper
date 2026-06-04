@@ -1714,7 +1714,7 @@ async def test_proxy(request: ProxyTestRequest):
                     'https': proxy_url
                 },
                 timeout=30,
-                verify=False  # Bright Data test endpoint uses self-signed cert
+                verify=os.getenv('PROXY_SSL_VERIFY', 'true').lower() != 'false'
             )
 
             if response.status_code == 200:

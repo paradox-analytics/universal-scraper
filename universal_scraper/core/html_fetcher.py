@@ -3,6 +3,7 @@ HTML Fetcher with CloudScraper and Proxy Support
 Handles fetching web pages with anti-bot protection and residential proxies
 """
 
+import os
 import time
 import random
 import logging
@@ -135,9 +136,12 @@ class HTMLFetcher:
                 'http': proxy_url,
                 'https': proxy_url
             })
-            # Disable SSL verification for proxy connections (Bright Data uses self-signed certs)
-            self.session.verify = False
-            logger.info(f" Using static proxy: {self.proxy_config['server']} (SSL verification disabled)")
+            ssl_verify = os.getenv('PROXY_SSL_VERIFY', 'true').lower() != 'false'
+            self.session.verify = ssl_verify
+            if not ssl_verify:
+                logger.warning(f" Using static proxy: {self.proxy_config['server']} (SSL verification DISABLED via PROXY_SSL_VERIFY=false)")
+            else:
+                logger.info(f" Using static proxy: {self.proxy_config['server']}")
 
     def fetch(self, url: str, warm_session: bool = None) -> Dict[str, Any]:
         """

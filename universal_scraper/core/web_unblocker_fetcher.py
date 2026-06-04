@@ -187,7 +187,7 @@ class WebUnblockerFetcher:
                     headers=headers,
                     timeout=(connect_timeout, read_timeout),  # (connect, read) timeout tuple
                     allow_redirects=True,
-                    verify=False  # Bright Data proxy uses self-signed certs for SSL inspection
+                    verify=os.getenv('PROXY_SSL_VERIFY', 'true').lower() != 'false'
                 )
 
                 logger.info(f"   Response received: {response.status_code}, {len(response.text)} bytes")

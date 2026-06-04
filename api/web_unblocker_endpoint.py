@@ -1,6 +1,10 @@
 """
-Add missing /api/v1/web-unblocker/test endpoint
+Web Unblocker test endpoint
 """
+import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Add after the proxy test endpoint (around line 1768)
 
@@ -43,7 +47,7 @@ async def test_web_unblocker(
             test_url,
             proxies=proxies,
             timeout=10,
-            verify=False
+            verify=os.getenv('PROXY_SSL_VERIFY', 'true').lower() != 'false'
         )
 
         if response.status_code == 200:

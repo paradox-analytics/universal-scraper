@@ -197,7 +197,7 @@ class BrowserFetcher:
                 ]
                 selected_ua = random.choice(user_agents)
 
-                context = await self.browser.new_context(
+                self._context = await self.browser.new_context(
                     ignore_https_errors=True,
                     viewport={
                         'width': random.choice([1920, 1366, 1536, 1440]),
@@ -205,6 +205,7 @@ class BrowserFetcher:
                     },
                     user_agent=selected_ua
                 )
+                context = self._context
 
                 # Comprehensive Universal Anti-Detection (Amazon-grade)
                 await context.add_init_script("""
@@ -980,25 +981,34 @@ class BrowserFetcher:
         return self.captured_requests
 
     async def close(self) -> None:
-        """Clean up browser resources"""
+        """Clean up browser resources (page -> context -> browser -> playwright)"""
         if self.page:
             try:
                 await self.page.close()
             except Exception:
                 pass
+            self.page = None
+
+        if hasattr(self, '_context') and self._context:
+            try:
+                await self._context.close()
+            except Exception:
+                pass
+            self._context = None
 
         if self.browser:
             try:
                 await self.browser.close()
             except Exception:
                 pass
+            self.browser = None
 
-        # Close Playwright if used
-        if BROWSER_TYPE == 'playwright' and hasattr(self, 'playwright'):
+        if BROWSER_TYPE == 'playwright' and hasattr(self, 'playwright') and self.playwright:
             try:
                 await self.playwright.stop()
             except Exception:
                 pass
+            self.playwright = None
 
         logger.info(" Browser closed")
 
