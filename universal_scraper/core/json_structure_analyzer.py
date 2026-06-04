@@ -430,7 +430,7 @@ class JSONStructureAnalyzer:
                 return json.dumps(structure, default=str)[:max_chars]
 
             return str(type(json_data).__name__)
-        except:
+        except Exception:
             return "unknown"
 
     def _create_fallback_analysis(self, json_data: Any, fields: List[str]) -> Dict[str, Any]:

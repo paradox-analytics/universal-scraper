@@ -98,7 +98,7 @@ class AdaptiveRateLimiter:
         """Extract domain from URL"""
         try:
             return urlparse(url).netloc
-        except:
+        except Exception:
             return url
 
     def _get_domain_delay(self, domain: str) -> float:

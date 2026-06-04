@@ -564,13 +564,13 @@ Structural context:
         if json_match:
             try:
                 return json.loads(json_match.group(1))
-            except:
+            except Exception:
                 pass
 
         # Try to parse the entire response as JSON
         try:
             return json.loads(text)
-        except:
+        except Exception:
             pass
 
         # Try to find any JSON object in the text
@@ -578,7 +578,7 @@ Structural context:
         if json_match:
             try:
                 return json.loads(json_match.group(0))
-            except:
+            except Exception:
                 pass
 
         logger.error("    Failed to extract JSON from LLM response")

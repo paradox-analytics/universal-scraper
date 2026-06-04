@@ -199,7 +199,7 @@ class FastPaginationDetector:
                 if links:
                     next_link = links[0].get('href')
                     break
-            except:
+            except Exception:
                 pass
 
         # Also check for text-based next links
@@ -252,7 +252,7 @@ class FastPaginationDetector:
                     else:
                         selector = elem.name
                     break
-            except:
+            except Exception:
                 pass
 
         if not selector:
@@ -410,7 +410,7 @@ class FastPaginationDetector:
                         max_page = int(data['numberOfPages'])
                     elif 'pagination' in data and 'total' in data['pagination']:
                         max_page = int(data['pagination']['total'])
-            except:
+            except Exception:
                 pass
 
         if max_page:

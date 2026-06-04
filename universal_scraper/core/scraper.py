@@ -2160,7 +2160,7 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                                         logger.info(f"    Found {len(alt_containers)} containers with alternative selector: {alt_selector}")
                                         containers = alt_containers
                                         break
-                                except:
+                                except Exception:
                                     continue
                     except Exception as e:
                         logger.warning(f"    Failed to find containers: {e}")
@@ -2570,23 +2570,17 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
             soup = BeautifulSoup(html, 'html.parser')
             logger.debug(f"    Parsed {len(str(soup))} bytes of HTML")
 
-            # Create execution namespace
-            namespace = {
-                'soup': soup,
-                'BeautifulSoup': BeautifulSoup,
-            }
-
-            logger.debug(" Executing generated code...")
+            logger.debug(" Executing generated code in restricted sandbox...")
             # Set timeout alarm (Unix-like systems only)
             try:
                 signal.signal(signal.SIGALRM, timeout_handler)
                 signal.alarm(timeout)
             except (AttributeError, ValueError):
-                # Windows or signal not available - no timeout
                 logger.warning(" Timeout not available on this platform")
 
-            # Execute the code
-            exec(code, namespace)
+            # Execute in restricted sandbox
+            from .sandbox import safe_exec
+            namespace = safe_exec(code, {'soup': soup, 'BeautifulSoup': BeautifulSoup})
             logger.debug("    Code execution completed")
 
             # Cancel alarm
@@ -2708,7 +2702,7 @@ Note: Look for product names/titles in fields like 'name', 'title', 'productName
                 try:
                     json_str = json.dumps(data, indent=2, default=str)[:1000]  # Limit each source
                     content += f"\n{name}:\n{json_str}\n"
-                except:
+                except Exception:
                     pass
 
         # Get user's goal from context manager
@@ -3247,7 +3241,7 @@ If you can't find the data, return an empty array: []
                     # Fallback: try to parse from string if it returned string
                     try:
                         indices = json.loads(response)
-                    except:
+                    except Exception:
                         logger.warning(f" Failed to parse filter response: {response}")
                         indices = range(len(batch)) # Keep all if failed
 

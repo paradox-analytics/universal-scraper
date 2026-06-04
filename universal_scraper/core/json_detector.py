@@ -1465,7 +1465,7 @@ class JSONDetector:
             for key, value in data.items():
                 if isinstance(value, str):
                     # Check if it's a URL
-                    if value.startswith(('http://', 'https://', '/')) or 'chewy.com' in value.lower() or 'amazon.com' in value.lower():
+                    if value.startswith(('http://', 'https://', '/')):
                         # Score based on key relevance
                         score = 10 if any(kw in key.lower() for kw in ['url', 'link', 'href', 'uri']) else 5
                         url_candidates.append((score, value))
@@ -1571,27 +1571,16 @@ class JSONDetector:
 
         # Try to find base URL from data-impression-tracker or other URL fields
         for key, value in data.items():
-            if isinstance(value, str) and ('http' in value or 'chewy.com' in value.lower() or 'amazon.com' in value.lower()):
-                # Extract domain from URL
-                if 'chewy.com' in value.lower():
-                    base_url = 'https://www.chewy.com'
-                elif 'amazon.com' in value.lower():
-                    base_url = 'https://www.amazon.com'
-                else:
-                    # Try to extract base URL
-                    import re
-                    match = re.search(r'(https?://[^/]+)', value)
-                    if match:
-                        base_url = match.group(1)
+            if isinstance(value, str) and 'http' in value:
+                import re
+                match = re.search(r'(https?://[^/]+)', value)
+                if match:
+                    base_url = match.group(1)
                 break
 
         # Construct URL if we have both id and base_url
         if data_id and base_url:
-            # Common e-commerce URL patterns
-            if 'chewy.com' in base_url:
-                return f"{base_url}/dp/{data_id}"  # Amazon-style
-            else:
-                return f"{base_url}/product/{data_id}"  # Generic pattern
+            return f"{base_url}/product/{data_id}"
 
         # Priority 4: Look for URL in nested structures
         for key, value in data.items():

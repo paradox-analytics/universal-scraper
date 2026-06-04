@@ -56,30 +56,37 @@ app.add_middleware(
     ],
     allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?|https://.*\.web\.app|https://.*\.firebaseapp\.com",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-API-Key", "X-Tenant-ID"],
 )
 
 # Request models
 class ScrapeRequest(BaseModel):
     url: str = Field(..., description="URL to scrape")
-    fields: List[str] = Field(default=[], description="Fields to extract (empty = auto-extract)")
-    target: Optional[str] = Field(default=None, description="What to look for (e.g., 'products', 'comments')")
+    fields: List[str] = Field(default=[], max_length=50, description="Fields to extract (empty = auto-extract)")
+    target: Optional[str] = Field(default=None, max_length=200, description="What to look for (e.g., 'products', 'comments')")
     html: Optional[str] = Field(default=None, description="Optional pre-fetched HTML content")
     mode: str = Field(default="hybrid", description="Fetch mode: html, browser, hybrid")
     force_html: bool = Field(default=False, description="Skip JSON detection")
     force_generate: bool = Field(default=False, description="Skip cache, generate new code")
     scroll_to_bottom: bool = Field(default=False, description="Scroll to bottom for infinite scroll")
-    click_load_more: Optional[str] = Field(default=None, description="CSS selector for Load More button")
-    wait_for_selector: Optional[str] = Field(default=None, description="Wait for selector before scraping")
+    click_load_more: Optional[str] = Field(default=None, max_length=200, description="CSS selector for Load More button")
+    wait_for_selector: Optional[str] = Field(default=None, max_length=200, description="Wait for selector before scraping")
     proxy_config: Optional[Dict[str, Any]] = Field(default=None, description="Proxy configuration")
-    browser_timeout: Optional[int] = Field(default=120000, description="Browser navigation timeout in milliseconds (default: 120s)")
+    browser_timeout: Optional[int] = Field(default=120000, ge=1000, le=300000, description="Browser navigation timeout in milliseconds (default: 120s)")
+
+    @classmethod
+    def model_validator_url(cls, v):
+        from universal_scraper.core.url_validator import validate_url
+        return validate_url(v)
+
+    model_config = {"validate_default": True}
 
 class CrawlRequest(BaseModel):
-    start_urls: List[str] = Field(..., description="Starting URLs for crawling")
-    fields: List[str] = Field(default=[], description="Fields to extract")
-    max_pages: int = Field(default=10, description="Maximum pages to crawl")
-    max_depth: int = Field(default=2, description="Maximum crawl depth")
+    start_urls: List[str] = Field(..., max_length=100, description="Starting URLs for crawling")
+    fields: List[str] = Field(default=[], max_length=50, description="Fields to extract")
+    max_pages: int = Field(default=10, ge=1, le=500, description="Maximum pages to crawl")
+    max_depth: int = Field(default=2, ge=1, le=10, description="Maximum crawl depth")
     follow_patterns: Optional[List[str]] = Field(default=None, description="URL patterns to follow")
     ignore_patterns: Optional[List[str]] = Field(default=None, description="URL patterns to ignore")
 
@@ -220,7 +227,7 @@ def convert_proxy_config(frontend_config: Optional[Dict[str, Any]]) -> Optional[
 
     # 6. Fallback for Web Unblocker if only API key provided via environment
     if result['web_unlocker'] and not server and not username:
-        customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
+        customer_id = os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', '')
         server = 'https://brd.superproxy.io:33335'
         username = f'brd-customer-{customer_id}-zone-{result["web_unlocker_zone"]}'
         password = os.getenv('WEB_UNBLOCKER_API_KEY')
@@ -939,7 +946,7 @@ async def preview_endpoint(
                         sample_value=sample,
                         count=len(elements)
                     ))
-            except:
+            except Exception:
                 continue
 
         # Detect common field selectors within items
@@ -968,7 +975,7 @@ async def preview_endpoint(
                             count=len(elements)
                         ))
                         break  # Only add first matching selector per field
-                except:
+                except Exception:
                     continue
 
         # Inject highlighting script into HTML
@@ -1934,7 +1941,7 @@ async def test_web_unblocker(
                     "success": True,
                     "message": f"Web Unblocker connection successful! IP: {ip}"
                 }
-            except:
+            except Exception:
                 return {
                     "success": True,
                     "message": "Web Unblocker connection successful!"

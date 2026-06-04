@@ -125,9 +125,9 @@ class AICodeGenerator:
                 from bs4 import BeautifulSoup
                 soup = BeautifulSoup(cleaned_html, 'html.parser')
 
-                # Execute code in sandbox
-                namespace = {'soup': soup, 'BeautifulSoup': BeautifulSoup}
-                exec(code, namespace)
+                # Execute code in restricted sandbox
+                from .sandbox import safe_exec
+                namespace = safe_exec(code, {'soup': soup, 'BeautifulSoup': BeautifulSoup})
 
                 if 'extract_data' in namespace:
                     result = namespace['extract_data'](soup)

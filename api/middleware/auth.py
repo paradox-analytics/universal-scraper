@@ -3,146 +3,146 @@ Authentication and tenant identification middleware
 Supports Firebase Auth tokens and API keys
 """
 import os
+import time
+import hashlib
 import logging
 from typing import Optional, Dict
-from fastapi import Header, Depends
+from fastapi import Header, Depends, HTTPException
 import jwt
 import requests
 
 logger = logging.getLogger(__name__)
 
-# Firebase project ID (from environment or default)
 FIREBASE_PROJECT_ID = os.getenv("FIREBASE_PROJECT_ID", "universal-scaper")
 
-# Cache for Firebase public keys (JWKs)
-_firebase_public_keys = None
+_firebase_public_keys: Optional[Dict[str, str]] = None
 _firebase_keys_expiry = 0
 
-def get_firebase_public_keys():
-    """Fetch Firebase public keys for JWT verification"""
+
+def get_firebase_public_keys() -> Optional[Dict[str, str]]:
+    """Fetch Firebase x509 public keys for JWT signature verification."""
     global _firebase_public_keys, _firebase_keys_expiry
 
-    import time
     current_time = time.time()
-
-    # Cache keys for 1 hour
     if _firebase_public_keys and current_time < _firebase_keys_expiry:
         return _firebase_public_keys
 
     try:
-        # Fetch Firebase public keys
         jwks_url = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com"
         response = requests.get(jwks_url, timeout=5)
         response.raise_for_status()
-
-        # Firebase uses x509 certificates, not JWKs
-        # We'll verify using the project ID instead
-        _firebase_public_keys = True  # Just mark as fetched
-        _firebase_keys_expiry = current_time + 3600  # 1 hour cache
+        _firebase_public_keys = response.json()
+        _firebase_keys_expiry = current_time + 3600
         return _firebase_public_keys
     except Exception as e:
         logger.warning(f"Failed to fetch Firebase keys: {e}")
         return None
 
+
 def verify_firebase_token(token: str) -> Optional[Dict]:
     """
-    Verify Firebase Auth token
+    Verify Firebase Auth token with signature validation.
 
-    Returns:
-        Decoded token payload if valid, None otherwise
+    Returns decoded payload if valid, None otherwise.
     """
     try:
-        # Decode without verification first to get header
-        unverified = jwt.decode(token, options={"verify_signature": False})
-
-        # Check if it's a Firebase token
-        if unverified.get("iss") != f"https://securetoken.google.com/{FIREBASE_PROJECT_ID}":
-            logger.debug("Token is not a Firebase token")
+        header = jwt.get_unverified_header(token)
+        kid = header.get("kid")
+        if not kid:
             return None
 
-        # Verify token using Firebase Admin SDK approach
-        # For now, we'll verify the basic structure and use the user_id as tenant_id
-        # In production, use Firebase Admin SDK for full verification
-
-        # Basic validation
-        if unverified.get("aud") != FIREBASE_PROJECT_ID:
-            logger.warning(f"Token audience mismatch: {unverified.get('aud')} != {FIREBASE_PROJECT_ID}")
+        public_keys = get_firebase_public_keys()
+        if not public_keys or kid not in public_keys:
+            logger.warning("Firebase public key not found for token kid")
             return None
 
-        # Check expiration
-        import time
-        exp = unverified.get("exp", 0)
-        if exp < time.time():
-            logger.warning("Token has expired")
-            return None
+        from cryptography.x509 import load_pem_x509_certificate
+        cert = load_pem_x509_certificate(public_keys[kid].encode())
+        public_key = cert.public_key()
 
-        # Return decoded token
-        return unverified
+        payload = jwt.decode(
+            token,
+            public_key,
+            algorithms=["RS256"],
+            audience=FIREBASE_PROJECT_ID,
+            issuer=f"https://securetoken.google.com/{FIREBASE_PROJECT_ID}",
+        )
+        return payload
+
+    except jwt.ExpiredSignatureError:
+        logger.warning("Firebase token has expired")
+        return None
     except jwt.InvalidTokenError as e:
         logger.warning(f"Invalid Firebase token: {e}")
         return None
+    except ImportError:
+        logger.warning("cryptography package not installed — falling back to unverified decode")
+        return _verify_firebase_token_fallback(token)
     except Exception as e:
         logger.error(f"Error verifying Firebase token: {e}")
         return None
 
+
+def _verify_firebase_token_fallback(token: str) -> Optional[Dict]:
+    """Fallback verification when cryptography package unavailable."""
+    try:
+        payload = jwt.decode(token, options={"verify_signature": False})
+
+        if payload.get("iss") != f"https://securetoken.google.com/{FIREBASE_PROJECT_ID}":
+            return None
+        if payload.get("aud") != FIREBASE_PROJECT_ID:
+            return None
+        if payload.get("exp", 0) < time.time():
+            return None
+
+        logger.warning("Using unverified Firebase token — install cryptography package for full verification")
+        return payload
+    except Exception:
+        return None
+
+
 async def get_tenant_id(
     authorization: Optional[str] = Header(None, alias="Authorization"),
     x_api_key: Optional[str] = Header(None, alias="X-API-Key"),
-    x_tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID")
 ) -> str:
     """
-    Extract tenant ID from request
+    Extract tenant ID from request. Requires authentication.
 
     Priority:
-    1. X-Tenant-ID header (for internal/admin use)
-    2. Firebase Auth Bearer token (production)
-    3. JWT Bearer token (legacy)
-    4. API key mapping (temporary, for migration)
+    1. Firebase Auth Bearer token (production)
+    2. Legacy JWT Bearer token
+    3. API key hash (X-API-Key header)
 
-    Returns:
-        tenant_id: Tenant identifier (Firebase UID or derived ID)
+    Raises HTTPException 401 if no valid credentials provided.
     """
-    # Option 1: Direct tenant ID header (for testing/admin)
-    if x_tenant_id:
-        return x_tenant_id
-
-    # Option 2: Firebase Auth Bearer token (production)
+    # Option 1: Bearer token (Firebase or legacy JWT)
     if authorization and authorization.startswith("Bearer "):
         token = authorization[7:]
 
-        # Try Firebase token first
         firebase_payload = verify_firebase_token(token)
         if firebase_payload:
-            # Use Firebase UID as tenant_id
             tenant_id = firebase_payload.get("user_id") or firebase_payload.get("sub")
             if tenant_id:
-                logger.debug(f"Using Firebase token tenant ID: {tenant_id}")
                 return tenant_id
 
-        # Try legacy JWT token
-        try:
-            jwt_secret = os.getenv("JWT_SECRET", "change-me-in-production")
-            payload = jwt.decode(token, jwt_secret, algorithms=["HS256"])
-            tenant_id = payload.get("tenant_id")
-            if tenant_id:
-                logger.debug(f"Using legacy JWT tenant ID: {tenant_id}")
-                return tenant_id
-        except jwt.InvalidTokenError:
-            pass  # Not a legacy JWT, continue
+        jwt_secret = os.getenv("JWT_SECRET")
+        if jwt_secret:
+            try:
+                payload = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+                tenant_id = payload.get("tenant_id")
+                if tenant_id:
+                    return tenant_id
+            except jwt.InvalidTokenError:
+                pass
 
-    # Option 3: API key mapping (temporary, for migration)
+    # Option 2: API key hash
     api_key = x_api_key or (authorization if authorization and not authorization.startswith("Bearer ") else None)
     if api_key:
-        # For now, use API key hash as tenant ID (temporary)
-        # In production, lookup tenant_id from database
-        import hashlib
-        tenant_id = f"tenant_{hashlib.md5(api_key.encode()).hexdigest()[:12]}"
-        logger.debug(f"Using API key-based tenant ID: {tenant_id}")
+        tenant_id = f"tenant_{hashlib.sha256(api_key.encode()).hexdigest()[:16]}"
         return tenant_id
 
-    # No authentication provided - return default for testing
-    logger.warning("No authentication provided. Using 'default_tenant' for testing.")
-    return "default_tenant"
+    raise HTTPException(status_code=401, detail="Authentication required")
+
 
 async def get_tenant_context(tenant_id: str = Depends(get_tenant_id)) -> Dict:
     """
@@ -150,40 +150,29 @@ async def get_tenant_context(tenant_id: str = Depends(get_tenant_id)) -> Dict:
 
     TODO: Replace with database lookup
     """
-    # For now, return default tenant config
-    # In production, lookup from database/Firestore
     return {
         "tenant_id": tenant_id,
-        "plan": "free",  # Default plan
+        "plan": "free",
         "rate_limit_per_minute": 10,
         "rate_limit_per_day": 1000,
-        "cache_ttl": 3600,  # 1 hour default
+        "cache_ttl": 3600,
     }
+
 
 async def get_current_user(
     authorization: Optional[str] = Header(None, alias="Authorization"),
     x_api_key: Optional[str] = Header(None, alias="X-API-Key"),
-    tenant_id: str = Depends(get_tenant_id)
+    tenant_id: str = Depends(get_tenant_id),
 ) -> Dict:
-    """
-    Get current user information from request
-
-    Returns:
-        Dict with tenant_id and api_key (if provided)
-    """
+    """Get current user information from request."""
     api_key = None
 
-    # Extract API key from X-API-Key header (highest priority)
     if x_api_key:
         api_key = x_api_key
-        logger.debug("API key found in X-API-Key header")
-    # Fallback: check Authorization header if it's not a Bearer token
     elif authorization and not authorization.startswith("Bearer "):
         api_key = authorization
-        logger.debug("API key found in Authorization header (non-Bearer)")
 
     return {
         "tenant_id": tenant_id,
-        "api_key": api_key
+        "api_key": api_key,
     }
-

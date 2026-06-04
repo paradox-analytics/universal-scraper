@@ -552,7 +552,7 @@ class DirectLLMExtractor:
                 extracted_content = self.hybrid_extractor.extract(html)
                 content_for_llm = extracted_content.markdown
                 metadata_context = extracted_content.get_metadata_summary()
-            except:
+            except Exception:
                 extracted_content = None
 
         if extracted_content is None:
@@ -787,7 +787,7 @@ Return complete JSON with 'items' array containing the same number of items."""
                 len(soup.find_all(class_=lambda x: x and 'post' in x.lower())),  # Posts
                 len(soup.find_all('article'))  # Article tags
             )
-        except:
+        except Exception:
             potential_items = None
 
         #  HYBRID EXTRACTION: Extract structured data + convert to markdown

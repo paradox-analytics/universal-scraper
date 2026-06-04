@@ -61,7 +61,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
         # Strategy 1: Wait for network idle (most reliable for JS-heavy sites)
         logger.debug("   Waiting for network idle...")
         await page.wait_for_load_state('networkidle', timeout=5000)
-    except:
+    except Exception:
         # Timeout is OK, try other strategies
         pass
 
@@ -70,7 +70,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
         try:
             logger.debug(f"   Waiting for selector: {wait_for_selector}")
             await page.wait_for_selector(wait_for_selector, timeout=5000)
-        except:
+        except Exception:
             # Selector not found, continue anyway
             pass
 
@@ -92,7 +92,7 @@ async def _smart_wait_for_content(page, wait_for_selector: Optional[str] = None)
             await page.wait_for_selector(selector, timeout=2000)
             logger.debug(f"   Content detected: {selector}")
             break
-        except:
+        except Exception:
             continue
 
     # Strategy 4: Minimum wait (ensures JS has time to execute)
@@ -354,9 +354,9 @@ def _camoufox_fetch_sync(
                                         'method': response.request.method,
                                         'data': data
                                     })
-                        except:
+                        except Exception:
                             pass
-            except:
+            except Exception:
                 pass
 
         page.on('response', handle_response)
@@ -613,7 +613,7 @@ def _camoufox_fetch_sync(
                 # Additional wait for JavaScript execution/challenge solving
                 time.sleep(8)  # Give it time to solve
                 log_internal(f"Waited for {challenge_type} challenge")
-            except:
+            except Exception:
                 logger.warning(f"    {challenge_type} challenge timeout - continuing anyway")
 
         # UNIVERSAL SOLUTION 3: Smart Wait Strategy for JS-heavy sites
@@ -631,7 +631,7 @@ def _camoufox_fetch_sync(
                 time.sleep(12)  # Extra wait for challenge completion
                 current_html = page.content()  # Refresh HTML
                 log_internal(f"After extended wait: {len(current_html):,} bytes")
-            except:
+            except Exception:
                 pass
 
         # Count initial API calls
@@ -754,7 +754,7 @@ def _camoufox_fetch_sync(
             try:
                 # Wait for network idle again (new APIs might be loading)
                 page.wait_for_load_state('networkidle', timeout=5000)
-            except:
+            except Exception:
                 pass  # Timeout is OK
 
             new_api_count = len(captured_json)
@@ -975,7 +975,7 @@ class CamoufoxFetcher:
 
             # Handle plain API key
             else:
-                customer_id = self.web_unblocker_customer_id or os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', 'REDACTED_CUSTOMER_ID')
+                customer_id = self.web_unblocker_customer_id or os.getenv('WEB_UNBLOCKER_CUSTOMER_ID', '')
                 proxy_config_for_request = {
                     'server': 'brd.superproxy.io:33335',
                     'username': f'brd-customer-{customer_id}-zone-{self.web_unblocker_zone}',
@@ -1105,9 +1105,9 @@ class CamoufoxFetcher:
                                         'url': url,
                                         'data': data
                                     })
-                            except:
+                            except Exception:
                                 pass
-                    except:
+                    except Exception:
                         pass
 
                 page.on('response', handle_response)

@@ -185,7 +185,7 @@ class BrowserSessionManager:
                 try:
                     await session.page.wait_for_selector('body:not(:has(#challenge-spinner))', timeout=60000)
                     await session.page.wait_for_load_state('networkidle', timeout=30000)
-                except:
+                except Exception:
                     pass  # Continue anyway
 
             session.url = url
@@ -290,7 +290,7 @@ class BrowserSessionManager:
         try:
             screenshot = await session.page.screenshot(type='png')
             return base64.b64encode(screenshot).decode('utf-8')
-        except:
+        except Exception:
             return None
 
     async def get_html(self, session_id: str) -> Optional[str]:
@@ -301,7 +301,7 @@ class BrowserSessionManager:
 
         try:
             return await session.page.content()
-        except:
+        except Exception:
             return session.current_html
 
     async def evaluate(

@@ -590,8 +590,8 @@ Return ONLY the Python code, no explanations."""
             from bs4 import BeautifulSoup
             soup = BeautifulSoup(html, 'html.parser')
 
-            namespace = {'soup': soup, 'BeautifulSoup': BeautifulSoup, 're': re}
-            exec(code, namespace)
+            from .sandbox import safe_exec
+            namespace = safe_exec(code, {'soup': soup, 'BeautifulSoup': BeautifulSoup})
 
             if 'extract_data' not in namespace:
                 return False
@@ -944,8 +944,8 @@ class PatternExecutor:
         if pattern.extraction_code:
             try:
                 soup = BeautifulSoup(html, 'html.parser')
-                namespace = {'soup': soup, 'BeautifulSoup': BeautifulSoup, 're': re}
-                exec(pattern.extraction_code, namespace)
+                from .sandbox import safe_exec
+                namespace = safe_exec(pattern.extraction_code, {'soup': soup, 'BeautifulSoup': BeautifulSoup})
 
                 if 'extract_data' in namespace:
                     return namespace['extract_data'](soup)

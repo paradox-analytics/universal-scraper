@@ -628,7 +628,7 @@ class HybridFetcher:
             # Reset browser fetcher so it can be retried next time
             try:
                 await self.browser_fetcher.close()
-            except:
+            except Exception:
                 pass
             self.browser_fetcher = None
 
@@ -848,7 +848,7 @@ class HybridFetcher:
         import asyncio
         try:
             asyncio.get_event_loop().run_until_complete(self.close())
-        except:
+        except Exception:
             pass
 
     async def __aenter__(self):

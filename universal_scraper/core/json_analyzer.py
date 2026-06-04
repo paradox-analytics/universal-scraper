@@ -503,7 +503,7 @@ Pick the MOST RELEVANT source. If none match, pick closest."""
         # Convert to JSON string for analysis
         try:
             json_str = json.dumps(source_data, default=str).lower()
-        except:
+        except Exception:
             return True  # If can't serialize, be safe and keep it
 
         # Get relevant keywords from context

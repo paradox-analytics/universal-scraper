@@ -315,7 +315,7 @@ class BrowserFetcher:
             if hasattr(self, 'playwright') and self.playwright:
                 try:
                     await self.playwright.stop()
-                except:
+                except Exception:
                     pass
                 self.playwright = None
             raise RuntimeError(f"Browser launch failed: {str(e)}") from e
@@ -356,7 +356,7 @@ class BrowserFetcher:
                 if method in ['POST', 'PUT', 'PATCH']:
                     try:
                         request_data['post_data'] = request.post_data
-                    except:
+                    except Exception:
                         pass
 
                 self.captured_requests.append(request_data)
@@ -379,7 +379,7 @@ class BrowserFetcher:
                             self._store_discovered_api(req)
 
                             logger.debug(f" Captured API response: {url[:100]}")
-                    except:
+                    except Exception:
                         pass
 
         # Attach handlers
@@ -625,7 +625,7 @@ class BrowserFetcher:
                 try:
                     await self.page.wait_for_load_state('networkidle', timeout=10000)
                     logger.info(" Network idle after scrolling")
-                except:
+                except Exception:
                     logger.info(" Network idle timeout after scrolling (continuing)")
 
             # Click "Load More" button if requested
@@ -803,7 +803,7 @@ class BrowserFetcher:
                         return items.length;
                     }}
                 ''')
-            except:
+            except Exception:
                 prev_item_count = 0
 
             # Scroll to bottom
@@ -825,7 +825,7 @@ class BrowserFetcher:
                             return items.length;
                         }}
                     ''')
-                except:
+                except Exception:
                     new_item_count = prev_item_count
 
                 height_changed = new_height > prev_height
@@ -984,20 +984,20 @@ class BrowserFetcher:
         if self.page:
             try:
                 await self.page.close()
-            except:
+            except Exception:
                 pass
 
         if self.browser:
             try:
                 await self.browser.close()
-            except:
+            except Exception:
                 pass
 
         # Close Playwright if used
         if BROWSER_TYPE == 'playwright' and hasattr(self, 'playwright'):
             try:
                 await self.playwright.stop()
-            except:
+            except Exception:
                 pass
 
         logger.info(" Browser closed")
